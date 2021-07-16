@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1066309751445",
+    "project_id": "ffmpegvideocompress",
+    "storage_bucket": "ffmpegvideocompress.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066309751445:android:796f35d6734fe9382f019c",
+        "android_client_info": {
+          "package_name": "ml.devcraft.VideoCompressor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066309751445-9479l08841fbmcmbqihea9qc1078ajda.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYHEqMnI_Dq4hNBCcSHH-uiQa5s4HCCZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066309751445-9479l08841fbmcmbqihea9qc1078ajda.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1066309751445-fvijcb972a81nfggt48h5gtkvqsa4scq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ml.devcraft.VideoCompressor"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

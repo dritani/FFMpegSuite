@@ -14,7 +14,8 @@ import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { AnimatedCircularProgress } from 'react-native-circular-progress'
+// https://github.com/bartgryszko/react-native-circular-progress
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()

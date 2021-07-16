@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
 import { navigate } from '@/Navigators/Root'
+import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -73,6 +74,19 @@ const IndexExampleContainer = () => {
       >
         <Text style={Fonts.textRegular}>History</Text>
       </TouchableOpacity>
+      <BannerAd
+        unitId={TestIds.BANNER}
+        size={BannerAdSize.SMART_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdLoaded={() => {
+          console.log('Advert loaded')
+        }}
+        onAdFailedToLoad={error => {
+          console.error('Advert failed to load: ', error)
+        }}
+      />
     </View>
   )
 }

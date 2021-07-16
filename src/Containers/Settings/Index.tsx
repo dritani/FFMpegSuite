@@ -43,58 +43,53 @@ const IndexExampleContainer = () => {
 
   return (
     <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
-      <View style={[[Layout.colCenter, Gutters.smallHPadding]]}>
-        <Brand />
-        {fetchOneUserLoading && <ActivityIndicator />}
-        {fetchOneUserError ? (
-          <Text style={Fonts.textRegular}>{fetchOneUserError.message}</Text>
-        ) : (
-          <Text style={Fonts.textRegular}>
-            {t('example.helloUser', { name: user.name })}
-          </Text>
-        )}
-      </View>
-      <View
-        style={[
-          Layout.row,
-          Layout.rowHCenter,
-          Gutters.smallHPadding,
-          Gutters.largeVMargin,
-          Common.backgroundPrimary,
-        ]}
+      <TouchableOpacity
+        style={[Common.button.outline, Gutters.regularBMargin]}
+        onPress={() => {}}
       >
-        <Text style={[Layout.fill, Fonts.textCenter, Fonts.textSmall]}>
-          {t('example.labels.userId')}
-        </Text>
-        <TextInput
-          onChangeText={text => fetch(text)}
-          editable={!fetchOneUserLoading}
-          keyboardType={'number-pad'}
-          maxLength={1}
-          value={userId}
-          selectTextOnFocus
-          style={[Layout.fill, Common.textInput]}
-        />
-      </View>
-      <Text style={[Fonts.textRegular, Gutters.smallBMargin]}>DarkMode :</Text>
+        <Text style={Fonts.textRegular}>Language</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity
+        style={[Common.button.outline, Gutters.regularBMargin]}
+        onPress={() => {}}
+      >
+        <Text style={Fonts.textRegular}>Remove Ads - $0.99</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
-        style={[Common.button.rounded, Gutters.regularBMargin]}
-        onPress={() => changeTheme({ darkMode: null })}
+        style={[Common.button.outline, Gutters.regularBMargin]}
+        onPress={() => {}}
       >
-        <Text style={Fonts.textRegular}>Auto</Text>
+        <Text style={Fonts.textRegular}>Pro version - $1.99 </Text>
       </TouchableOpacity>
+
       <TouchableOpacity
-        style={[Common.button.outlineRounded, Gutters.regularBMargin]}
-        onPress={() => changeTheme({ darkMode: true })}
+        style={[Common.button.outline, Gutters.regularBMargin]}
+        onPress={() => {}}
       >
-        <Text style={Fonts.textRegular}>Dark</Text>
+        <Text style={Fonts.textRegular}>Restore Purchases</Text>
+      </TouchableOpacity>
+
+
+      <TouchableOpacity
+        style={[Common.button.outline, Gutters.regularBMargin]}
+        onPress={() => {}}
+      >
+        <Text style={Fonts.textRegular}>Rate Us!</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => changeTheme({ darkMode: false })}
+        onPress={() => {}}
       >
-        <Text style={Fonts.textRegular}>Light</Text>
+        <Text style={Fonts.textRegular}>Recommend App</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[Common.button.outline, Gutters.regularBMargin]}
+        onPress={() => {}}
+      >
+        <Text style={Fonts.textRegular}>Other apps: Photo Converter</Text>
       </TouchableOpacity>
     </View>
   )
