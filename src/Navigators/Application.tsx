@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { IndexStartupContainer } from '@/Containers'
+import { InputContainer, OptionsContainer, ProcessingContainer, ResultsContainer, SettingsContainer } from '@/Containers'
 import { useSelector } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import { navigationRef } from '@/Navigators/Root'
@@ -41,17 +41,13 @@ const ApplicationNavigator = () => {
     <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
         <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
-        <Stack.Navigator headerMode={'none'}>
-          <Stack.Screen name="Startup" component={IndexStartupContainer} />
-          {isApplicationLoaded && MainNavigator != null && (
-            <Stack.Screen
-              name="Main"
-              component={MainNavigator}
-              options={{
-                animationEnabled: false,
-              }}
-            />
-          )}
+        {/* <Stack.Navigator headerMode={'none'}> */}
+        <Stack.Navigator>
+          <Stack.Screen name="Input" component={InputContainer} />
+          <Stack.Screen name="Options" component={OptionsContainer} />
+          <Stack.Screen name="Processing" component={ProcessingContainer} />
+          <Stack.Screen name="Results" component={ResultsContainer} />
+          <Stack.Screen name="Settings" component={SettingsContainer} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

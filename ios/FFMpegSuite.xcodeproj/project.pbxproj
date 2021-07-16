@@ -279,6 +279,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = PK3D83SCBL;
 						LastSwiftMigration = 1120;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -631,6 +632,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PK3D83SCBL;
 				ENABLE_BITCODE = NO;
@@ -643,8 +646,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ml.devcraft.FFMpegSuite;
 				PRODUCT_NAME = FFMpegSuite;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -655,6 +660,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PK3D83SCBL;
 				INFOPLIST_FILE = FFMpegSuite/Info.plist;
@@ -666,7 +673,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ml.devcraft.FFMpegSuite;
 				PRODUCT_NAME = FFMpegSuite;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
