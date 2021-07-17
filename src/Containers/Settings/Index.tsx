@@ -24,11 +24,28 @@ import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap'
-// import i18n from 'i18next'
+import i18n from 'i18next'
 import Rate, { AndroidMarket } from 'react-native-rate'
+import type { PickerItem } from 'react-native-woodpicker'
+import { Picker } from 'react-native-woodpicker'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
+  const [pickedLang, setPickedLang] = useState<PickerItem>()
+  const languages: Array<PickerItem> = [
+    { label: '🇺🇸 English', value: 'en' },
+    { label: '🇫🇷 Français', value: 'fr' },
+    { label: '🇨🇳 中文', value: 'zh' },
+    { label: '🇯🇵 日本語', value: 'jp' },
+    { label: '🇩🇪 Deutsche', value: 'de' },
+  ]
+
+  const handleSelectLanguage = (lng: string) => {
+    console.log(lng)
+    // setPickedLang(lng)
+    // i18n.changeLanguage(lng)
+  }
+
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
   const itemSkus = Platform.select({
@@ -98,14 +115,14 @@ const IndexExampleContainer = () => {
 
   const handleRate = () => {
     const options = {
-      AppleAppID: '2193813192',
-      GooglePackageName: 'com.mywebsite.myapp',
-      AmazonPackageName: 'com.mywebsite.myapp',
-      OtherAndroidURL: 'http://www.randomappstore.com/app/47172391',
+      AppleAppID: '2193813192', // after publishin?
+      GooglePackageName: 'ml.devcraft.videocompressor',
+      AmazonPackageName: 'ml.devcraft.videocompressor',
+      // OtherAndroidURL: 'http://www.randomappstore.com/app/47172391',
       preferredAndroidMarket: AndroidMarket.Google,
       preferInApp: false,
       openAppStoreIfInAppFails: true,
-      fallbackPlatformURL: 'http://www.mywebsite.com/myapp.html',
+      fallbackPlatformURL: 'http://www.mywebsite.com/myapp.html', // put your app link
     }
     Rate.rate(options, success => {
       if (success) {
@@ -135,6 +152,8 @@ const IndexExampleContainer = () => {
     }
   }
 
+  // language picker component:
+  // https://github.com/thodubois/react-native-woodpicker
   return (
     <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
       <TouchableOpacity
@@ -143,7 +162,18 @@ const IndexExampleContainer = () => {
       >
         <Text style={Fonts.textRegular}>Language</Text>
       </TouchableOpacity>
-
+      <Picker
+        item={pickedLang}
+        items={languages}
+        onItemChange={setPickedLang}
+        title="Language Picker"
+        placeholder="Select Language"
+        isNullable
+        //backdropAnimation={{ opactity: 0 }}
+        //mode="dropdown"
+        //isNullable
+        //disable
+      />
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={handlePurchaseAds}
