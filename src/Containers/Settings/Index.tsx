@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Platform,
 } from 'react-native'
 import { Brand } from '@/Components'
 import { useTheme } from '@/Theme'
@@ -14,11 +15,30 @@ import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
+import RNIap, {
+  Product,
+  ProductPurchase,
+  PurchaseError,
+  acknowledgePurchaseAndroid,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+} from 'react-native-iap'
+// import i18n from 'i18next'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
   const dispatch = useDispatch()
+  const itemSkus = Platform.select({
+    ios: [
+      '888',
+      '999'
+    ],
+    android: [
+     '888',
+     '999'
+    ]
+   })
 
   const user = useSelector((state: { user: UserState }) => state.user.item)
   const fetchOneUserLoading = useSelector(
@@ -41,55 +61,62 @@ const IndexExampleContainer = () => {
     dispatch(ChangeTheme.action({ theme, darkMode }))
   }
 
+  const changeLanguage = () => {
+    // popup
+    // i18n.changeLanguage('zh')
+  }
+
+  const handlePurchaseAds = () => {}
+
+  const handlePurchasePro = () => {}
+
+  const handleRestorePurchases = () => {}
+
+  const handleRate = () => {}
+
+  const handleRecommend = () => {}
+
   return (
     <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => {}}
+        onPress={changeLanguage}
       >
         <Text style={Fonts.textRegular}>Language</Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => {}}
+        onPress={handlePurchaseAds}
       >
         <Text style={Fonts.textRegular}>Remove Ads - $0.99</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => {}}
+        onPress={handlePurchasePro}
       >
         <Text style={Fonts.textRegular}>Pro version - $1.99 </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => {}}
+        onPress={handleRestorePurchases}
       >
         <Text style={Fonts.textRegular}>Restore Purchases</Text>
       </TouchableOpacity>
 
-
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => {}}
+        onPress={handleRate}
       >
         <Text style={Fonts.textRegular}>Rate Us!</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => {}}
+        onPress={handleRecommend}
       >
         <Text style={Fonts.textRegular}>Recommend App</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => {}}
-      >
-        <Text style={Fonts.textRegular}>Other apps: Photo Converter</Text>
       </TouchableOpacity>
     </View>
   )
