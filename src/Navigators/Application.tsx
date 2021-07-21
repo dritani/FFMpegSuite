@@ -1,10 +1,16 @@
 import React, { useEffect, useState, FunctionComponent } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { InputContainer, OptionsContainer, ProcessingContainer, ResultsContainer, SettingsContainer } from '@/Containers'
+import {
+  InputContainer,
+  OptionsContainer,
+  ProcessingContainer,
+  ResultsContainer,
+  SettingsContainer,
+} from '@/Containers'
 import { useSelector } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
-import { navigationRef } from '@/Navigators/Root'
-import { SafeAreaView, StatusBar } from 'react-native'
+import { navigate, navigationRef } from '@/Navigators/Root'
+import { Button, SafeAreaView, StatusBar } from 'react-native'
 import { useTheme } from '@/Theme'
 import { StartupState } from '@/Store/Startup'
 
@@ -20,6 +26,15 @@ const ApplicationNavigator = () => {
   const applicationIsLoading = useSelector(
     (state: { startup: StartupState }) => state.startup.loading,
   )
+
+  const screenOptions = () => {
+    return {
+      title: '',
+      headerRight: () => (
+        <Button title="Settings" onPress={() => navigate('Settings')} />
+      ),
+    }
+  }
 
   useEffect(() => {
     if (MainNavigator == null && !applicationIsLoading) {
@@ -41,9 +56,26 @@ const ApplicationNavigator = () => {
     <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
         <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
-        {/* <Stack.Navigator headerMode={'none'}> */}
-        <Stack.Navigator>
-          <Stack.Screen name="Input" component={InputContainer} />
+        <Stack.Navigator
+          headerMode="float"
+          initialRouteName="Input"
+          // title="title"
+          // headerTitle="headerTitle"
+          // navigationOptions={{
+          //   // title: 'nav title',
+          //   // headerTitle: 'nav headerTitle',
+          //   headerRight: 'Settings',
+          // }}
+          // options={{
+          //   headerRight:"Settings"
+          // }}
+        >
+          {/* <Stack.Navigator> */}
+          <Stack.Screen
+            options={screenOptions}
+            name="Input"
+            component={InputContainer}
+          />
           <Stack.Screen name="Options" component={OptionsContainer} />
           <Stack.Screen name="Processing" component={ProcessingContainer} />
           <Stack.Screen name="Results" component={ResultsContainer} />

@@ -49,13 +49,14 @@ const IndexExampleContainer = () => {
   }
 
   return (
-    <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => pushNext('Settings', '')}
-      >
-        <Text style={Fonts.textRegular}>Settings</Text>
-      </TouchableOpacity>
+    <View
+      style={[
+        Layout.fill,
+        Layout.column,
+        Layout.scrollSpaceBetween,
+        Gutters.smallHPadding,
+      ]}
+    >
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={() => pushNext('Options', 'Photo')}
