@@ -18,6 +18,9 @@ export default function ({ Colors, ...args }: ThemeCommonParams) {
       backgroundPrimary: {
         backgroundColor: Colors.primary,
       },
+      backgroundWhite: {
+        backgroundColor: Colors.white,
+      },
       backgroundReset: {
         backgroundColor: Colors.transparent,
       },

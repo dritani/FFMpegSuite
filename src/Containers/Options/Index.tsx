@@ -14,7 +14,7 @@ import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import SegmentedControl from '@react-native-segmented-control/segmented-control'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -31,6 +31,8 @@ const IndexExampleContainer = () => {
 
   const [userId, setUserId] = useState('1')
 
+  const [selectedIndex, setSelectedIndex] = useState(1)
+
   const fetch = (id: string) => {
     setUserId(id)
     if (id) {
@@ -43,29 +45,28 @@ const IndexExampleContainer = () => {
   }
 
   return (
-    <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
+    <View style={[Layout.fill, Layout.column, Gutters.smallHPadding]}>
       <View
         style={[
           Layout.row,
           Layout.rowHCenter,
           Gutters.smallHPadding,
           Gutters.largeVMargin,
-          Common.backgroundPrimary,
+          // Common.backgroundPrimary,
         ]}
       >
-        <Text style={[Layout.fill, Fonts.textCenter, Fonts.textSmall]}>
-          {t('example.labels.userId')}
-        </Text>
-        <AnimatedCircularProgress
-          size={120}
-          width={15}
-          fill={100}
-          tintColor="#00e0ff"
-          onAnimationComplete={() => console.log('onAnimationComplete')}
-          backgroundColor="#3d5875" 
+        <SegmentedControl
+          values={['Presets', 'Advanced']}
+          backgroundColor="#FF00FF"
+          selectedIndex={selectedIndex}
+          onChange={event => {
+            setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
+          }}
         />
+        {/* <Text style={[Layout.fill, Fonts.textCenter, Fonts.textSmall]}>
+          {t('example.labels.userId')}
+        </Text> */}
       </View>
-      <Text style={[Fonts.textRegular, Gutters.smallBMargin]}>DarkMode :</Text>
     </View>
   )
 }

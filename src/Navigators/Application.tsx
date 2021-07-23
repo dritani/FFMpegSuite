@@ -13,6 +13,7 @@ import { navigate, navigationRef } from '@/Navigators/Root'
 import { Button, SafeAreaView, StatusBar } from 'react-native'
 import { useTheme } from '@/Theme'
 import { StartupState } from '@/Store/Startup'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const Stack = createStackNavigator()
 
@@ -31,7 +32,12 @@ const ApplicationNavigator = () => {
     return {
       title: '',
       headerRight: () => (
-        <Button title="Settings" onPress={() => navigate('Settings')} />
+        <Icon 
+          name="settings-sharp" 
+          size={30} 
+          onPress={() => navigate('Settings')} 
+        />
+        // <Button title="Settings" onPress={() => navigate('Settings')} />
       ),
     }
   }
@@ -59,6 +65,10 @@ const ApplicationNavigator = () => {
         <Stack.Navigator
           headerMode="float"
           initialRouteName="Input"
+          screenOptions={{
+            headerLeftContainerStyle: { marginLeft: 10 },
+            headerRightContainerStyle: { marginRight: 10 },
+          }}
           // title="title"
           // headerTitle="headerTitle"
           // navigationOptions={{
