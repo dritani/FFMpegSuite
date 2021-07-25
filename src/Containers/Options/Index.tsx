@@ -58,10 +58,13 @@ const IndexExampleContainer = () => {
         <SegmentedControl
           values={['Presets', 'Advanced']}
           backgroundColor="#FF00FF"
-          selectedIndex={selectedIndex}
-          onChange={event => {
-            setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-          }}
+          
+          // style={{height: 40}}
+          
+          // selectedIndex={selectedIndex}
+          // onChange={event => {
+          //   setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
+          // }}
         />
         {/* <Text style={[Layout.fill, Fonts.textCenter, Fonts.textSmall]}>
           {t('example.labels.userId')}

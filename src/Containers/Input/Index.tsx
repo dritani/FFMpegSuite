@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Text,
   TextInput,
+  Image,
   TouchableOpacity,
 } from 'react-native'
 import { Brand } from '@/Components'
@@ -37,7 +38,7 @@ const IndexExampleContainer = () => {
     },
   ]
   const { t } = useTranslation()
-  const { Common, Fonts, Gutters, Layout } = useTheme()
+  const { Common, Fonts, Gutters, Layout, Images } = useTheme()
   const dispatch = useDispatch()
 
   const user = useSelector((state: { user: UserState }) => state.user.item)
@@ -100,16 +101,18 @@ const IndexExampleContainer = () => {
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={handleLibraryPick}
       >
+        {/* <Image source={Images.photoLibrary} /> */}
         <Text style={Fonts.textRegular}>Photo Library</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={handleFilePick}
       >
+        {/* <Image source={Images.files} /> */}
         <Text style={Fonts.textRegular}>Files</Text>
       </TouchableOpacity>
       <View>
-        {list.map((l, i) => (
+        {/* {list.map((l, i) => (
           <ListItem key={i} bottomDivider>
             <Avatar source={{ uri: l.avatar_url }} />
             <ListItem.Content>
@@ -117,15 +120,37 @@ const IndexExampleContainer = () => {
               <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
             </ListItem.Content>
           </ListItem>
-        ))}
+        ))} */}
+        <ListItem key={'img1'} bottomDivider>
+          <Avatar source={Images.photoLibrary} />
+          <ListItem.Content>
+            <ListItem.Title>Photos</ListItem.Title>
+            <ListItem.Subtitle>Media Library</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={'img2'} bottomDivider>
+          <Avatar source={Images.files} />
+          <ListItem.Content>
+            <ListItem.Title>Files</ListItem.Title>
+            <ListItem.Subtitle>Your Files App</ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
       </View>
       <Text>Output</Text>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={() => pushNext('Options', 'History')}
       >
+        <Image source={Images.history} />
         <Text style={Fonts.textRegular}>History</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <ListItem key={'img1'} bottomDivider>
+        <Avatar source={Images.history} />
+        <ListItem.Content>
+          <ListItem.Title>History</ListItem.Title>
+          <ListItem.Subtitle>Browse Converted Files</ListItem.Subtitle>
+        </ListItem.Content>
+      </ListItem>
       <BannerAd
         unitId={TestIds.BANNER}
         size={BannerAdSize.SMART_BANNER}

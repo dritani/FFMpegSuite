@@ -10,10 +10,11 @@ import {
 import { useSelector } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import { navigate, navigationRef } from '@/Navigators/Root'
-import { Button, SafeAreaView, StatusBar } from 'react-native'
+import { Button, SafeAreaView, StatusBar, Image } from 'react-native'
 import { useTheme } from '@/Theme'
 import { StartupState } from '@/Store/Startup'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { Avatar } from 'react-native-elements'
 
 const Stack = createStackNavigator()
 
@@ -21,7 +22,7 @@ let MainNavigator: FunctionComponent | null
 
 // @refresh reset
 const ApplicationNavigator = () => {
-  const { Layout, darkMode, NavigationTheme } = useTheme()
+  const { Layout, darkMode, NavigationTheme, Images } = useTheme()
   const { colors } = NavigationTheme
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
   const applicationIsLoading = useSelector(
@@ -32,11 +33,20 @@ const ApplicationNavigator = () => {
     return {
       title: '',
       headerRight: () => (
-        <Icon 
-          name="settings-sharp" 
-          size={30} 
+        // <Image src=
+        <Avatar 
+          source={Images.settings} 
           onPress={() => navigate('Settings')} 
         />
+        // <Image 
+        //   source={Images.settings} 
+        //   onPress={() => navigate('Settings')} 
+        // />
+        // <Icon 
+        //   name="settings-sharp" 
+        //   size={30} 
+        //   onPress={() => navigate('Settings')} 
+        // />
         // <Button title="Settings" onPress={() => navigate('Settings')} />
       ),
     }
