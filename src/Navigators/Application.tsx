@@ -32,6 +32,7 @@ const ApplicationNavigator = () => {
   const screenOptions = () => {
     return {
       title: '',
+      // headerStyle: { },
       headerRight: () => (
         // <Image src=
         <Avatar 
@@ -78,6 +79,7 @@ const ApplicationNavigator = () => {
           screenOptions={{
             headerLeftContainerStyle: { marginLeft: 10 },
             headerRightContainerStyle: { marginRight: 10 },
+            headerStyle: { shadowColor: 'transparent' },
           }}
           // title="title"
           // headerTitle="headerTitle"

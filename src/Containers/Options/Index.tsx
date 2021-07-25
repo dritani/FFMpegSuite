@@ -14,7 +14,7 @@ import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
-import SegmentedControl from '@react-native-segmented-control/segmented-control'
+import SegmentedControlTab from 'react-native-segmented-control-tab'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -31,7 +31,7 @@ const IndexExampleContainer = () => {
 
   const [userId, setUserId] = useState('1')
 
-  const [selectedIndex, setSelectedIndex] = useState(1)
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
   const fetch = (id: string) => {
     setUserId(id)
@@ -55,20 +55,11 @@ const IndexExampleContainer = () => {
           // Common.backgroundPrimary,
         ]}
       >
-        <SegmentedControl
+        <SegmentedControlTab
           values={['Presets', 'Advanced']}
-          backgroundColor="#FF00FF"
-          
-          // style={{height: 40}}
-          
-          // selectedIndex={selectedIndex}
-          // onChange={event => {
-          //   setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-          // }}
+          selectedIndex={selectedIndex}
+          onTabPress={index => setSelectedIndex(index)}
         />
-        {/* <Text style={[Layout.fill, Fonts.textCenter, Fonts.textSmall]}>
-          {t('example.labels.userId')}
-        </Text> */}
       </View>
     </View>
   )

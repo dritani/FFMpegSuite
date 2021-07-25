@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   Image,
+  ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { Brand } from '@/Components'
@@ -21,6 +22,8 @@ import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import { launchImageLibrary } from 'react-native-image-picker'
 import DocumentPicker from 'react-native-document-picker'
 import { ListItem, Avatar } from 'react-native-elements'
+import TouchableScale from 'react-native-touchable-scale'
+import LinearGradient from 'react-native-linear-gradient'
 
 const IndexExampleContainer = () => {
   const list = [
@@ -85,6 +88,9 @@ const IndexExampleContainer = () => {
       }
     }
   }
+  // flex column, justify start
+  // first one contains Input Text, 2 buttons
+  // second contains Output Text, 1 button
 
   return (
     <View
@@ -92,65 +98,141 @@ const IndexExampleContainer = () => {
         Layout.fill,
         Layout.column,
         Layout.scrollSpaceBetween,
+        // Layout.scrollSpaceStart,
         Gutters.smallHPadding,
         Common.backgroundWhite,
       ]}
     >
-      <Text>Input</Text>
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={handleLibraryPick}
-      >
-        {/* <Image source={Images.photoLibrary} /> */}
-        <Text style={Fonts.textRegular}>Photo Library</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={handleFilePick}
-      >
-        {/* <Image source={Images.files} /> */}
-        <Text style={Fonts.textRegular}>Files</Text>
-      </TouchableOpacity>
-      <View>
-        {/* {list.map((l, i) => (
-          <ListItem key={i} bottomDivider>
-            <Avatar source={{ uri: l.avatar_url }} />
+      <ScrollView>
+        <View style={{marginBottom: 40}}>
+          <Text
+            style={{
+              fontFamily: 'Nunito-ExtraBold',
+              fontSize: 40,
+              marginBottom: 15,
+            }}
+          >
+            Input
+          </Text>
+
+          <ListItem
+            containerStyle={{ borderRadius: 10, marginBottom: 15 }}
+            key={'img1'}
+            Component={TouchableScale}
+            friction={90} //
+            tension={100} // These props are passed to the parent component (here TouchableScale)
+            activeScale={0.95} //
+            linearGradientProps={{
+              colors: ['#a34dab', '#911f9c'],
+              start: { x: 1, y: 0 },
+              end: { x: 0.2, y: 0 },
+            }}
+            ViewComponent={LinearGradient} // Only if no expo
+            onPress={handleLibraryPick}
+          >
+            <Avatar source={Images.photoLibrary} />
             <ListItem.Content>
-              <ListItem.Title>{l.name}</ListItem.Title>
-              <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+              <ListItem.Title
+                style={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontFamily: 'Nunito-Regular',
+                }}
+              >
+                Photos
+              </ListItem.Title>
+              <ListItem.Subtitle
+                style={{ color: 'white', fontFamily: 'Nunito-Regular' }}
+              >
+                Media Library
+              </ListItem.Subtitle>
             </ListItem.Content>
+            <ListItem.Chevron color="white" />
           </ListItem>
-        ))} */}
-        <ListItem key={'img1'} bottomDivider>
-          <Avatar source={Images.photoLibrary} />
-          <ListItem.Content>
-            <ListItem.Title>Photos</ListItem.Title>
-            <ListItem.Subtitle>Media Library</ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem key={'img2'} bottomDivider>
-          <Avatar source={Images.files} />
-          <ListItem.Content>
-            <ListItem.Title>Files</ListItem.Title>
-            <ListItem.Subtitle>Your Files App</ListItem.Subtitle>
-          </ListItem.Content>
-        </ListItem>
-      </View>
-      <Text>Output</Text>
-      {/* <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => pushNext('Options', 'History')}
-      >
-        <Image source={Images.history} />
-        <Text style={Fonts.textRegular}>History</Text>
-      </TouchableOpacity> */}
-      <ListItem key={'img1'} bottomDivider>
-        <Avatar source={Images.history} />
-        <ListItem.Content>
-          <ListItem.Title>History</ListItem.Title>
-          <ListItem.Subtitle>Browse Converted Files</ListItem.Subtitle>
-        </ListItem.Content>
-      </ListItem>
+
+          <ListItem
+            containerStyle={{ borderRadius: 10 }}
+            key={'img2'}
+            Component={TouchableScale}
+            friction={90} //
+            tension={100} // These props are passed to the parent component (here TouchableScale)
+            activeScale={0.95} //
+            linearGradientProps={{
+              colors: ['#65d0f7', '#0cbafa'],
+              start: { x: 1, y: 0 },
+              end: { x: 0.2, y: 0 },
+            }}
+            ViewComponent={LinearGradient} // Only if no expo
+            onPress={handleFilePick}
+          >
+            <Avatar source={Images.files} />
+            <ListItem.Content>
+              <ListItem.Title
+                style={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontFamily: 'Nunito-Regular',
+                }}
+              >
+                Files
+              </ListItem.Title>
+              <ListItem.Subtitle
+                style={{ color: 'white', fontFamily: 'Nunito-Regular' }}
+              >
+                Your Files App
+              </ListItem.Subtitle>
+            </ListItem.Content>
+            <ListItem.Chevron color="white" />
+          </ListItem>
+        </View>
+        
+        <View>
+          <Text
+            style={{
+              fontFamily: 'Nunito-ExtraBold',
+              fontSize: 40,
+              marginBottom: 15,
+            }}
+          >
+            Output
+          </Text>
+          <ListItem
+            containerStyle={{ borderRadius: 10 }}
+            key={'img3'}
+            Component={TouchableScale}
+            friction={90}
+            tension={100}
+            activeScale={0.95} //
+            linearGradientProps={{
+              colors: ['#2eb36e', '#09994f'],
+              start: { x: 1, y: 0 },
+              end: { x: 0.2, y: 0 },
+            }}
+            ViewComponent={LinearGradient}
+            onPress={() => pushNext('Options', 'History')}
+          >
+            <Avatar source={Images.history} />
+            <ListItem.Content>
+              <ListItem.Title
+                style={{
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontFamily: 'Nunito-Regular',
+                }}
+              >
+                History
+              </ListItem.Title>
+              <ListItem.Subtitle
+                style={{ color: 'white', fontFamily: 'Nunito-Regular' }}
+              >
+                Browse Converted Files
+              </ListItem.Subtitle>
+            </ListItem.Content>
+            <ListItem.Chevron color="white" />
+          </ListItem>
+        </View>
+      </ScrollView>
+
       <BannerAd
         unitId={TestIds.BANNER}
         size={BannerAdSize.SMART_BANNER}

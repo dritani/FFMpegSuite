@@ -71,6 +71,10 @@ export default function ({}: ThemeVariables): ThemeLayout {
     justifyContentBetween: {
       justifyContent: 'space-between',
     },
+    scrollSpaceStart: {
+      flexGrow: 1,
+      justifyContent: 'flex-start',
+    },
     scrollSpaceAround: {
       flexGrow: 1,
       justifyContent: 'space-around',
