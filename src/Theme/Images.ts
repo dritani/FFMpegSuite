@@ -12,5 +12,7 @@ export default function ({}: ThemeVariables): ThemeImages {
     files: require('@/Assets/Images/folder-invoices.png'),
     history: require('@/Assets/Images/order-history.png'),
     settings: require('@/Assets/Images/settings.png'),
+    services: require('@/Assets/Images/services.gif'),
+    checkmark: require('@/Assets/Images/checkmark.png'),
   }
 }

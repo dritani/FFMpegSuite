@@ -24,6 +24,7 @@ import DocumentPicker from 'react-native-document-picker'
 import { ListItem, Avatar } from 'react-native-elements'
 import TouchableScale from 'react-native-touchable-scale'
 import LinearGradient from 'react-native-linear-gradient'
+import FileViewer from 'react-native-file-viewer'
 
 const IndexExampleContainer = () => {
   const list = [
@@ -89,6 +90,18 @@ const IndexExampleContainer = () => {
     }
   }
 
+  const handleHistory = async () => {
+    pushNext('Options', 'History')
+    // try {
+    //   const res = await DocumentPicker.pick({
+    //     type: [DocumentPicker.types.allFiles],
+    //   })
+    //   await FileViewer.open(res.uri)
+    // } catch (e) {
+
+    // }
+  }
+
   return (
     <View
       style={[
@@ -101,7 +114,7 @@ const IndexExampleContainer = () => {
       ]}
     >
       <ScrollView>
-        <View style={{marginBottom: 40}}>
+        <View style={{ marginBottom: 40 }}>
           <Text
             style={{
               fontFamily: 'Nunito-ExtraBold',
@@ -182,7 +195,7 @@ const IndexExampleContainer = () => {
             <ListItem.Chevron color="white" />
           </ListItem>
         </View>
-        
+
         <View>
           <Text
             style={{
@@ -206,7 +219,7 @@ const IndexExampleContainer = () => {
               end: { x: 0.2, y: 0 },
             }}
             ViewComponent={LinearGradient}
-            onPress={() => pushNext('Options', 'History')}
+            onPress={handleHistory}
           >
             <Avatar source={Images.history} />
             <ListItem.Content>

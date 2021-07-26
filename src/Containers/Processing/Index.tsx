@@ -6,6 +6,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Image,
+  Button,
 } from 'react-native'
 import { Brand, CircularSlider } from '@/Components'
 import { useTheme } from '@/Theme'
@@ -14,10 +16,17 @@ import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
+import { navigate } from '@/Navigators/Root'
+
+// spinning icon at the top => Checkmark when done
+// green color when 100%
+// put size before => size after somewhere
+// The compressed video has been saved to your files
+// Finish button => Pop to first screen.
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
-  const { Common, Fonts, Gutters, Layout } = useTheme()
+  const { Common, Fonts, Gutters, Layout, Images } = useTheme()
   const dispatch = useDispatch()
 
   const user = useSelector((state: { user: UserState }) => state.user.item)
@@ -42,19 +51,20 @@ const IndexExampleContainer = () => {
   }
 
   return (
-    <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
+    <View
+      style={[
+        Layout.fill,
+        Layout.colCenter,
+        Gutters.smallHPadding,
+        Common.backgroundWhite,
+      ]}
+    >
+      {/* <Image style={{ width: 100, height: 100 }} source={Images.checkmark} /> */}
+      <Image style={{ width: 100, height: 100 }} source={Images.services} />
       <CircularSlider value={45} trackWidth={15} showText={true} noThumb />
       <Text>Compressing video, please wait...</Text>
-      {/* <View
-        style={[
-          Layout.row,
-          Layout.rowHCenter,
-          Gutters.smallHPadding,
-          Gutters.largeVMargin,
-          Common.backgroundPrimary,
-        ]}
-      >
-      </View> */}
+      <Text>Video saved to Files</Text>
+      <Button title="Finish" onPress={()=>navigate("Input")}></Button>
     </View>
   )
 }
