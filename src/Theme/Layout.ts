@@ -24,6 +24,11 @@ export default function ({}: ThemeVariables): ThemeLayout {
       flexDirection: 'column',
       alignItems: 'center',
     },
+    colAroundCenter: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+    },
     colHCenter: {
       flexDirection: 'column',
       justifyContent: 'center',

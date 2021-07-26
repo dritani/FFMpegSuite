@@ -20,7 +20,8 @@ const Stack = createStackNavigator()
 
 let MainNavigator: FunctionComponent | null
 
-// @refresh reset
+// Hide it for Processing screen: headerBackTitleVisible: false, gestureEnabled: false. screenOptions
+
 const ApplicationNavigator = () => {
   const { Layout, darkMode, NavigationTheme, Images } = useTheme()
   const { colors } = NavigationTheme
@@ -29,27 +30,19 @@ const ApplicationNavigator = () => {
     (state: { startup: StartupState }) => state.startup.loading,
   )
 
-  const screenOptions = () => {
+  const inputOptions = () => {
     return {
       title: '',
-      // headerStyle: { },
       headerRight: () => (
-        // <Image src=
-        <Avatar 
-          source={Images.settings} 
-          onPress={() => navigate('Settings')} 
-        />
-        // <Image 
-        //   source={Images.settings} 
-        //   onPress={() => navigate('Settings')} 
-        // />
-        // <Icon 
-        //   name="settings-sharp" 
-        //   size={30} 
-        //   onPress={() => navigate('Settings')} 
-        // />
-        // <Button title="Settings" onPress={() => navigate('Settings')} />
+        <Avatar source={Images.settings} onPress={() => navigate('Settings')} />
       ),
+    }
+  }
+
+  const processingOptions = () => {
+    return {
+      headerLeft: null,
+      gestureEnabled: false,
     }
   }
 
@@ -80,7 +73,11 @@ const ApplicationNavigator = () => {
             headerLeftContainerStyle: { marginLeft: 10 },
             headerRightContainerStyle: { marginRight: 10 },
             headerStyle: { shadowColor: 'transparent' },
+            title: '',
+            headerTintColor: '#0066FF',
+            headerBackTitle: 'Back',
           }}
+
           // title="title"
           // headerTitle="headerTitle"
           // navigationOptions={{
@@ -94,12 +91,16 @@ const ApplicationNavigator = () => {
         >
           {/* <Stack.Navigator> */}
           <Stack.Screen
-            options={screenOptions}
+            options={inputOptions}
             name="Input"
             component={InputContainer}
           />
           <Stack.Screen name="Options" component={OptionsContainer} />
-          <Stack.Screen name="Processing" component={ProcessingContainer} />
+          <Stack.Screen
+            options={processingOptions}
+            name="Processing"
+            component={ProcessingContainer}
+          />
           <Stack.Screen name="Results" component={ResultsContainer} />
           <Stack.Screen name="Settings" component={SettingsContainer} />
         </Stack.Navigator>

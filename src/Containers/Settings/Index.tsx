@@ -32,7 +32,10 @@ import { ListItem, Icon } from 'react-native-elements'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
-  const [pickedLang, setPickedLang] = useState<PickerItem>()
+  const [pickedLang, setPickedLang] = useState<PickerItem>({
+    label: '🇺🇸 English',
+    value: 'en',
+  })
   const languages: Array<PickerItem> = [
     { label: '🇺🇸 English', value: 'en' },
     { label: '🇫🇷 Français', value: 'fr' },
@@ -168,92 +171,127 @@ const IndexExampleContainer = () => {
   // https://github.com/thodubois/react-native-woodpicker
   return (
     <View style={[Layout.fill, Layout.column]}>
-      {/* Gutters.smallHPadding */}
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={changeLanguage}
-      >
-        <Text style={Fonts.textRegular}>Language</Text>
-      </TouchableOpacity>
-      <Picker
-        item={pickedLang}
-        items={languages}
-        onItemChange={setPickedLang}
-        title="Language Picker"
-        placeholder="Select Language"
-        isNullable
-        //backdropAnimation={{ opactity: 0 }}
-        //mode="dropdown"
-        //isNullable
-        //disable
-      />
-      <View>
-        {list.map((item, i) => (
-          <ListItem key={i} bottomDivider topDivider>
-            <Icon name={item.icon} />
-            <ListItem.Content>
-              {/* <ListItem.Title>{item.title}</ListItem.Title> */}
-              <View
-                style={{
-                  flex: 1,
-                  width: '100%',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text style={{ fontSize: 17, color: 'black' }}>Hello</Text>
-                <Text style={{ fontSize: 17, color: 'grey' }}>Hello</Text>
-              </View>
-            </ListItem.Content>
-            {/* <ListItem.Content>
-              <View
-                style={{
-                  flex: 1,
-                  flexGrow: 1,
-                  flexDirection: 'row',
-                  alignContent: 'flex-end',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                <Text style={{ fontSize: 17, color: 'grey' }}>Hello</Text>
-              </View>
-            </ListItem.Content> */}
-          </ListItem>
-        ))}
+      <View style={{ marginTop: 10 }}>
+        <ListItem key={'row_1'} topDivider bottomDivider>
+          <Icon name="globe-outline" type="ionicon" />
+          <ListItem.Content>
+            <View
+              style={{
+                flex: 1,
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 17, color: 'black' }}>Language</Text>
+              <Picker
+                item={pickedLang}
+                items={languages}
+                onItemChange={setPickedLang}
+                title="Language Picker"
+                placeholder="Select Language"
+                isNullable
+                //backdropAnimation={{ opactity: 0 }}
+                //mode="dropdown"
+                //isNullable
+                //disable
+              />
+            </View>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={'row_2'} bottomDivider onPress={handleRate}>
+          <Icon name="star" type="ionicon" />
+          <ListItem.Content>
+            <View
+              style={{
+                flex: 1,
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 17, color: 'black' }}>Rate Us</Text>
+              <ListItem.Chevron />
+            </View>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={'row_3'} bottomDivider onPress={handleRecommend}>
+          <Icon name="share-social" type="ionicon" />
+          <ListItem.Content>
+            <View
+              style={{
+                flex: 1,
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 17, color: 'black' }}>
+                Recommend App
+              </Text>
+              <ListItem.Chevron />
+            </View>
+          </ListItem.Content>
+        </ListItem>
       </View>
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={handlePurchaseAds}
-      >
-        <Text style={Fonts.textRegular}>Remove Ads - $0.99</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={handlePurchasePro}
-      >
-        <Text style={Fonts.textRegular}>Pro version - $1.99 </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={handleRestorePurchases}
-      >
-        <Text style={Fonts.textRegular}>Restore Purchases</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={handleRate}
-      >
-        <Text style={Fonts.textRegular}>Rate Us!</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={handleRecommend}
-      >
-        <Text style={Fonts.textRegular}>Recommend App</Text>
-      </TouchableOpacity>
+      <View style={{ marginTop: 10 }}>
+        <ListItem
+          key={'row_4'}
+          topDivider
+          bottomDivider
+          onPress={handlePurchaseAds}
+        >
+          <Icon name="globe-outline" type="ionicon" color="#FFFFFF" />
+          <ListItem.Content>
+            <View
+              style={{
+                flex: 1,
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 17, color: 'black' }}>Remove Ads</Text>
+              <Text style={{ fontSize: 17, color: 'grey' }}>$ 0.99</Text>
+            </View>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={'row_5'} bottomDivider onPress={handlePurchasePro}>
+          <Icon name="star" type="ionicon" color="#FFFFFF" />
+          <ListItem.Content>
+            <View
+              style={{
+                flex: 1,
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 17, color: 'black' }}>Pro Version</Text>
+              <Text style={{ fontSize: 17, color: 'grey' }}>$ 1.99</Text>
+            </View>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={'row_6'} bottomDivider onPress={handleRestorePurchases}>
+          <Icon name="share-social" type="ionicon" color="#FFFFFF" />
+          <ListItem.Content>
+            <View
+              style={{
+                flex: 1,
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 17, color: 'black' }}>
+                Restore Purchases
+              </Text>
+              <ListItem.Chevron />
+            </View>
+          </ListItem.Content>
+        </ListItem>
+      </View>
     </View>
   )
 }

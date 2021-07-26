@@ -24,6 +24,9 @@ import { navigate } from '@/Navigators/Root'
 // The compressed video has been saved to your files
 // Finish button => Pop to first screen.
 
+// receive FFMpeg file from screen 1
+// receive FFMPeg command params from screen 2
+
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
@@ -54,17 +57,22 @@ const IndexExampleContainer = () => {
     <View
       style={[
         Layout.fill,
-        Layout.colCenter,
+        Layout.colAroundCenter,
         Gutters.smallHPadding,
         Common.backgroundWhite,
       ]}
     >
       {/* <Image style={{ width: 100, height: 100 }} source={Images.checkmark} /> */}
       <Image style={{ width: 100, height: 100 }} source={Images.services} />
-      <CircularSlider value={45} trackWidth={15} showText={true} noThumb />
-      <Text>Compressing video, please wait...</Text>
-      <Text>Video saved to Files</Text>
-      <Button title="Finish" onPress={()=>navigate("Input")}></Button>
+      <View>
+        <CircularSlider value={45} trackWidth={15} showText={true} noThumb />
+
+        <Text>Compressing video, please wait...</Text>
+        <Text>Video saved to Files</Text>
+        <Button title="Finish" onPress={() => navigate('Input')} />
+      </View>
+
+      <View />
     </View>
   )
 }
