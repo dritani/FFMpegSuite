@@ -88,9 +88,6 @@ const IndexExampleContainer = () => {
       }
     }
   }
-  // flex column, justify start
-  // first one contains Input Text, 2 buttons
-  // second contains Output Text, 1 button
 
   return (
     <View
@@ -123,7 +120,7 @@ const IndexExampleContainer = () => {
             tension={100} // These props are passed to the parent component (here TouchableScale)
             activeScale={0.95} //
             linearGradientProps={{
-              colors: ['#a34dab', '#911f9c'],
+              colors: ['#a459ab', '#911f9c'],
               start: { x: 1, y: 0 },
               end: { x: 0.2, y: 0 },
             }}
@@ -158,7 +155,7 @@ const IndexExampleContainer = () => {
             tension={100} // These props are passed to the parent component (here TouchableScale)
             activeScale={0.95} //
             linearGradientProps={{
-              colors: ['#65d0f7', '#0cbafa'],
+              colors: ['#71cef0', '#0cbafa'],
               start: { x: 1, y: 0 },
               end: { x: 0.2, y: 0 },
             }}
@@ -204,7 +201,7 @@ const IndexExampleContainer = () => {
             tension={100}
             activeScale={0.95} //
             linearGradientProps={{
-              colors: ['#2eb36e', '#09994f'],
+              colors: ['#3fc47f', '#03964a'],
               start: { x: 1, y: 0 },
               end: { x: 0.2, y: 0 },
             }}

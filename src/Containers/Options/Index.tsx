@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Button,
 } from 'react-native'
 import { Brand } from '@/Components'
 import { useTheme } from '@/Theme'
@@ -15,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
+import { navigate } from '@/Navigators/Root'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -56,11 +58,15 @@ const IndexExampleContainer = () => {
         ]}
       >
         <SegmentedControlTab
-          values={['Presets', 'Advanced']}
+          values={['Basic', 'Advanced']}
           selectedIndex={selectedIndex}
           onTabPress={index => setSelectedIndex(index)}
         />
       </View>
+      <Button 
+        title="Start"
+        onPress={() => navigate('Processing', '')}
+        ></Button>
     </View>
   )
 }

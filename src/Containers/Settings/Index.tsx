@@ -28,6 +28,7 @@ import i18n from 'i18next'
 import Rate, { AndroidMarket } from 'react-native-rate'
 import type { PickerItem } from 'react-native-woodpicker'
 import { Picker } from 'react-native-woodpicker'
+import { ListItem, Icon } from 'react-native-elements'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -38,6 +39,17 @@ const IndexExampleContainer = () => {
     { label: '🇨🇳 中文', value: 'zh' },
     { label: '🇯🇵 日本語', value: 'jp' },
     { label: '🇩🇪 Deutsche', value: 'de' },
+  ]
+
+  const list = [
+    {
+      title: 'Language',
+      icon: 'av-timer',
+    },
+    {
+      title: 'Dark Mode',
+      icon: 'flight-takeoff',
+    },
   ]
 
   const handleSelectLanguage = (lng: string) => {
@@ -155,7 +167,8 @@ const IndexExampleContainer = () => {
   // language picker component:
   // https://github.com/thodubois/react-native-woodpicker
   return (
-    <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
+    <View style={[Layout.fill, Layout.column]}>
+      {/* Gutters.smallHPadding */}
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={changeLanguage}
@@ -174,6 +187,40 @@ const IndexExampleContainer = () => {
         //isNullable
         //disable
       />
+      <View>
+        {list.map((item, i) => (
+          <ListItem key={i} bottomDivider topDivider>
+            <Icon name={item.icon} />
+            <ListItem.Content>
+              {/* <ListItem.Title>{item.title}</ListItem.Title> */}
+              <View
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text style={{ fontSize: 17, color: 'black' }}>Hello</Text>
+                <Text style={{ fontSize: 17, color: 'grey' }}>Hello</Text>
+              </View>
+            </ListItem.Content>
+            {/* <ListItem.Content>
+              <View
+                style={{
+                  flex: 1,
+                  flexGrow: 1,
+                  flexDirection: 'row',
+                  alignContent: 'flex-end',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <Text style={{ fontSize: 17, color: 'grey' }}>Hello</Text>
+              </View>
+            </ListItem.Content> */}
+          </ListItem>
+        ))}
+      </View>
       <TouchableOpacity
         style={[Common.button.outline, Gutters.regularBMargin]}
         onPress={handlePurchaseAds}
