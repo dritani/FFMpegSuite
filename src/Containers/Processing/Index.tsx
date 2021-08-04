@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
 import { navigate } from '@/Navigators/Root'
+import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 
 // spinning icon at the top => Checkmark when done
 // green color when 100%
@@ -31,6 +32,8 @@ const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
   const dispatch = useDispatch()
+
+  const [finished, setFinished] = useState(false)
 
   const user = useSelector((state: { user: UserState }) => state.user.item)
   const fetchOneUserLoading = useSelector(
@@ -49,6 +52,10 @@ const IndexExampleContainer = () => {
     }
   }
 
+  useEffect(() => {
+    setTimeout(() => setFinished(true), 2500)
+  }, [])
+
   const changeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
     dispatch(ChangeTheme.action({ theme, darkMode }))
   }
@@ -57,22 +64,50 @@ const IndexExampleContainer = () => {
     <View
       style={[
         Layout.fill,
-        Layout.colAroundCenter,
+        Layout.colBetweenCenter,
         Gutters.smallHPadding,
         Common.backgroundWhite,
       ]}
     >
-      {/* <Image style={{ width: 100, height: 100 }} source={Images.checkmark} /> */}
-      <Image style={{ width: 100, height: 100 }} source={Images.services} />
+      <Image
+        style={{ width: 100, height: 100 }}
+        source={finished ? Images.checkmark : Images.services}
+      />
       <View>
-        <CircularSlider value={45} trackWidth={15} showText={true} noThumb />
+        <CircularSlider
+          value={45}
+          trackWidth={15}
+          showText={true}
+          noThumb
+          trackColor={finished ? '#00ff00' : '#0079e3'}
+        />
 
-        <Text>Compressing video, please wait...</Text>
-        <Text>Video saved to Files</Text>
-        <Button title="Finish" onPress={() => navigate('Input')} />
+        <Text>
+          {finished
+            ? 'Video saved to Files'
+            : 'Compressing video, please wait...'}
+        </Text>
+        {finished && (
+          <View>
+            <Text>322 MB => 79.3 MB</Text>
+            <Button title="Finish" onPress={() => navigate('Input')} />
+          </View>
+        )}
       </View>
 
-      <View />
+      <BannerAd
+        unitId={TestIds.BANNER}
+        size={BannerAdSize.SMART_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdLoaded={() => {
+          console.log('Advert loaded')
+        }}
+        onAdFailedToLoad={error => {
+          console.error('Advert failed to load: ', error)
+        }}
+      />
     </View>
   )
 }

@@ -24,10 +24,10 @@ export default function ({}: ThemeVariables): ThemeLayout {
       flexDirection: 'column',
       alignItems: 'center',
     },
-    colAroundCenter: {
+    colBetweenCenter: {
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
     },
     colHCenter: {
       flexDirection: 'column',
@@ -86,6 +86,12 @@ export default function ({}: ThemeVariables): ThemeLayout {
     },
     scrollSpaceBetween: {
       flexGrow: 1,
+      justifyContent: 'space-between',
+    },
+    rowBetween: {
+      flex: 1,
+      width: '100%',
+      flexDirection: 'row',
       justifyContent: 'space-between',
     },
     selfStretch: {

@@ -9,6 +9,7 @@ import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import { navigate } from '@/Navigators/Root'
+import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 
 // presets
 // compression ratio
@@ -54,17 +55,20 @@ const IndexExampleContainer = () => {
       style={[
         Layout.fill,
         Layout.column,
+        Layout.justifyContentBetween,
         Gutters.smallHPadding,
         Common.backgroundWhite,
       ]}
     >
+      
+      
+      <View>
       <View
         style={[
           Layout.row,
           Layout.rowHCenter,
           Gutters.smallHPadding,
           Gutters.largeVMargin,
-          // Common.backgroundPrimary,
         ]}
       >
         <SegmentedControlTab
@@ -79,6 +83,20 @@ const IndexExampleContainer = () => {
       {selectedIndex === 0 && basicTab()}
       {selectedIndex === 1 && advancedTab()}
       <Button title="Start" onPress={() => navigate('Processing', '')} />
+      </View>
+      <BannerAd
+        unitId={TestIds.BANNER}
+        size={BannerAdSize.SMART_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdLoaded={() => {
+          console.log('Advert loaded')
+        }}
+        onAdFailedToLoad={error => {
+          console.error('Advert failed to load: ', error)
+        }}
+      />
     </View>
   )
 }

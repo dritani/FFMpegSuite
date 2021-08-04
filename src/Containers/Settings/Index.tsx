@@ -171,19 +171,12 @@ const IndexExampleContainer = () => {
   // https://github.com/thodubois/react-native-woodpicker
   return (
     <View style={[Layout.fill, Layout.column]}>
-      <View style={{ marginTop: 10 }}>
-        <ListItem key={'row_1'} topDivider bottomDivider>
+      <View style={Gutters.smallTMargin}>
+        <ListItem key="row_lang" topDivider bottomDivider>
           <Icon name="globe-outline" type="ionicon" />
           <ListItem.Content>
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={{ fontSize: 17, color: 'black' }}>Language</Text>
+            <View style={Layout.rowBetween}>
+              <Text style={Fonts.blackSettings}>Language</Text>
               <Picker
                 item={pickedLang}
                 items={languages}
@@ -199,94 +192,59 @@ const IndexExampleContainer = () => {
             </View>
           </ListItem.Content>
         </ListItem>
-        <ListItem key={'row_2'} bottomDivider onPress={handleRate}>
+        <ListItem key={'row_rating'} bottomDivider onPress={handleRate}>
           <Icon name="star" type="ionicon" />
           <ListItem.Content>
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={{ fontSize: 17, color: 'black' }}>Rate Us</Text>
+            <View style={Layout.rowBetween}>
+              <Text style={Fonts.blackSettings}>Rate Us</Text>
               <ListItem.Chevron />
             </View>
           </ListItem.Content>
         </ListItem>
-        <ListItem key={'row_3'} bottomDivider onPress={handleRecommend}>
+        <ListItem key={'row_recommend'} bottomDivider onPress={handleRecommend}>
           <Icon name="share-social" type="ionicon" />
           <ListItem.Content>
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={{ fontSize: 17, color: 'black' }}>
-                Recommend App
-              </Text>
+            <View style={Layout.rowBetween}>
+              <Text style={Fonts.blackSettings}>Recommend App</Text>
               <ListItem.Chevron />
             </View>
           </ListItem.Content>
         </ListItem>
       </View>
 
-      <View style={{ marginTop: 10 }}>
+      <View style={Gutters.smallTMargin}>
         <ListItem
-          key={'row_4'}
+          key={'row_ads'}
           topDivider
           bottomDivider
           onPress={handlePurchaseAds}
         >
-          <Icon name="globe-outline" type="ionicon" color="#FFFFFF" />
+          <Icon name="close-circle-outline" type="ionicon" />
           <ListItem.Content>
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={{ fontSize: 17, color: 'black' }}>Remove Ads</Text>
-              <Text style={{ fontSize: 17, color: 'grey' }}>$ 0.99</Text>
+            <View style={Layout.rowBetween}>
+              <Text style={Fonts.blackSettings}>Remove Ads</Text>
+              <Text style={Fonts.greySettings}>$ 0.99</Text>
             </View>
           </ListItem.Content>
         </ListItem>
-        <ListItem key={'row_5'} bottomDivider onPress={handlePurchasePro}>
-          <Icon name="star" type="ionicon" color="#FFFFFF" />
+        <ListItem key={'row_pro'} bottomDivider onPress={handlePurchasePro}>
+          <Icon name="key" type="ionicon" />
           <ListItem.Content>
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={{ fontSize: 17, color: 'black' }}>Pro Version</Text>
-              <Text style={{ fontSize: 17, color: 'grey' }}>$ 1.99</Text>
+            <View style={Layout.rowBetween}>
+              <Text style={Fonts.blackSettings}>Pro Version</Text>
+              <Text style={Fonts.greySettings}>$ 1.99</Text>
             </View>
           </ListItem.Content>
         </ListItem>
-        <ListItem key={'row_6'} bottomDivider onPress={handleRestorePurchases}>
-          <Icon name="share-social" type="ionicon" color="#FFFFFF" />
+        <ListItem
+          key={'row_restore'}
+          bottomDivider
+          onPress={handleRestorePurchases}
+        >
+          <Icon name="refresh" type="ionicon" />
           <ListItem.Content>
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={{ fontSize: 17, color: 'black' }}>
-                Restore Purchases
-              </Text>
+            <View style={Layout.rowBetween}>
+              <Text style={Fonts.blackSettings}>Restore Purchases</Text>
               <ListItem.Chevron />
             </View>
           </ListItem.Content>
