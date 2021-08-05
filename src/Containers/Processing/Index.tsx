@@ -62,6 +62,8 @@ const IndexExampleContainer = props => {
   // const [statistics, setStatistics] = useState(undefined)
 
   useEffect(() => {
+    setProgress(0)
+    setFinished(false)
     enableStatisticsCallback(statisticsCallback)
     runFFmpeg()
 
@@ -89,13 +91,17 @@ const IndexExampleContainer = props => {
 
     let timeInMilliseconds = statistics.time
     if (timeInMilliseconds > 0) {
-      let totalVideoDuration = 31000
+      let totalVideoDuration = 30528
       // get Video Duration with ffProbe first?
       // asset.duration and asset.uri
-      // how about file selection??
+      // how about file selection?? => react-native-media-meta
+      // https://dev.to/saadbashar/finding-video-duration-react-native-456f
       let completePercentage = Math.round(
-        (timeInMilliseconds * 99.99) / totalVideoDuration,
+        (timeInMilliseconds * 99.9) / totalVideoDuration,
       )
+
+      console.log('completePercentage')
+      console.log(completePercentage)
 
       setProgress(completePercentage)
     }
@@ -113,6 +119,10 @@ const IndexExampleContainer = props => {
       console.log(result)
       if (result !== 0) {
         console.log('command failed')
+        // error handling: make it red. Return/Finish
+      } else {
+        setFinished(true)
+        setProgress(99.9)
       }
     })
   }
