@@ -71,16 +71,34 @@ const IndexExampleContainer = () => {
   }
 
   const handleLibraryPick = () => {
-    launchImageLibrary({}, () => navigate('Options'))
+    launchImageLibrary(
+      {
+        // mediaType: 'video'
+      },
+      res => {
+        if (!res.didCancel) {
+          console.log('res:')
+          console.log(res)
+          console.log('assets:')
+          if (res.assets.length) {
+            let filePath = res.assets[0].uri
+            console.log(filePath)
+            navigate('Options', { filePath })
+          }
+        }
+        // assets.uri // => will be different for Android Check out the launchImageLibrary docs
+      },
+    )
   }
 
   const handleFilePick = async () => {
     try {
       const res = await DocumentPicker.pick({
-        // type: [DocumentPicker.types.images],
+        // type: [DocumentPicker.types.video], // => necessary
       })
       // this.setState({videoURI: res.uri})
-      navigate('Options', '')
+      let filePath = res.uri
+      navigate('Options', { filePath })
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on

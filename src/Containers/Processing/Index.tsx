@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native'
-import { Button, Icon } from 'react-native-elements'
+import { Button } from 'react-native-elements'
 import { Brand, CircularSlider } from '@/Components'
 import { useTheme } from '@/Theme'
 import FetchOne from '@/Store/User/FetchOne'
@@ -28,7 +28,7 @@ import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 // receive FFMpeg file from screen 1
 // receive FFMPeg command params from screen 2
 
-const IndexExampleContainer = () => {
+const IndexExampleContainer = props => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
   const dispatch = useDispatch()
@@ -53,11 +53,20 @@ const IndexExampleContainer = () => {
   }
 
   useEffect(() => {
+    console.log('props:')
+    console.log(props?.route?.params?.filePath)
+
     setTimeout(() => {
       setFinished(true)
       setProgress(99.9)
     }, 2500)
   }, [])
+
+  const runFFmpeg = () => {
+    // grab filePath from params
+    // grab command from params
+    let ffmpegCommand = this.state.commandText
+  }
 
   const changeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
     dispatch(ChangeTheme.action({ theme, darkMode }))
@@ -78,7 +87,7 @@ const IndexExampleContainer = () => {
         style={{ width: 100, height: 100 }}
         source={finished ? Images.checkmark : Images.services}
       />
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: 'center' }}>
         <CircularSlider
           value={progress}
           trackWidth={15}
@@ -87,27 +96,22 @@ const IndexExampleContainer = () => {
           trackColor={finished ? '#00ff00' : '#0079e3'}
         />
 
-        <View style={{marginTop: 15}}>
-          <Text style={{fontFamily: 'Nunito-Regular', fontSize: 20}}>
+        <View style={{ marginTop: 15 }}>
+          <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>
             {finished
               ? 'Video saved to Files'
               : 'Compressing video, please wait...'}
           </Text>
 
-          <View style={{ opacity: finished ? 1 : 0, marginTop: 15 }}>
+          <View
+            style={{ opacity: finished ? 1 : 0, marginTop: 15, alignItems: 'center' }}
+          >
             {/* <View style={{ display: 'none' }}> */}
             <Button
-              icon={
-                <Icon
-                  name="checkmark-circle-outline"
-                  size={20}
-                  color="white"
-                  type="ionicon"
-                />
-              }
               title="Finish"
-              titleStyle={{marginLeft: 10, fontFamily: 'Nunito-Regular', fontSize: 20}}
-              onPress={() => navigate('Input')} 
+              containerStyle={{ width: 150, borderRadius: 5}}
+              titleStyle={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}
+              onPress={() => navigate('Input')}
             />
           </View>
         </View>
