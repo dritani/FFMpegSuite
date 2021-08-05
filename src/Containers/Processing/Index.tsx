@@ -7,8 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Button,
 } from 'react-native'
+import { Button, Icon } from 'react-native-elements'
 import { Brand, CircularSlider } from '@/Components'
 import { useTheme } from '@/Theme'
 import FetchOne from '@/Store/User/FetchOne'
@@ -53,12 +53,17 @@ const IndexExampleContainer = () => {
   }
 
   useEffect(() => {
-    setTimeout(() => setFinished(true), 2500)
+    setTimeout(() => {
+      setFinished(true)
+      setProgress(99.9)
+    }, 2500)
   }, [])
 
   const changeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
     dispatch(ChangeTheme.action({ theme, darkMode }))
   }
+
+  const [progress, setProgress] = useState(25)
 
   return (
     <View
@@ -73,26 +78,39 @@ const IndexExampleContainer = () => {
         style={{ width: 100, height: 100 }}
         source={finished ? Images.checkmark : Images.services}
       />
-      <View>
+      <View style={{alignItems: 'center'}}>
         <CircularSlider
-          value={45}
+          value={progress}
           trackWidth={15}
           showText={true}
           noThumb
           trackColor={finished ? '#00ff00' : '#0079e3'}
         />
 
-        <Text>
-          {finished
-            ? 'Video saved to Files'
-            : 'Compressing video, please wait...'}
-        </Text>
-        {finished && (
-          <View>
-            <Text>322 MB => 79.3 MB</Text>
-            <Button title="Finish" onPress={() => navigate('Input')} />
+        <View style={{marginTop: 15}}>
+          <Text style={{fontFamily: 'Nunito-Regular', fontSize: 20}}>
+            {finished
+              ? 'Video saved to Files'
+              : 'Compressing video, please wait...'}
+          </Text>
+
+          <View style={{ opacity: finished ? 1 : 0, marginTop: 15 }}>
+            {/* <View style={{ display: 'none' }}> */}
+            <Button
+              icon={
+                <Icon
+                  name="checkmark-circle-outline"
+                  size={20}
+                  color="white"
+                  type="ionicon"
+                />
+              }
+              title="Finish"
+              titleStyle={{marginLeft: 10, fontFamily: 'Nunito-Regular', fontSize: 20}}
+              onPress={() => navigate('Input')} 
+            />
           </View>
-        )}
+        </View>
       </View>
 
       <BannerAd
