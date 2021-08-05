@@ -73,7 +73,7 @@ const IndexExampleContainer = () => {
   const handleLibraryPick = () => {
     launchImageLibrary(
       {
-        // mediaType: 'video'
+        mediaType: 'video',
       },
       res => {
         if (!res.didCancel) {

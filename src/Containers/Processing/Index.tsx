@@ -18,6 +18,30 @@ import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
 import { navigate } from '@/Navigators/Root'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
+import RNFS from 'react-native-fs'
+import { VideoUtil } from '@/Utils'
+import {
+  enableStatisticsCallback,
+  executeFFmpegAsync,
+  executeFFmpeg,
+  resetStatistics,
+} from '@/Utils'
+
+
+
+
+// +useEffect: call enableStatisticsCallback(statisticsCallback)
+// +define statisticsCallback
+// +updateProgressDialog: modify progress variable
+// call runFFmpeg/encodeVideo
+
+
+// get it to the point where it can accept a file as input
+// find an arbitrary ffmpeg command and execute it
+
+
+
+
 
 // spinning icon at the top => Checkmark when done
 // green color when 100%
@@ -33,46 +57,65 @@ const IndexExampleContainer = props => {
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
   const dispatch = useDispatch()
 
+  const [progress, setProgress] = useState(0)
   const [finished, setFinished] = useState(false)
+  // const [statistics, setStatistics] = useState(undefined)
 
-  const user = useSelector((state: { user: UserState }) => state.user.item)
-  const fetchOneUserLoading = useSelector(
-    (state: { user: UserState }) => state.user.fetchOne.loading,
-  )
-  const fetchOneUserError = useSelector(
-    (state: { user: UserState }) => state.user.fetchOne.error,
-  )
+  useEffect(() => {
+    enableStatisticsCallback(statisticsCallback)
+    runFFmpeg()
 
-  const [userId, setUserId] = useState('1')
+    // setTimeout(() => {
+    //   setFinished(true)
+    //   setProgress(99.9)
+    // }, 2500)
+  }, [])
 
-  const fetch = (id: string) => {
-    setUserId(id)
-    if (id) {
-      dispatch(FetchOne.action(id))
+  const statisticsCallback = statistics => {
+    console.log('statisticsCallback')
+    console.log(statistics)
+    // setStatistics(statistics)
+    updateProgressDialog(statistics)
+  }
+
+  const updateProgressDialog = statistics => {
+    // console.log('updateProgressDialog')
+    // console.log('statistics')
+    // console.log(statistics)
+
+    if (statistics === undefined) {
+      return
+    }
+
+    let timeInMilliseconds = statistics.time
+    if (timeInMilliseconds > 0) {
+      let totalVideoDuration = 31000
+      // get Video Duration with ffProbe first?
+      // asset.duration and asset.uri
+      // how about file selection??
+      let completePercentage = Math.round(
+        (timeInMilliseconds * 99.99) / totalVideoDuration,
+      )
+
+      setProgress(completePercentage)
     }
   }
 
-  useEffect(() => {
-    console.log('props:')
-    console.log(props?.route?.params?.filePath)
-
-    setTimeout(() => {
-      setFinished(true)
-      setProgress(99.9)
-    }, 2500)
-  }, [])
-
   const runFFmpeg = () => {
-    // grab filePath from params
-    // grab command from params
-    let ffmpegCommand = this.state.commandText
-  }
+    let videoFile = `${RNFS.CachesDirectoryPath}/output.avi`
+    VideoUtil.deleteFile(videoFile)
 
-  const changeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-    dispatch(ChangeTheme.action({ theme, darkMode }))
-  }
+    let filePath = props?.route?.params?.filePath
+    let ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
 
-  const [progress, setProgress] = useState(25)
+    executeFFmpeg(ffmpegCommand).then(result => {
+      console.log('result DONE!')
+      console.log(result)
+      if (result !== 0) {
+        console.log('command failed')
+      }
+    })
+  }
 
   return (
     <View
@@ -104,12 +147,16 @@ const IndexExampleContainer = props => {
           </Text>
 
           <View
-            style={{ opacity: finished ? 1 : 0, marginTop: 15, alignItems: 'center' }}
+            style={{
+              opacity: finished ? 1 : 0,
+              marginTop: 15,
+              alignItems: 'center',
+            }}
           >
             {/* <View style={{ display: 'none' }}> */}
             <Button
               title="Finish"
-              containerStyle={{ width: 150, borderRadius: 5}}
+              containerStyle={{ width: 150, borderRadius: 5 }}
               titleStyle={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}
               onPress={() => navigate('Input')}
             />

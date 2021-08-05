@@ -80,9 +80,7 @@ const IndexExampleContainer = props => {
       // time_end
       // ratio
     }
-    if (filePath) {
-      navigate('Processing', ffmpeg)
-    }
+    navigate('Processing', ffmpeg)
   }
 
   return (
