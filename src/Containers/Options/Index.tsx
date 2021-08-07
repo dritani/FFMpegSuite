@@ -37,7 +37,7 @@ const IndexExampleContainer = props => {
   const [time_end, setTimeEnd] = useState(300)
   const [framerate, setFramerate] = useState(30) // fps
   const [bitrate, setBitrate] = useState(1200)
-  const [ratio, setRatio] = useState('normal') // ffmpeg has normal, fast, fastest?
+  const [preset, setPreset] = useState('ultrafast') // ffmpeg has normal, fast, fastest?
   const [type, setType] = useState('basic')
 
   const basicTab = () => {
@@ -69,17 +69,19 @@ const IndexExampleContainer = props => {
 
   const handleStart = () => {
     let filePath = props?.route?.params?.filePath
+    let duration = props?.route?.params?.duration
     let ffmpeg = {
       filePath,
+      duration,
       type,
+      preset,
       width,
       height,
+      time_start,
+      time_end,
       volume,
       bitrate,
       framerate,
-      time_start,
-      time_end,
-      ratio,
     }
     navigate('Processing', ffmpeg)
   }
@@ -109,7 +111,7 @@ const IndexExampleContainer = props => {
             selectedIndex={selectedIndex}
             onTabPress={index => {
               setSelectedIndex(index)
-              console.log(index)
+              // console.log(index)
             }}
           />
         </View>
@@ -136,10 +138,10 @@ const IndexExampleContainer = props => {
           requestNonPersonalizedAdsOnly: true,
         }}
         onAdLoaded={() => {
-          console.log('Advert loaded')
+          // console.log('Advert loaded')
         }}
         onAdFailedToLoad={error => {
-          console.error('Advert failed to load: ', error)
+          // console.error('Advert failed to load: ', error)
         }}
       />
     </View>

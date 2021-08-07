@@ -63,16 +63,19 @@ const ApplicationNavigator = () => {
   )
 
   return (
-    <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
+    <SafeAreaView style={[Layout.fill, { backgroundColor: '#FFFFFF' }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
-        <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
+        <StatusBar barStyle="light-content" />
         <Stack.Navigator
           headerMode="float"
           initialRouteName="Input"
           screenOptions={{
             headerLeftContainerStyle: { marginLeft: 10 },
             headerRightContainerStyle: { marginRight: 10 },
-            headerStyle: { shadowColor: 'transparent' },
+            headerStyle: {
+              shadowColor: 'transparent',
+              backgroundColor: '#FFFFFF',
+            },
             title: '',
             headerTintColor: '#0066FF',
             headerBackTitle: 'Back',

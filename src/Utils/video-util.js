@@ -133,6 +133,30 @@ export default class VideoUtil {
     )
   }
 
+  static generateBasicCompressionScript(
+    filePath,
+    preset,
+    width,
+    height,
+    time_start,
+    time_end,
+  ) {
+    return `- i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+  }
+
+  static generateAdvancedCompressionScript(
+    filePath,
+    width,
+    height,
+    time_start,
+    time_end,
+    volume,
+    bitrate,
+    framerate,
+  ) {
+    return `- i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+  }
+
   static generateShakingVideoScript(
     image1Path,
     image2Path,

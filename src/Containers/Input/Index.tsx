@@ -25,6 +25,7 @@ import { ListItem, Avatar } from 'react-native-elements'
 import TouchableScale from 'react-native-touchable-scale'
 import LinearGradient from 'react-native-linear-gradient'
 import FileViewer from 'react-native-file-viewer'
+import MediaMeta from 'react-native-media-meta'
 
 const IndexExampleContainer = () => {
   const list = [
@@ -77,13 +78,11 @@ const IndexExampleContainer = () => {
       },
       res => {
         if (!res.didCancel) {
-          console.log('res:')
-          console.log(res)
-          console.log('assets:')
           if (res.assets.length) {
-            let filePath = res.assets[0].uri
-            console.log(filePath)
-            navigate('Options', { filePath })
+            let asset = res.assets[0]
+            let filePath = asset.uri
+            let duration = asset.duration
+            navigate('Options', { filePath, duration })
           }
         }
         // assets.uri // => will be different for Android Check out the launchImageLibrary docs
@@ -98,7 +97,12 @@ const IndexExampleContainer = () => {
       })
       // this.setState({videoURI: res.uri})
       let filePath = res.uri
-      navigate('Options', { filePath })
+      MediaMeta.get(filePath)
+        .then(metadata => {
+          let duration = metadata.duration
+          navigate('Options', { filePath, duration })
+        })
+        .catch(err => {})
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on
@@ -268,10 +272,10 @@ const IndexExampleContainer = () => {
           requestNonPersonalizedAdsOnly: true,
         }}
         onAdLoaded={() => {
-          console.log('Advert loaded')
+          // console.log('Advert loaded')
         }}
         onAdFailedToLoad={error => {
-          console.error('Advert failed to load: ', error)
+          // console.error('Advert failed to load: ', error)
         }}
       />
     </View>

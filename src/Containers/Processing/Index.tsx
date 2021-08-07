@@ -26,6 +26,7 @@ import {
   executeFFmpeg,
   resetStatistics,
 } from '@/Utils'
+import MediaMeta from 'react-native-media-meta'
 
 // UI
 // +spinning icon at the top => Checkmark when done
@@ -52,17 +53,26 @@ const IndexExampleContainer = props => {
   const [progress, setProgress] = useState(0)
   const [finished, setFinished] = useState(false)
   // const [statistics, setStatistics] = useState(undefined)
+  const [started, setStarted] = useState(false)
+  const [ii, setII] = useState(0)
 
   useEffect(() => {
     // setProgress(0)
     // setFinished(false)
+    console.log('useEffect init')
     enableStatisticsCallback(statisticsCallback)
     runFFmpeg()
   }, [])
 
+  useEffect(() => {
+    if (started) {
+      setProgress(1)
+    }
+  }, [started])
+
   const statisticsCallback = statistics => {
-    console.log('statisticsCallback')
-    console.log(statistics)
+    // console.log('statisticsCallback')
+    // console.log(statistics)
     // setStatistics(statistics)
     updateProgressDialog(statistics)
   }
@@ -78,19 +88,46 @@ const IndexExampleContainer = props => {
 
     let timeInMilliseconds = statistics.time
     if (timeInMilliseconds > 0) {
-      let totalVideoDuration = 30528
-      // get Video Duration with ffProbe first?
-      // asset.duration and asset.uri
-      // how about file selection?? => react-native-media-meta
-      // https://dev.to/saadbashar/finding-video-duration-react-native-456f
+      let duration = props?.route?.params?.duration
+      let totalVideoDuration = duration * 1000
+
       let completePercentage = Math.round(
         (timeInMilliseconds * 99.9) / totalVideoDuration,
       )
 
-      console.log('completePercentage')
-      console.log(completePercentage)
+      console.log('completePercentage: ' + completePercentage)
 
+      // bug: the first tick goes to max right away
+      // console.log('started: ', started)
+      // let SSS = getStarted()
+      // console.log('SSS: ', SSS)
+      console.log('statistics: ', statistics)
+
+      // setStarted(true) // 2 ticks?
+
+      // if (progress === 0)
+      // oh. We can't read variables from the outside, we can only set them.
+      // well we CAN read them, but statically. From when the method is first set up.
+      // console.log('progress: ', progress, 'started: ', started)
       setProgress(completePercentage)
+      setStarted(true)
+      // array of stat.time?
+      // if (progress === 0) {
+      //   console.log('!progress')
+      //   setProgress(1)
+      //   setStarted(true)
+      // } else {
+      //   console.log('yes progress')
+      //   setProgress(completePercentage)
+      // }
+      // setTicks(ticks + 3)
+
+      // if (started) {
+      //   setProgress(completePercentage)
+      // } else {
+      //   console.log('STARTING!')
+      //   setStarted(true)
+      // }
     }
   }
 
@@ -100,18 +137,30 @@ const IndexExampleContainer = props => {
 
     // let filePath = props?.route?.params?.filePath
     // let type = props?.route?.params?.filePath
-    let { filePath, type } = props?.route?.params
+    let {
+      filePath,
+      type,
+      preset,
+      width,
+      height,
+      time_start,
+      time_end,
+      volume,
+      bitrate,
+      framerate,
+    } = props?.route?.params
     let ffmpegCommand = ''
-    console.log(filePath, type)
+
+    // console.log(filePath, type)
 
     // ffmpeg multiple filters:
     // -vf "movie=watermark.png [logo]; [in][logo] overlay=W-w-10:H-h-10, fade=in:0:20 [out]"
 
     // usethe faster 265 compression algorithm
     // -c:v libx265
-    // width and height: 
+    // width and height:
     // -vf scale="720:480"
-    // framerate: 
+    // framerate:
     // OR: -vf fps=30
     // bitrate: separate for audio and video
     // -b:v 1M -b:a 192k
@@ -124,21 +173,45 @@ const IndexExampleContainer = props => {
     // -filter:a "volume=1.5" => 150% audio level of input.
     if (type === 'basic') {
       ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+      // ffmpegCommand = VideoUtil.generateBasicCompressionScript(
+      //   filePath,
+      //   preset,
+      //   width,
+      //   height,
+      //   time_start,
+      //   time_end,
+      // )
     } else {
-      ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+      // ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+      ffmpegCommand = VideoUtil.generateAdvancedCompressionScript(
+        filePath,
+        width,
+        height,
+        time_start,
+        time_end,
+        volume,
+        bitrate,
+        framerate,
+      )
     }
 
     executeFFmpeg(ffmpegCommand).then(result => {
-      console.log('result DONE!')
-      console.log(result)
       if (result !== 0) {
-        console.log('command failed')
         // error handling: make it red. Return/Finish
       } else {
         setFinished(true)
-        // setProgress(99.9)
+        setProgress(99.9)
       }
     })
+  }
+
+  const getProgress = () => {
+    if (!started && progress !== 0) {
+      setStarted(true)
+      return 20
+    } else {
+      return progress
+    }
   }
 
   return (
@@ -156,7 +229,12 @@ const IndexExampleContainer = props => {
       />
       <View style={{ alignItems: 'center' }}>
         <CircularSlider
-          value={progress}
+          // started && 
+          // oldProgress, progress
+          // 0 0
+          // 0 98
+          // 98 23
+          value={!started && progress !== 0 ? 1 : progress}
           trackWidth={15}
           showText={true}
           noThumb
@@ -195,10 +273,10 @@ const IndexExampleContainer = props => {
           requestNonPersonalizedAdsOnly: true,
         }}
         onAdLoaded={() => {
-          console.log('Advert loaded')
+          // console.log('Advert loaded')
         }}
         onAdFailedToLoad={error => {
-          console.error('Advert failed to load: ', error)
+          // console.error('Advert failed to load: ', error)
         }}
       />
     </View>

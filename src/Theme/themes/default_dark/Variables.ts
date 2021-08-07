@@ -7,7 +7,7 @@ const Colors: ThemeColors = {
 }
 
 const NavigationColors: Partial<ThemeNavigationColors> = {
-  primary: Colors.primary,
+  primary: Colors.white,
 }
 
 export default {
