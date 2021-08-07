@@ -27,30 +27,22 @@ import {
   resetStatistics,
 } from '@/Utils'
 
+// UI
+// +spinning icon at the top => Checkmark when done
+// +green color when 100%
+// +put size before => size after somewhere
+// +The compressed video has been saved to your files
+// +Finish button => Pop to first screen.
 
-
-
+// FFMpeg
+// +receive FFMpeg file from screen 1
+// +receive FFMPeg command params from screen 2
 // +useEffect: call enableStatisticsCallback(statisticsCallback)
 // +define statisticsCallback
 // +updateProgressDialog: modify progress variable
 // call runFFmpeg/encodeVideo
-
-
-// get it to the point where it can accept a file as input
-// find an arbitrary ffmpeg command and execute it
-
-
-
-
-
-// spinning icon at the top => Checkmark when done
-// green color when 100%
-// put size before => size after somewhere
-// The compressed video has been saved to your files
-// Finish button => Pop to first screen.
-
-// receive FFMpeg file from screen 1
-// receive FFMPeg command params from screen 2
+// +get it to the point where it can accept a file as input
+// +find an arbitrary ffmpeg command and execute it
 
 const IndexExampleContainer = props => {
   const { t } = useTranslation()
@@ -62,15 +54,10 @@ const IndexExampleContainer = props => {
   // const [statistics, setStatistics] = useState(undefined)
 
   useEffect(() => {
-    setProgress(0)
-    setFinished(false)
+    // setProgress(0)
+    // setFinished(false)
     enableStatisticsCallback(statisticsCallback)
     runFFmpeg()
-
-    // setTimeout(() => {
-    //   setFinished(true)
-    //   setProgress(99.9)
-    // }, 2500)
   }, [])
 
   const statisticsCallback = statistics => {
@@ -111,8 +98,35 @@ const IndexExampleContainer = props => {
     let videoFile = `${RNFS.CachesDirectoryPath}/output.avi`
     VideoUtil.deleteFile(videoFile)
 
-    let filePath = props?.route?.params?.filePath
-    let ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+    // let filePath = props?.route?.params?.filePath
+    // let type = props?.route?.params?.filePath
+    let { filePath, type } = props?.route?.params
+    let ffmpegCommand = ''
+    console.log(filePath, type)
+
+    // ffmpeg multiple filters:
+    // -vf "movie=watermark.png [logo]; [in][logo] overlay=W-w-10:H-h-10, fade=in:0:20 [out]"
+
+    // usethe faster 265 compression algorithm
+    // -c:v libx265
+    // width and height: 
+    // -vf scale="720:480"
+    // framerate: 
+    // OR: -vf fps=30
+    // bitrate: separate for audio and video
+    // -b:v 1M -b:a 192k
+    // presets:
+    // -preset ultrafast, veryfast, medium (default), slower
+    // ultrafast, superfast, veryfast, faster, fast, medium. Use the 4 fastest ones only
+    // time_start, time_end
+    //  ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4
+    // audio volume
+    // -filter:a "volume=1.5" => 150% audio level of input.
+    if (type === 'basic') {
+      ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+    } else {
+      ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+    }
 
     executeFFmpeg(ffmpegCommand).then(result => {
       console.log('result DONE!')
@@ -122,7 +136,7 @@ const IndexExampleContainer = props => {
         // error handling: make it red. Return/Finish
       } else {
         setFinished(true)
-        setProgress(99.9)
+        // setProgress(99.9)
       }
     })
   }

@@ -38,6 +38,7 @@ const IndexExampleContainer = props => {
   const [framerate, setFramerate] = useState(30) // fps
   const [bitrate, setBitrate] = useState(1200)
   const [ratio, setRatio] = useState('normal') // ffmpeg has normal, fast, fastest?
+  const [type, setType] = useState('basic')
 
   const basicTab = () => {
     return (
@@ -68,17 +69,17 @@ const IndexExampleContainer = props => {
 
   const handleStart = () => {
     let filePath = props?.route?.params?.filePath
-    console.log(filePath)
     let ffmpeg = {
       filePath,
-      // width
-      // height
-      // volume
-      // bitrate
-      // framerate
-      // time_start
-      // time_end
-      // ratio
+      type,
+      width,
+      height,
+      volume,
+      bitrate,
+      framerate,
+      time_start,
+      time_end,
+      ratio,
     }
     navigate('Processing', ffmpeg)
   }
