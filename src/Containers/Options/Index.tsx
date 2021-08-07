@@ -10,6 +10,7 @@ import { ThemeState } from '@/Store/Theme'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import { navigate } from '@/Navigators/Root'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
+import MultiSlider from '@ptomasroos/react-native-multi-slider'
 
 // presets
 // compression ratio
@@ -43,16 +44,16 @@ const IndexExampleContainer = props => {
   const basicTab = () => {
     return (
       <View>
-        {/* <Button></Button> */}
-        {/* <Input></Input> */}
-        <Slider
-          thumbTintColor="blue"
-          value={0.33}
-          thumbStyle={{ height: 30, width: 30 }}
-        />
-        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>
-          Hello
-        </Text>
+        <View>
+          <Button title="fastest" />
+          <Button title="faster" />
+          <Button title="normal" />
+          <Button title="slower" />
+        </View>
+        <View>
+          <Input type="text" placeholder="Width" />
+          <Input type="text" placeholder="Height" />
+        </View>
       </View>
     )
   }
@@ -60,9 +61,25 @@ const IndexExampleContainer = props => {
   const advancedTab = () => {
     return (
       <View>
-        {/* <Input></Input> */}
-        <Slider value={0.66} />
-        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>YO</Text>
+        <View>
+          <Input type="text" placeholder="Width" />
+          <Input type="text" placeholder="Height" />
+        </View>
+        
+        <Input type="text" placeholder="Bitrate" />
+        <Input type="text" placeholder="Framerate" />
+
+         <MultiSlider values={[100, 200]} />
+        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>Time</Text>
+
+        <Slider
+          thumbTintColor="blue"
+          value={0.33}
+          thumbStyle={{ height: 30, width: 30 }}
+        />
+        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>
+          Volume
+        </Text>
       </View>
     )
   }

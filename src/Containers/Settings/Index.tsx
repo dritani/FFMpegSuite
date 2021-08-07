@@ -32,10 +32,12 @@ import { ListItem, Icon } from 'react-native-elements'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
+  
   const [pickedLang, setPickedLang] = useState<PickerItem>({
     label: '🇺🇸 English',
     value: 'en',
   })
+
   const languages: Array<PickerItem> = [
     { label: '🇺🇸 English', value: 'en' },
     { label: '🇫🇷 Français', value: 'fr' },
@@ -62,32 +64,11 @@ const IndexExampleContainer = () => {
   }
 
   const { Common, Fonts, Gutters, Layout } = useTheme()
-  const dispatch = useDispatch()
+
   const itemSkus = Platform.select({
     ios: ['888', '999'],
     android: ['888', '999'],
   })
-
-  const user = useSelector((state: { user: UserState }) => state.user.item)
-  const fetchOneUserLoading = useSelector(
-    (state: { user: UserState }) => state.user.fetchOne.loading,
-  )
-  const fetchOneUserError = useSelector(
-    (state: { user: UserState }) => state.user.fetchOne.error,
-  )
-
-  const [userId, setUserId] = useState('1')
-
-  const fetch = (id: string) => {
-    setUserId(id)
-    if (id) {
-      dispatch(FetchOne.action(id))
-    }
-  }
-
-  const changeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-    dispatch(ChangeTheme.action({ theme, darkMode }))
-  }
 
   const changeLanguage = () => {
     // popup
@@ -170,7 +151,7 @@ const IndexExampleContainer = () => {
   // language picker component:
   // https://github.com/thodubois/react-native-woodpicker
   return (
-    <View style={[Layout.fill, Layout.column]}>
+    <View style={[Layout.fill, Layout.column, { backgroundColor: '#f2f2f2' }]}>
       <View style={Gutters.smallTMargin}>
         <ListItem key="row_lang" topDivider bottomDivider>
           <Icon name="globe-outline" type="ionicon" />
