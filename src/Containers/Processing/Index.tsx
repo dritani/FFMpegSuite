@@ -172,16 +172,18 @@ const IndexExampleContainer = props => {
     // audio volume
     // -filter:a "volume=1.5" => 150% audio level of input.
     if (type === 'basic') {
-      ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
-      // ffmpegCommand = VideoUtil.generateBasicCompressionScript(
-      //   filePath,
-      //   preset,
-      //   width,
-      //   height,
-      //   time_start,
-      //   time_end,
-      // )
-    } else {
+      // ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+
+      ffmpegCommand = VideoUtil.generateBasicCompressionScript(
+        filePath,
+        preset,
+        width,
+        height,
+      )
+
+      // console.log('ffmpegCommand: ', ffmpegCommand)
+      // console.log('ffmpegCommand2: ', ffmpegCommand2)
+    } else { // advanced
       // ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
       ffmpegCommand = VideoUtil.generateAdvancedCompressionScript(
         filePath,

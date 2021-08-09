@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { View } from 'react-native'
 import { Slider, Input, Text, Button } from 'react-native-elements'
-// import { Brand } from '@/Components'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
-import { UserState } from '@/Store/User'
-import { ThemeState } from '@/Store/Theme'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import { navigate } from '@/Navigators/Root'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
+import StepIndicator from 'react-native-step-indicator'
 
 // presets
 // compression ratio
@@ -39,7 +36,39 @@ const IndexExampleContainer = props => {
   const [framerate, setFramerate] = useState(30) // fps
   const [bitrate, setBitrate] = useState(1200)
   const [preset, setPreset] = useState('ultrafast') // ffmpeg has normal, fast, fastest?
-  const [type, setType] = useState('basic')
+  // might be better to use crf values
+
+  const [currentPosition] = useState(0)
+  const labels = [
+    'Cart',
+    'Delivery Address',
+    'Order Summary',
+    'Payment Method',
+    'Track',
+  ]
+  const customStyles = {
+    stepIndicatorSize: 25,
+    currentStepIndicatorSize: 30,
+    separatorStrokeWidth: 2,
+    currentStepStrokeWidth: 3,
+    stepStrokeCurrentColor: '#fe7013',
+    stepStrokeWidth: 3,
+    stepStrokeFinishedColor: '#fe7013',
+    stepStrokeUnFinishedColor: '#aaaaaa',
+    separatorFinishedColor: '#fe7013',
+    separatorUnFinishedColor: '#aaaaaa',
+    stepIndicatorFinishedColor: '#fe7013',
+    stepIndicatorUnFinishedColor: '#ffffff',
+    stepIndicatorCurrentColor: '#ffffff',
+    stepIndicatorLabelFontSize: 13,
+    currentStepIndicatorLabelFontSize: 13,
+    stepIndicatorLabelCurrentColor: '#fe7013',
+    stepIndicatorLabelFinishedColor: '#ffffff',
+    stepIndicatorLabelUnFinishedColor: '#aaaaaa',
+    labelColor: '#999999',
+    labelSize: 13,
+    currentStepLabelColor: '#fe7013',
+  }
 
   const basicTab = () => {
     return (
@@ -50,6 +79,11 @@ const IndexExampleContainer = props => {
           <Button title="normal" />
           <Button title="slower" />
         </View>
+        <StepIndicator
+          customStyles={customStyles}
+          currentPosition={currentPosition}
+          labels={labels}
+        />
         <View>
           <Input type="text" placeholder="Width" />
           <Input type="text" placeholder="Height" />
@@ -65,11 +99,11 @@ const IndexExampleContainer = props => {
           <Input type="text" placeholder="Width" />
           <Input type="text" placeholder="Height" />
         </View>
-        
+
         <Input type="text" placeholder="Bitrate" />
         <Input type="text" placeholder="Framerate" />
 
-         <MultiSlider values={[100, 200]} />
+        <MultiSlider values={[100, 200]} />
         <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>Time</Text>
 
         <Slider
@@ -90,7 +124,7 @@ const IndexExampleContainer = props => {
     let ffmpeg = {
       filePath,
       duration,
-      type,
+      type: selectedIndex === 0 ? 'basic' : 'advanced',
       preset,
       width,
       height,
@@ -128,6 +162,7 @@ const IndexExampleContainer = props => {
             selectedIndex={selectedIndex}
             onTabPress={index => {
               setSelectedIndex(index)
+
               // console.log(index)
             }}
           />
