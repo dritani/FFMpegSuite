@@ -126,7 +126,7 @@ PODS:
   - GoogleUtilities/Reachability (7.5.0):
     - GoogleUtilities/Logger
   - libevent (2.1.12)
-  - mobile-ffmpeg-https (4.4)
+  - mobile-ffmpeg-min-gpl (4.4)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -330,11 +330,8 @@ PODS:
   - React-jsinspector (0.64.2)
   - react-native-document-picker (5.2.0):
     - React-Core
-  - react-native-ffmpeg (0.5.1):
-    - React
-    - react-native-ffmpeg/https (= 0.5.1)
-  - react-native-ffmpeg/https (0.5.1):
-    - mobile-ffmpeg-https (= 4.4)
+  - react-native-ffmpeg/min-gpl (0.5.1):
+    - mobile-ffmpeg-min-gpl (= 4.4)
     - React
   - react-native-flipper (0.94.1):
     - React-Core
@@ -520,7 +517,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
-  - react-native-ffmpeg (from `../node_modules/react-native-ffmpeg`)
+  - react-native-ffmpeg/min-gpl (from `../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-meta-media (from `../node_modules/react-native-media-meta`)
@@ -578,7 +575,7 @@ SPEC REPOS:
     - GoogleUserMessagingPlatform
     - GoogleUtilities
     - libevent
-    - mobile-ffmpeg-https
+    - mobile-ffmpeg-min-gpl
     - nanopb
     - OpenSSL-Universal
     - PersonalizedAdConsent
@@ -621,7 +618,7 @@ EXTERNAL SOURCES:
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-ffmpeg:
-    :path: "../node_modules/react-native-ffmpeg"
+    :podspec: "../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
   react-native-image-picker:
@@ -717,7 +714,7 @@ SPEC CHECKSUMS:
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
   GoogleUtilities: eea970f4a389963963bffe8d8fabe43540678b9c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  mobile-ffmpeg-https: 311fc4a8f671cf36d1d6b8f421e8246b790978d9
+  mobile-ffmpeg-min-gpl: 123f47d1bd9ec498688627a5be2621bcd6e88a01
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   PersonalizedAdConsent: dbecabb3467df967c16d9cebc2ef4a8890e4bbd8
@@ -771,6 +768,6 @@ SPEC CHECKSUMS:
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 08b1e994342576c6d347d6c2ede29cd4d36b0d39
+PODFILE CHECKSUM: 1d9c43b7fd36339a107aa510db38890419015972
 
 COCOAPODS: 1.10.1

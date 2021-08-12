@@ -17,7 +17,13 @@ import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
 import { navigate } from '@/Navigators/Root'
-import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
+import {
+  TestIds,
+  BannerAd,
+  BannerAdSize,
+  InterstitialAd,
+  AdEventType,
+} from '@react-native-firebase/admob'
 import RNFS from 'react-native-fs'
 import { VideoUtil } from '@/Utils'
 import {
@@ -45,6 +51,12 @@ import MediaMeta from 'react-native-media-meta'
 // +get it to the point where it can accept a file as input
 // +find an arbitrary ffmpeg command and execute it
 
+// const adUnitId = __DEV__
+//   ? TestIds.INTERSTITIAL
+//   : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy'
+const adUnitId = TestIds.INTERSTITIAL
+const interstitial = InterstitialAd.createForAdRequest(adUnitId)
+
 const IndexExampleContainer = props => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
@@ -52,16 +64,24 @@ const IndexExampleContainer = props => {
 
   const [progress, setProgress] = useState(0)
   const [finished, setFinished] = useState(false)
-  // const [statistics, setStatistics] = useState(undefined)
   const [started, setStarted] = useState(false)
-  const [ii, setII] = useState(0)
+  const [error, setError] = useState(false)
+  const [adLoaded, setAdLoaded] = useState(false)
 
   useEffect(() => {
-    // setProgress(0)
-    // setFinished(false)
-    console.log('useEffect init')
+    const eventListener = interstitial.onAdEvent(type => {
+      if (type === AdEventType.LOADED) {
+        setAdLoaded(true)
+      }
+    })
+
+    interstitial.load()
     enableStatisticsCallback(statisticsCallback)
     runFFmpeg()
+
+    return () => {
+      eventListener()
+    }
   }, [])
 
   useEffect(() => {
@@ -132,7 +152,8 @@ const IndexExampleContainer = props => {
   }
 
   const runFFmpeg = () => {
-    let videoFile = `${RNFS.CachesDirectoryPath}/output.avi`
+    // CachesDirectoryPath
+    let videoFile = `${RNFS.DocumentDirectoryPath}/output.mp4`
     VideoUtil.deleteFile(videoFile)
 
     // let filePath = props?.route?.params?.filePath
@@ -183,7 +204,8 @@ const IndexExampleContainer = props => {
 
       // console.log('ffmpegCommand: ', ffmpegCommand)
       // console.log('ffmpegCommand2: ', ffmpegCommand2)
-    } else { // advanced
+    } else {
+      // advanced
       // ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
       ffmpegCommand = VideoUtil.generateAdvancedCompressionScript(
         filePath,
@@ -198,21 +220,22 @@ const IndexExampleContainer = props => {
     }
 
     executeFFmpeg(ffmpegCommand).then(result => {
+      console.log('ffmpeg result: ', result)
       if (result !== 0) {
-        // error handling: make it red. Return/Finish
+        setFinished(true)
+        setError(true) // red icon at the top.
       } else {
         setFinished(true)
         setProgress(99.9)
+        showInterstitialAd()
       }
     })
   }
 
-  const getProgress = () => {
-    if (!started && progress !== 0) {
-      setStarted(true)
-      return 20
-    } else {
-      return progress
+  const showInterstitialAd = () => {
+    let randomNumber = Math.random()
+    if (randomNumber > 0.5 && adLoaded) {
+      interstitial.show()
     }
   }
 
@@ -227,27 +250,26 @@ const IndexExampleContainer = props => {
     >
       <Image
         style={{ width: 100, height: 100 }}
-        source={finished ? Images.checkmark : Images.services}
+        source={
+          finished ? Images.checkmark : error ? Images.error : Images.services
+        }
       />
       <View style={{ alignItems: 'center' }}>
         <CircularSlider
-          // started && 
-          // oldProgress, progress
-          // 0 0
-          // 0 98
-          // 98 23
           value={!started && progress !== 0 ? 1 : progress}
           trackWidth={15}
           showText={true}
           noThumb
-          trackColor={finished ? '#00ff00' : '#0079e3'}
+          trackColor={finished ? '#00ff00' : error ? '#ff0000' : '#0079e3'}
         />
 
         <View style={{ marginTop: 15 }}>
           <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>
             {finished
-              ? 'Video saved to Files'
-              : 'Compressing video, please wait...'}
+              ? t('processing.finishedLabel')
+              : error
+              ? t('processing.processingLabel')
+              : t('processing.errorLabel')}
           </Text>
 
           <View
@@ -257,9 +279,8 @@ const IndexExampleContainer = props => {
               alignItems: 'center',
             }}
           >
-            {/* <View style={{ display: 'none' }}> */}
             <Button
-              title="Finish"
+              title={t('processing.finishButton')}
               containerStyle={{ width: 150, borderRadius: 5 }}
               titleStyle={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}
               onPress={() => navigate('Input')}

@@ -1,12 +1,42 @@
 export default {
-  welcome: 'Welcome to React Native FFMpegSuite by TheCodingMachine',
-  actions: {
-    continue: 'Continue',
+  input: {
+    inputLabel: 'Input',
+    outputLabel: 'Output',
+    photosTitle: 'Photos',
+    photosSubtitle: 'Media Library',
+    filesTitle: 'Files',
+    filesSubtitle: 'Your Files App',
+    historyTitle: 'History',
+    historySubtitle: 'Browse Converted Files',
   },
-  example: {
-    helloUser: 'I am a fake user, my name is {{name}}',
-    labels: {
-      userId: 'Enter a user id',
-    },
+  options: {
+    basicTab: 'Basic',
+    advancedTab: 'Advanced',
+    widthLabel: 'Width',
+    heightLabel: 'Height',
+    bitrateLabel: 'Bitrate',
+    framerateLabel: 'Framerate',
+    volumeLabel: 'Volume',
+    timeLabel: 'Time',
+    fasterLabel: 'Faster, Lossier',
+    slowerLabel: 'Slower, Lossless',
+    startButton: 'Start',
+  },
+  processing: {
+    finishButton: 'Finish',
+    finishedLabel: 'Video saved to Files',
+    processingLabel: ' Compressing video, please wait...',
+    errorLabel: 'There was an error during compression',
+  },
+  settings: {
+    language: 'Language',
+    rateUs: 'Rate Us',
+    recommendApp: 'Recommend App',
+    removeAds: 'Remove Ads',
+    proVersion: 'Pro Version',
+    restorePurchases: 'Restore Purchases',
+  },
+  general: {
+    headerBackTitle: 'Back',
   },
 }

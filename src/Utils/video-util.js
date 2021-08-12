@@ -7,6 +7,22 @@ import {
   setFontDirectory,
 } from './react-native-ffmpeg-api-wrapper'
 
+
+// save differently on Android and iOS // wait, I won't even need this method then (assetPath)
+  // what I will need is that RNFS exception on Android.
+// duplicate file name deal with: (1)
+// assetToFile ?? This seems to copy existing assets in VSCode to file storage
+// create a custom App folder with:
+// const    AppFolder    =     'DirNameyouwant';
+//  const DirectoryPath= RNFS.ExternalStorageDirectoryPath +'/'+ AppFolder;
+//  RNFS.mkdir(DirectoryPath);
+// DocumentDirectoryPath => here?
+// RNFS.writeFile => do I really need this??
+
+// how about on APp start you check if Documents/VideoCompressor exists
+// if not, create it
+// then with FFMpeg you write to DocumentsDirectory/VideoCompressor instead of CachesDirectory
+
 export default class VideoUtil {
   static async assetToFile(assetName) {
     let fullTemporaryPath = VideoUtil.assetPath(assetName)
@@ -90,7 +106,43 @@ export default class VideoUtil {
   }
 
   static generateBasicCompressionScript(filePath, preset, width, height) {
-    return `-i ${filePath} -preset ${preset} -vf scale="${width}:${height}" ${RNFS.CachesDirectoryPath}/output.avi`
+    let crf = 28,
+      f_preset = 'fast'
+    // preset: 4, 3, 2, 1
+
+    switch (preset) {
+      case '':
+        crf = 30
+        f_preset = 'faster'
+        break
+      case '':
+        crf = 28
+        f_preset = 'fast'
+        break
+      case '':
+        crf = 26
+        f_preset = 'fast'
+        break
+      case '':
+        crf = 24
+        f_preset = 'medium'
+        break
+      default:
+        break
+    }
+
+    let command = `-i ${filePath} -c:v libx264 -crf ${crf} -preset ${f_preset} `
+
+    if (width || height) {
+      command += `-vf scale="${width}:${height}" `
+    }
+
+    command += `${RNFS.DocumentDirectoryPath}/output.mp4`
+    // -vf scale="${width}:${height}"
+    // -c:v libx265 -crf ${crf} -preset ${f_preset}
+    // CachesDirectoryPath, DocumentDirectoryPath
+    // the following works, but 265 does not. Same error as on Mac.
+    return command
   }
 
   static generateAdvancedCompressionScript(
@@ -104,7 +156,31 @@ export default class VideoUtil {
     framerate, // 30
     // crf: 18-51? 51 fastest, 28 default.
   ) {
-    return `-i -ss ${time_start} ${filePath} -b:v ${bitrate} -b:a ${bitrate} -filter:a "volume=${volume}" -vf scale="${width}:${height}" -vf fps=${framerate} -to ${time_end} -c copy ${RNFS.CachesDirectoryPath}/output.avi`
+    let command = `-i ${filePath} `
+
+    if (bitrate) {
+      command += `-b:v ${bitrate} `
+    }
+
+    if (framerate) {
+      command += `-r ${framerate} `
+    }
+
+    if (time_start || time_end) {
+      command += `-ss ${time_start} -to ${time_end} -c copy `
+    }
+
+    if (volume) {
+      command += `-filter:a "volume=${volume}" `
+    }
+
+    if (width || height) {
+      command += `-vf scale="${width}:${height}" `
+    }
+
+    command += `${RNFS.CachesDirectoryPath}/output.mp4`
+
+    return command
   }
 
   // works!!!
@@ -123,6 +199,7 @@ export default class VideoUtil {
   // actually, it does work, you just forgot to put -vf in front.
   // instead: -r 25
 
+
   // possible, but only if you'd like to split audio and video bitrates
   // -b:v ${bitrate} -b:a ${bitrate}
   // for the same bitrate: -b 12000
@@ -132,6 +209,8 @@ export default class VideoUtil {
   // no need for the multiple filter command 
   // -vf "filter1, filter2"
   // comma separated if you do end up needing it.
+  // it works:
+  // -vf "fps=4,scale=400:200"
 
   // can combine crf with preset
   // do NOT use ultrafast!! ?????
@@ -153,6 +232,8 @@ export default class VideoUtil {
 
   // left scale: slower, lossless
 }
+
+// the above trial and erorr: 264
 // 264
 // uperfast
 // veryfast
@@ -162,6 +243,7 @@ export default class VideoUtil {
 // slow
 // slower
 // veryslow
+
 
 // 265
 // ultrafast

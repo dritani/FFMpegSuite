@@ -32,7 +32,7 @@ import { ListItem, Icon } from 'react-native-elements'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
-  
+
   const [pickedLang, setPickedLang] = useState<PickerItem>({
     label: '🇺🇸 English',
     value: 'en',
@@ -40,27 +40,15 @@ const IndexExampleContainer = () => {
 
   const languages: Array<PickerItem> = [
     { label: '🇺🇸 English', value: 'en' },
-    { label: '🇫🇷 Français', value: 'fr' },
     { label: '🇨🇳 中文', value: 'zh' },
-    { label: '🇯🇵 日本語', value: 'jp' },
-    { label: '🇩🇪 Deutsche', value: 'de' },
   ]
 
-  const list = [
-    {
-      title: 'Language',
-      icon: 'av-timer',
-    },
-    {
-      title: 'Dark Mode',
-      icon: 'flight-takeoff',
-    },
-  ]
-
-  const handleSelectLanguage = (lng: string) => {
+  const handleSelectLanguage = (lng: PickerItem) => {
+    console.log('lng')
     console.log(lng)
+    setPickedLang(lng)
+    i18n.changeLanguage(lng.value)
     // setPickedLang(lng)
-    // i18n.changeLanguage(lng)
   }
 
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -71,6 +59,7 @@ const IndexExampleContainer = () => {
   })
 
   const changeLanguage = () => {
+    console.log()
     // popup
     // i18n.changeLanguage('zh')
   }
@@ -157,11 +146,12 @@ const IndexExampleContainer = () => {
           <Icon name="globe-outline" type="ionicon" />
           <ListItem.Content>
             <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>Language</Text>
+              <Text style={Fonts.blackSettings}>{t('settings.language')}</Text>
               <Picker
                 item={pickedLang}
                 items={languages}
-                onItemChange={setPickedLang}
+                // onItemChange={setPickedLang}
+                onItemChange={handleSelectLanguage}
                 title="Language Picker"
                 placeholder="Select Language"
                 isNullable
@@ -177,7 +167,7 @@ const IndexExampleContainer = () => {
           <Icon name="star" type="ionicon" />
           <ListItem.Content>
             <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>Rate Us</Text>
+              <Text style={Fonts.blackSettings}>{t('settings.rateUs')}</Text>
               <ListItem.Chevron />
             </View>
           </ListItem.Content>
@@ -186,7 +176,9 @@ const IndexExampleContainer = () => {
           <Icon name="share-social" type="ionicon" />
           <ListItem.Content>
             <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>Recommend App</Text>
+              <Text style={Fonts.blackSettings}>
+                {t('settings.recommendApp')}
+              </Text>
               <ListItem.Chevron />
             </View>
           </ListItem.Content>
@@ -203,8 +195,9 @@ const IndexExampleContainer = () => {
           <Icon name="close-circle-outline" type="ionicon" />
           <ListItem.Content>
             <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>Remove Ads</Text>
+              <Text style={Fonts.blackSettings}>{t('settings.removeAds')}</Text>
               <Text style={Fonts.greySettings}>$ 0.99</Text>
+              {/* <ListItem.Chevron /> */}
             </View>
           </ListItem.Content>
         </ListItem>
@@ -212,8 +205,11 @@ const IndexExampleContainer = () => {
           <Icon name="key" type="ionicon" />
           <ListItem.Content>
             <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>Pro Version</Text>
+              <Text style={Fonts.blackSettings}>
+                {t('settings.proVersion')}
+              </Text>
               <Text style={Fonts.greySettings}>$ 1.99</Text>
+              {/* <ListItem.Chevron /> */}
             </View>
           </ListItem.Content>
         </ListItem>
@@ -225,7 +221,9 @@ const IndexExampleContainer = () => {
           <Icon name="refresh" type="ionicon" />
           <ListItem.Content>
             <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>Restore Purchases</Text>
+              <Text style={Fonts.blackSettings}>
+                {t('settings.restorePurchases')}
+              </Text>
               <ListItem.Chevron />
             </View>
           </ListItem.Content>

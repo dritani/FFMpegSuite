@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
@@ -10,13 +10,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { Brand } from '@/Components'
 import { useTheme } from '@/Theme'
-import FetchOne from '@/Store/User/FetchOne'
-import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
-import { UserState } from '@/Store/User'
-import { ThemeState } from '@/Store/Theme'
 import { navigate } from '@/Navigators/Root'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import { launchImageLibrary } from 'react-native-image-picker'
@@ -26,50 +21,11 @@ import TouchableScale from 'react-native-touchable-scale'
 import LinearGradient from 'react-native-linear-gradient'
 import FileViewer from 'react-native-file-viewer'
 import MediaMeta from 'react-native-media-meta'
+import RNFS from 'react-native-fs'
 
 const IndexExampleContainer = () => {
-  const list = [
-    {
-      name: 'Amy Farha',
-      avatar_url:
-        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-      subtitle: 'Vice President',
-    },
-    {
-      name: 'Chris Jackson',
-      avatar_url:
-        'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-      subtitle: 'Vice Chairman',
-    },
-  ]
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
-  const dispatch = useDispatch()
-
-  const user = useSelector((state: { user: UserState }) => state.user.item)
-  const fetchOneUserLoading = useSelector(
-    (state: { user: UserState }) => state.user.fetchOne.loading,
-  )
-  const fetchOneUserError = useSelector(
-    (state: { user: UserState }) => state.user.fetchOne.error,
-  )
-
-  const [userId, setUserId] = useState('1')
-
-  const fetch = (id: string) => {
-    setUserId(id)
-    if (id) {
-      dispatch(FetchOne.action(id))
-    }
-  }
-
-  const changeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-    dispatch(ChangeTheme.action({ theme, darkMode }))
-  }
-
-  const pushNext = (path: string, params: string) => {
-    navigate(path, params)
-  }
 
   const handleLibraryPick = () => {
     launchImageLibrary(
@@ -93,16 +49,22 @@ const IndexExampleContainer = () => {
   const handleFilePick = async () => {
     try {
       const res = await DocumentPicker.pick({
-        // type: [DocumentPicker.types.video], // => necessary
+        type: [DocumentPicker.types.video], // => necessary
       })
-      // this.setState({videoURI: res.uri})
+
       let filePath = res.uri
-      MediaMeta.get(filePath)
-        .then(metadata => {
-          let duration = metadata.duration
-          navigate('Options', { filePath, duration })
-        })
-        .catch(err => {})
+      console.log('res: ', res)
+
+      navigate('Options', { filePath, duration: 31 })
+      // MediaMeta.get(filePath)
+      //   .then(metadata => {
+      //     console.log('file pick successful: ', metadata)
+      //     let duration = metadata.duration
+      //     navigate('Options', { filePath, duration })
+      //   })
+      //   .catch(err => {
+      //     console.log('file pick error: ', err)
+      //   })
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on
@@ -113,15 +75,27 @@ const IndexExampleContainer = () => {
   }
 
   const handleHistory = async () => {
-    pushNext('Options', 'History')
-    // try {
-    //   const res = await DocumentPicker.pick({
-    //     type: [DocumentPicker.types.allFiles],
-    //   })
-    //   await FileViewer.open(res.uri)
-    // } catch (e) {
+    // WORKS!!! But there is no longer any need.
+    // let folderPath = `${RNFS.DocumentDirectoryPath}/Hello`
+    // RNFS.mkdir(folderPath, {
+    //   NSURLIsExcludedFromBackupKey: true,
+    // })
+    // console.log('directory "Hello" created')
 
-    // }
+    // pushNext('Options', 'History')
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+        mode: 'open',
+      })
+      await FileViewer.open(res.uri)
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err
+      }
+    }
   }
 
   return (
@@ -144,7 +118,7 @@ const IndexExampleContainer = () => {
               marginBottom: 15,
             }}
           >
-            Input
+            {t('input.inputLabel')}
           </Text>
 
           <ListItem
@@ -171,12 +145,12 @@ const IndexExampleContainer = () => {
                   fontFamily: 'Nunito-Regular',
                 }}
               >
-                Photos
+                {t('input.photosTitle')}
               </ListItem.Title>
               <ListItem.Subtitle
                 style={{ color: 'white', fontFamily: 'Nunito-Regular' }}
               >
-                Media Library
+                {t('input.photosSubtitle')}
               </ListItem.Subtitle>
             </ListItem.Content>
             <ListItem.Chevron color="white" />
@@ -206,12 +180,12 @@ const IndexExampleContainer = () => {
                   fontFamily: 'Nunito-Regular',
                 }}
               >
-                Files
+                {t('input.filesTitle')}
               </ListItem.Title>
               <ListItem.Subtitle
                 style={{ color: 'white', fontFamily: 'Nunito-Regular' }}
               >
-                Your Files App
+                {t('input.filesSubtitle')}
               </ListItem.Subtitle>
             </ListItem.Content>
             <ListItem.Chevron color="white" />
@@ -226,7 +200,7 @@ const IndexExampleContainer = () => {
               marginBottom: 15,
             }}
           >
-            Output
+            {t('input.outputLabel')}
           </Text>
           <ListItem
             containerStyle={{ borderRadius: 10 }}
@@ -252,12 +226,12 @@ const IndexExampleContainer = () => {
                   fontFamily: 'Nunito-Regular',
                 }}
               >
-                History
+                {t('input.historyTitle')}
               </ListItem.Title>
               <ListItem.Subtitle
                 style={{ color: 'white', fontFamily: 'Nunito-Regular' }}
               >
-                Browse Converted Files
+                {t('input.historySubtitle')}
               </ListItem.Subtitle>
             </ListItem.Content>
             <ListItem.Chevron color="white" />
@@ -265,6 +239,9 @@ const IndexExampleContainer = () => {
         </View>
       </ScrollView>
 
+      {/* <View>
+        
+      </View> */}
       <BannerAd
         unitId={TestIds.BANNER}
         size={BannerAdSize.SMART_BANNER}

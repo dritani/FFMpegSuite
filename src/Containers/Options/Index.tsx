@@ -9,6 +9,31 @@ import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import StepIndicator from 'react-native-step-indicator'
 
+
+// width, height
+// number inputBackground// keypad only
+// check that they are numbers, otherwise refuse to push
+// greater than 1, less than 10000
+// greater than 1, less than 10000
+
+// framerate
+  // greater than 1, less than 1000
+
+// bitrate: 50k - 1M
+
+// time
+  // 0 => 00:00:00
+  // video max length accurately. convert seconds to hours:minutes:seconds in display
+  // max selected by default
+
+// volume
+  // 0 to 5, default is 1
+
+
+
+
+
+
 // presets
 // compression ratio
 // width, height
@@ -18,7 +43,6 @@ import StepIndicator from 'react-native-step-indicator'
 // volume
 // bitrate
 // framerate
-// width, height
 // time (full)
 
 const IndexExampleContainer = props => {
@@ -28,14 +52,14 @@ const IndexExampleContainer = props => {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const [width, setWidth] = useState(400)
-  const [height, setHeight] = useState(400)
-  const [volume, setVolume] = useState(100)
-  const [time_start, setTimeStart] = useState(0)
-  const [time_end, setTimeEnd] = useState(300)
-  const [framerate, setFramerate] = useState(30) // fps
-  const [bitrate, setBitrate] = useState(1200)
-  const [preset, setPreset] = useState('ultrafast') // ffmpeg has normal, fast, fastest?
+  const [width, setWidth] = useState(null)
+  const [height, setHeight] = useState(null)
+  const [volume, setVolume] = useState(null)
+  const [time_start, setTimeStart] = useState(null)
+  const [time_end, setTimeEnd] = useState(null)
+  const [framerate, setFramerate] = useState(null)
+  const [bitrate, setBitrate] = useState(null)
+  const [preset, setPreset] = useState(null) // ffmpeg has normal, fast, fastest?
   // might be better to use crf values
 
   const [currentPosition] = useState(0)
@@ -46,6 +70,7 @@ const IndexExampleContainer = props => {
     'Payment Method',
     'Track',
   ]
+
   const customStyles = {
     stepIndicatorSize: 25,
     currentStepIndicatorSize: 30,
@@ -73,21 +98,46 @@ const IndexExampleContainer = props => {
   const basicTab = () => {
     return (
       <View>
-        <View>
-          <Button title="fastest" />
+        {/* <View>
+          <Button title="fastest" onPress={() => {}} />
           <Button title="faster" />
           <Button title="normal" />
           <Button title="slower" />
-        </View>
-        <StepIndicator
+        </View> */}
+        {/* <StepIndicator
           customStyles={customStyles}
           currentPosition={currentPosition}
           labels={labels}
-        />
-        <View>
-          <Input type="text" placeholder="Width" />
-          <Input type="text" placeholder="Height" />
+        /> */}
+
+        
+        <View
+        //  style={{ flex: 1 }}
+        >
+          <Input style={{flex: 1}} type="number" placeholder={t('options.widthLabel')} />
+          <Text>X</Text>
+          <Input style={{flex: 1}} type="number" placeholder={t('options.heightLabel')} />
         </View>
+        {/* <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 100,
+          }}
+        >
+          <Input
+            style={{ marginTop: 40 }}
+            label={t('options.widthLabel')}
+            type="number"
+            placeholder="optional1"
+          />
+          <Input
+            label={t('options.heightLabel')}
+            type="number"
+            placeholder="optional2"
+          />
+        </View> */}
       </View>
     )
   }
@@ -96,15 +146,15 @@ const IndexExampleContainer = props => {
     return (
       <View>
         <View>
-          <Input type="text" placeholder="Width" />
-          <Input type="text" placeholder="Height" />
+          <Input type="text" placeholder={t('options.widthLabel')} />
+          <Input type="text" placeholder={t('options.heightLabel')} />
         </View>
 
-        <Input type="text" placeholder="Bitrate" />
-        <Input type="text" placeholder="Framerate" />
+        <Input type="text" placeholder={t('options.bitrateLabel')} />
+        <Input type="text" placeholder={t('options.framerateLabel')} />
 
         <MultiSlider values={[100, 200]} />
-        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>Time</Text>
+        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>{t('options.timeLabel')}</Text>
 
         <Slider
           thumbTintColor="blue"
@@ -112,7 +162,7 @@ const IndexExampleContainer = props => {
           thumbStyle={{ height: 30, width: 30 }}
         />
         <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>
-          Volume
+          {t('options.volumeLabel')}
         </Text>
       </View>
     )
@@ -157,7 +207,7 @@ const IndexExampleContainer = props => {
           ]}
         >
           <SegmentedControlTab
-            values={['Basic', 'Advanced']}
+            values={[t('options.basicTab'), t('options.advancedTab')]}
             tabTextStyle={{ fontFamily: 'Nunito-Regular', fontSize: 15 }}
             selectedIndex={selectedIndex}
             onTabPress={index => {
@@ -176,7 +226,7 @@ const IndexExampleContainer = props => {
           }}
         >
           <Button
-            title="Start"
+            title={t('options.startButton')}
             titleStyle={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}
             containerStyle={{ width: 150, borderRadius: 5 }}
             onPress={handleStart}

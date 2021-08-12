@@ -4,7 +4,6 @@ import {
   InputContainer,
   OptionsContainer,
   ProcessingContainer,
-  ResultsContainer,
   SettingsContainer,
 } from '@/Containers'
 import { useSelector } from 'react-redux'
@@ -15,6 +14,7 @@ import { useTheme } from '@/Theme'
 import { StartupState } from '@/Store/Startup'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Avatar } from 'react-native-elements'
+import { useTranslation } from 'react-i18next'
 
 const Stack = createStackNavigator()
 
@@ -23,6 +23,7 @@ let MainNavigator: FunctionComponent | null
 // Hide it for Processing screen: headerBackTitleVisible: false, gestureEnabled: false. screenOptions
 
 const ApplicationNavigator = () => {
+  const { t } = useTranslation()
   const { Layout, darkMode, NavigationTheme, Images } = useTheme()
   const { colors } = NavigationTheme
   const [isApplicationLoaded, setIsApplicationLoaded] = useState(false)
@@ -78,7 +79,7 @@ const ApplicationNavigator = () => {
             },
             title: '',
             headerTintColor: '#0066FF',
-            headerBackTitle: 'Back',
+            headerBackTitle: t('general.headerBackTitle'),
           }}
 
           // title="title"
@@ -104,7 +105,6 @@ const ApplicationNavigator = () => {
             name="Processing"
             component={ProcessingContainer}
           />
-          <Stack.Screen name="Results" component={ResultsContainer} />
           <Stack.Screen name="Settings" component={SettingsContainer} />
         </Stack.Navigator>
       </NavigationContainer>
