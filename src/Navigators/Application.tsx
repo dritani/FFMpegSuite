@@ -66,7 +66,7 @@ const ApplicationNavigator = () => {
   return (
     <SafeAreaView style={[Layout.fill, { backgroundColor: '#FFFFFF' }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
-        <StatusBar barStyle="light-content" />
+        <StatusBar hidden={true} />
         <Stack.Navigator
           headerMode="float"
           initialRouteName="Input"

@@ -29,6 +29,7 @@ import Rate, { AndroidMarket } from 'react-native-rate'
 import type { PickerItem } from 'react-native-woodpicker'
 import { Picker } from 'react-native-woodpicker'
 import { ListItem, Icon } from 'react-native-elements'
+import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -44,29 +45,25 @@ const IndexExampleContainer = () => {
   ]
 
   const handleSelectLanguage = (lng: PickerItem) => {
-    console.log('lng')
-    console.log(lng)
     setPickedLang(lng)
     i18n.changeLanguage(lng.value)
-    // setPickedLang(lng)
+    // localstorage save
   }
 
   const { Common, Fonts, Gutters, Layout } = useTheme()
 
   const itemSkus = Platform.select({
-    ios: ['888', '999'],
+    ios: ['videoCompressor.noAds', 'videoCompressor.pro'],
     android: ['888', '999'],
   })
 
-  const changeLanguage = () => {
-    console.log()
-    // popup
-    // i18n.changeLanguage('zh')
+  const handlePurchaseAds = () => {
+
   }
 
-  const handlePurchaseAds = () => {}
+  const handlePurchasePro = () => {
 
-  const handlePurchasePro = () => {}
+  }
 
   const handleRestorePurchases = async () => {
     try {
@@ -140,95 +137,111 @@ const IndexExampleContainer = () => {
   // language picker component:
   // https://github.com/thodubois/react-native-woodpicker
   return (
-    <View style={[Layout.fill, Layout.column, { backgroundColor: '#f2f2f2' }]}>
-      <View style={Gutters.smallTMargin}>
-        <ListItem key="row_lang" topDivider bottomDivider>
-          <Icon name="globe-outline" type="ionicon" />
-          <ListItem.Content>
-            <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>{t('settings.language')}</Text>
-              <Picker
-                item={pickedLang}
-                items={languages}
-                // onItemChange={setPickedLang}
-                onItemChange={handleSelectLanguage}
-                title="Language Picker"
-                placeholder="Select Language"
-                isNullable
-                //backdropAnimation={{ opactity: 0 }}
-                //mode="dropdown"
-                //isNullable
-                //disable
-              />
+    <View style={[Layout.fill, Layout.column, { backgroundColor: '#f2f2f2', justifyContent: 'space-between' }]}>
+      <View>
+        <View style={Gutters.smallTMargin}>
+              <ListItem key="row_lang" topDivider bottomDivider>
+                <Icon name="globe-outline" type="ionicon" />
+                <ListItem.Content>
+                  <View style={Layout.rowBetween}>
+                    <Text style={Fonts.blackSettings}>{t('settings.language')}</Text>
+                    <Picker
+                      item={pickedLang}
+                      items={languages}
+                      // onItemChange={setPickedLang}
+                      onItemChange={handleSelectLanguage}
+                      title="Language Picker"
+                      placeholder="Select Language"
+                      isNullable
+                      //backdropAnimation={{ opactity: 0 }}
+                      //mode="dropdown"
+                      //isNullable
+                      //disable
+                    />
+                  </View>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem key={'row_rating'} bottomDivider onPress={handleRate}>
+                <Icon name="star" type="ionicon" />
+                <ListItem.Content>
+                  <View style={Layout.rowBetween}>
+                    <Text style={Fonts.blackSettings}>{t('settings.rateUs')}</Text>
+                    <ListItem.Chevron />
+                  </View>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem key={'row_recommend'} bottomDivider onPress={handleRecommend}>
+                <Icon name="share-social" type="ionicon" />
+                <ListItem.Content>
+                  <View style={Layout.rowBetween}>
+                    <Text style={Fonts.blackSettings}>
+                      {t('settings.recommendApp')}
+                    </Text>
+                    <ListItem.Chevron />
+                  </View>
+                </ListItem.Content>
+              </ListItem>
             </View>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem key={'row_rating'} bottomDivider onPress={handleRate}>
-          <Icon name="star" type="ionicon" />
-          <ListItem.Content>
-            <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>{t('settings.rateUs')}</Text>
-              <ListItem.Chevron />
+
+        <View style={Gutters.smallTMargin}>
+              <ListItem
+                key={'row_ads'}
+                topDivider
+                bottomDivider
+                onPress={handlePurchaseAds}
+              >
+                <Icon name="close-circle-outline" type="ionicon" />
+                <ListItem.Content>
+                  <View style={Layout.rowBetween}>
+                    <Text style={Fonts.blackSettings}>{t('settings.removeAds')}</Text>
+                    <Text style={Fonts.greySettings}>$ 0.99</Text>
+                    {/* <ListItem.Chevron /> */}
+                  </View>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem key={'row_pro'} bottomDivider onPress={handlePurchasePro}>
+                <Icon name="key" type="ionicon" />
+                <ListItem.Content>
+                  <View style={Layout.rowBetween}>
+                    <Text style={Fonts.blackSettings}>
+                      {t('settings.proVersion')}
+                    </Text>
+                    <Text style={Fonts.greySettings}>$ 1.99</Text>
+                    {/* <ListItem.Chevron /> */}
+                  </View>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem
+                key={'row_restore'}
+                bottomDivider
+                onPress={handleRestorePurchases}
+              >
+                <Icon name="refresh" type="ionicon" />
+                <ListItem.Content>
+                  <View style={Layout.rowBetween}>
+                    <Text style={Fonts.blackSettings}>
+                      {t('settings.restorePurchases')}
+                    </Text>
+                    <ListItem.Chevron />
+                  </View>
+                </ListItem.Content>
+              </ListItem>
             </View>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem key={'row_recommend'} bottomDivider onPress={handleRecommend}>
-          <Icon name="share-social" type="ionicon" />
-          <ListItem.Content>
-            <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>
-                {t('settings.recommendApp')}
-              </Text>
-              <ListItem.Chevron />
-            </View>
-          </ListItem.Content>
-        </ListItem>
       </View>
 
-      <View style={Gutters.smallTMargin}>
-        <ListItem
-          key={'row_ads'}
-          topDivider
-          bottomDivider
-          onPress={handlePurchaseAds}
-        >
-          <Icon name="close-circle-outline" type="ionicon" />
-          <ListItem.Content>
-            <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>{t('settings.removeAds')}</Text>
-              <Text style={Fonts.greySettings}>$ 0.99</Text>
-              {/* <ListItem.Chevron /> */}
-            </View>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem key={'row_pro'} bottomDivider onPress={handlePurchasePro}>
-          <Icon name="key" type="ionicon" />
-          <ListItem.Content>
-            <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>
-                {t('settings.proVersion')}
-              </Text>
-              <Text style={Fonts.greySettings}>$ 1.99</Text>
-              {/* <ListItem.Chevron /> */}
-            </View>
-          </ListItem.Content>
-        </ListItem>
-        <ListItem
-          key={'row_restore'}
-          bottomDivider
-          onPress={handleRestorePurchases}
-        >
-          <Icon name="refresh" type="ionicon" />
-          <ListItem.Content>
-            <View style={Layout.rowBetween}>
-              <Text style={Fonts.blackSettings}>
-                {t('settings.restorePurchases')}
-              </Text>
-              <ListItem.Chevron />
-            </View>
-          </ListItem.Content>
-        </ListItem>
-      </View>
+      <BannerAd
+        unitId={TestIds.BANNER}
+        size={BannerAdSize.SMART_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdLoaded={() => {
+          // console.log('Advert loaded')
+        }}
+        onAdFailedToLoad={error => {
+          // console.error('Advert failed to load: ', error)
+        }}
+      />
     </View>
   )
 }

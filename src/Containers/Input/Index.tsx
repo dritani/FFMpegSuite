@@ -1,15 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  View,
-  Button,
-  ActivityIndicator,
-  Text,
-  TextInput,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native'
+import React from 'react'
+import { View, Text, ScrollView } from 'react-native'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
 import { navigate } from '@/Navigators/Root'
@@ -67,7 +57,7 @@ const IndexExampleContainer = () => {
       //   })
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
+        // User cancelled the picker
       } else {
         throw err
       }
@@ -75,14 +65,6 @@ const IndexExampleContainer = () => {
   }
 
   const handleHistory = async () => {
-    // WORKS!!! But there is no longer any need.
-    // let folderPath = `${RNFS.DocumentDirectoryPath}/Hello`
-    // RNFS.mkdir(folderPath, {
-    //   NSURLIsExcludedFromBackupKey: true,
-    // })
-    // console.log('directory "Hello" created')
-
-    // pushNext('Options', 'History')
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
@@ -91,7 +73,7 @@ const IndexExampleContainer = () => {
       await FileViewer.open(res.uri)
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
+        // User cancelled the picker
       } else {
         throw err
       }
@@ -104,7 +86,6 @@ const IndexExampleContainer = () => {
         Layout.fill,
         Layout.column,
         Layout.scrollSpaceBetween,
-        // Layout.scrollSpaceStart,
         Gutters.smallHPadding,
         Common.backgroundWhite,
       ]}
@@ -240,7 +221,7 @@ const IndexExampleContainer = () => {
       </ScrollView>
 
       {/* <View>
-        
+
       </View> */}
       <BannerAd
         unitId={TestIds.BANNER}

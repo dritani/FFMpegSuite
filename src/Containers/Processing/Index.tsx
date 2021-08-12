@@ -289,6 +289,9 @@ const IndexExampleContainer = props => {
         </View>
       </View>
 
+      {/* <View>
+
+      </View> */}
       <BannerAd
         unitId={TestIds.BANNER}
         size={BannerAdSize.SMART_BANNER}

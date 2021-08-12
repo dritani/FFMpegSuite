@@ -10,6 +10,7 @@ const locale =
       NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
     : NativeModules.I18nManager.localeIdentifier
 
+// should I check here if the language has been saved previously? Indeed.
 i18n.use(initReactI18next).init({
   resources: {
     ...Object.entries(resources).reduce(
