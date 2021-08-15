@@ -18,14 +18,15 @@ export default {
     framerateLabel: 'Framerate',
     volumeLabel: 'Volume',
     timeLabel: 'Time',
-    fasterLabel: 'Faster, Lossier',
-    slowerLabel: 'Slower, Lossless',
+    compressionLabel: 'Compression Speed',
+    fasterLabel: 'Faster\nLossier',
+    slowerLabel: 'Slower\n   Lossless',
     startButton: 'Start',
   },
   processing: {
     finishButton: 'Finish',
     finishedLabel: 'Video saved to Files',
-    processingLabel: ' Compressing video, please wait...',
+    processingLabel: 'Compressing video, please wait...',
     errorLabel: 'There was an error during compression',
   },
   settings: {

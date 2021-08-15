@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, createContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
@@ -20,6 +20,10 @@ import RNIap, {
   Product,
   ProductPurchase,
   PurchaseError,
+  
+  InAppPurchase,
+  finishTransaction,
+
   acknowledgePurchaseAndroid,
   purchaseErrorListener,
   purchaseUpdatedListener,
@@ -30,6 +34,10 @@ import type { PickerItem } from 'react-native-woodpicker'
 import { Picker } from 'react-native-woodpicker'
 import { ListItem, Icon } from 'react-native-elements'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+let purchaseUpdateSubscription: EmitterSubscription
+let purchaseErrorSubscription: EmitterSubscription
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -38,6 +46,12 @@ const IndexExampleContainer = () => {
     label: '🇺🇸 English',
     value: 'en',
   })
+  // this one should just be the index tbh...
+
+  // useEffect(() => {
+  //   let language = AsyncStorage.getItem('language')
+  //   setPickedLang()
+  // }, [])
 
   const languages: Array<PickerItem> = [
     { label: '🇺🇸 English', value: 'en' },
@@ -54,7 +68,13 @@ const IndexExampleContainer = () => {
 
   const itemSkus = Platform.select({
     ios: ['videoCompressor.noAds', 'videoCompressor.pro'],
-    android: ['888', '999'],
+    android: ['888', '999'], // todo
+  })
+
+  const IAPContext = createContext<IAPContext>({
+    isSubscription: false,
+    subscription: undefined,
+    showPurchase: () => {},
   })
 
   const handlePurchaseAds = () => {

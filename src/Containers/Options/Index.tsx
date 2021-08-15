@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { Slider, Input, Text, Button } from 'react-native-elements'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
@@ -9,41 +9,36 @@ import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import StepIndicator from 'react-native-step-indicator'
 
+// ffprobe on the file received
+  // detect if the file is longer than 3 minutes
+// save prefs: default speed & advanced tab or not - don't bother
+
+
+
+
+
 
 // width, height
 // number inputBackground// keypad only
 // check that they are numbers, otherwise refuse to push
-// greater than 1, less than 10000
-// greater than 1, less than 10000
+// greater than 10, less than 10000
+// greater than 10, less than 10000
 
 // framerate
-  // greater than 1, less than 1000
+// greater than 1, less than 1000
 
-// bitrate: 50k - 1M
+// bitrate: 50k - 1M ???
 
 // time
-  // 0 => 00:00:00
-  // video max length accurately. convert seconds to hours:minutes:seconds in display
-  // max selected by default
+// 0 => 00:00:00
+// video max length accurately. convert seconds to hours:minutes:seconds in display
+// max selected by default
+// max 3m free
 
 // volume
-  // 0 to 5, default is 1
+// 0 to 5, default is 1
 
-
-
-
-
-
-// presets
-// compression ratio
-// width, height
-// time range (max 45s)
-
-// advanced
-// volume
-// bitrate
-// framerate
-// time (full)
+// Premium button => crown, locked. Click => Buy
 
 const IndexExampleContainer = props => {
   const { t } = useTranslation()
@@ -51,120 +46,297 @@ const IndexExampleContainer = props => {
   const { Common, Fonts, Gutters, Layout } = useTheme()
 
   const [selectedIndex, setSelectedIndex] = useState(0)
-
+  const [scrollEnabled, setScrollEnabled] = useState(true)
   const [width, setWidth] = useState(null)
   const [height, setHeight] = useState(null)
-  const [volume, setVolume] = useState(null)
+  const [volume, setVolume] = useState(0.166)
   const [time_start, setTimeStart] = useState(null)
   const [time_end, setTimeEnd] = useState(null)
   const [framerate, setFramerate] = useState(null)
   const [bitrate, setBitrate] = useState(null)
-  const [preset, setPreset] = useState(null) // ffmpeg has normal, fast, fastest?
+  const [preset] = useState(null) // ffmpeg has normal, fast, fastest?
   // might be better to use crf values
 
-  const [currentPosition] = useState(0)
-  const labels = [
-    'Cart',
-    'Delivery Address',
-    'Order Summary',
-    'Payment Method',
-    'Track',
-  ]
+  const [currentPreset, setPreset] = useState(2)
+  const labels = [t('options.slowerLabel'), '', '', t('options.fasterLabel')]
 
   const customStyles = {
     stepIndicatorSize: 25,
     currentStepIndicatorSize: 30,
     separatorStrokeWidth: 2,
     currentStepStrokeWidth: 3,
-    stepStrokeCurrentColor: '#fe7013',
+    stepStrokeCurrentColor: '#0066ff',
     stepStrokeWidth: 3,
-    stepStrokeFinishedColor: '#fe7013',
-    stepStrokeUnFinishedColor: '#aaaaaa',
-    separatorFinishedColor: '#fe7013',
-    separatorUnFinishedColor: '#aaaaaa',
-    stepIndicatorFinishedColor: '#fe7013',
+    stepStrokeFinishedColor: '#0066ff',
+    stepStrokeUnFinishedColor: '#0066ff',
+    separatorFinishedColor: '#0066ff',
+    separatorUnFinishedColor: '#0066ff',
+    stepIndicatorFinishedColor: '#ffffff',
     stepIndicatorUnFinishedColor: '#ffffff',
-    stepIndicatorCurrentColor: '#ffffff',
-    stepIndicatorLabelFontSize: 13,
-    currentStepIndicatorLabelFontSize: 13,
-    stepIndicatorLabelCurrentColor: '#fe7013',
-    stepIndicatorLabelFinishedColor: '#ffffff',
-    stepIndicatorLabelUnFinishedColor: '#aaaaaa',
-    labelColor: '#999999',
-    labelSize: 13,
-    currentStepLabelColor: '#fe7013',
+    stepIndicatorCurrentColor: '#0066ff',
+    stepIndicatorLabelFontSize: 15,
+    currentStepIndicatorLabelFontSize: 15,
+    stepIndicatorLabelCurrentColor: '#ffffff',
+    stepIndicatorLabelFinishedColor: '#0066ff',
+    stepIndicatorLabelUnFinishedColor: '#0066ff',
+    labelColor: '#000000',
+    labelSize: 15,
+    currentStepLabelColor: '#000000',
+    labelFontFamily: 'Nunito-Regular',
   }
 
   const basicTab = () => {
     return (
       <View>
-        {/* <View>
-          <Button title="fastest" onPress={() => {}} />
-          <Button title="faster" />
-          <Button title="normal" />
-          <Button title="slower" />
-        </View> */}
-        {/* <StepIndicator
-          customStyles={customStyles}
-          currentPosition={currentPosition}
-          labels={labels}
-        /> */}
-
-        
         <View
-        //  style={{ flex: 1 }}
+          style={[
+            styles.container,
+            { flexDirection: 'column', justifyContent: 'flex-start' },
+          ]}
         >
-          <Input style={{flex: 1}} type="number" placeholder={t('options.widthLabel')} />
-          <Text>X</Text>
-          <Input style={{flex: 1}} type="number" placeholder={t('options.heightLabel')} />
+          {/* <Text>Preset</Text> */}
+          <View style={[styles.container, { flexDirection: 'row' }]}>
+            <View style={[styles.box]}>
+              <Text
+                style={[
+                  Gutters.smallLMargin,
+                  { fontFamily: 'Nunito-Regular', fontSize: 15 },
+                ]}
+              >
+                {t('options.widthLabel')}
+              </Text>
+              <Input
+                style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
+                type="number"
+                keyboardType="numeric"
+                placeholder="-"
+              />
+            </View>
+            <View style={[styles.box]}>
+              <Text
+                style={[
+                  Gutters.smallLMargin,
+                  { fontFamily: 'Nunito-Regular', fontSize: 15 },
+                ]}
+              >
+                {t('options.heightLabel')}
+              </Text>
+              <Input
+                style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
+                type="number"
+                keyboardType="numeric"
+                placeholder="-"
+              />
+            </View>
+          </View>
         </View>
-        {/* <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 100,
-          }}
+        <View style={{ marginTop: 100 }} />
+        <Text
+          style={[
+            Gutters.smallLMargin,
+            { fontFamily: 'Nunito-Regular', fontSize: 15 },
+          ]}
         >
-          <Input
-            style={{ marginTop: 40 }}
-            label={t('options.widthLabel')}
-            type="number"
-            placeholder="optional1"
-          />
-          <Input
-            label={t('options.heightLabel')}
-            type="number"
-            placeholder="optional2"
-          />
-        </View> */}
+          {t('options.compressionLabel')}
+        </Text>
+        <View style={{ marginTop: 20 }} />
+        <StepIndicator
+          customStyles={customStyles}
+          currentPosition={currentPreset}
+          labels={labels}
+          stepCount={5}
+          onPress={e => setPreset(e)}
+        />
       </View>
     )
   }
 
   const advancedTab = () => {
     return (
-      <View>
-        <View>
-          <Input type="text" placeholder={t('options.widthLabel')} />
-          <Input type="text" placeholder={t('options.heightLabel')} />
+      <ScrollView
+        scrollEnabled={scrollEnabled}
+        containerStyle={[
+          styles.container,
+          { flexDirection: 'column', justifyContent: 'flex-start' },
+        ]}
+      >
+        <View style={[styles.container, { flexDirection: 'row' }]}>
+          <View style={[styles.box]}>
+            <Text
+              style={[
+                Gutters.smallLMargin,
+                { fontFamily: 'Nunito-Regular', fontSize: 15 },
+              ]}
+            >
+              {t('options.widthLabel')}
+            </Text>
+            <Input
+              style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
+              type="number"
+              keyboardType="numeric"
+              placeholder="-"
+            />
+          </View>
+          <View style={[styles.box]}>
+            <Text
+              style={[
+                Gutters.smallLMargin,
+                { fontFamily: 'Nunito-Regular', fontSize: 15 },
+              ]}
+            >
+              {t('options.heightLabel')}
+            </Text>
+            <Input
+              style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
+              type="number"
+              keyboardType="numeric"
+              placeholder="-"
+            />
+          </View>
         </View>
+        <View
+          style={[styles.container, { flexDirection: 'row', marginTop: 40 }]}
+        >
+          <View style={[styles.box]}>
+            <Text
+              style={[
+                Gutters.smallLMargin,
+                { fontFamily: 'Nunito-Regular', fontSize: 15 },
+              ]}
+            >
+              {t('options.bitrateLabel')}
+            </Text>
+            <Input
+              style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
+              type="number"
+              keyboardType="numeric"
+              placeholder="-"
+            />
+          </View>
+          <View style={[styles.box]}>
+            <Text
+              style={[
+                Gutters.smallLMargin,
+                { fontFamily: 'Nunito-Regular', fontSize: 15 },
+              ]}
+            >
+              {t('options.framerateLabel')}
+            </Text>
+            <Input
+              style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
+              type="number"
+              keyboardType="numeric"
+              placeholder="-"
+            />
+          </View>
+        </View>
+        <View
+          style={[styles.container, { flexDirection: 'row', marginTop: 40 }]}
+        >
+          <View
+            style={{
+              height: 50,
+            }}
+          >
+            <Text
+              style={[
+                Gutters.smallLMargin,
+                { fontFamily: 'Nunito-Regular', fontSize: 15 },
+              ]}
+            >
+              {t('options.timeLabel')}
+            </Text>
+            <MultiSlider
+              containerStyle={{ marginLeft: 10 }}
+              selectedStyle={{ height: 4, backgroundColor: '#0066ff' }}
+              unselectedStyle={{ height: 4 }}
+              markerStyle={{
+                shadowColor: 'transparent',
+                boxShadow: 'none',
+                borderWidth: 0,
+                borderColor: 'transparent',
+                backgroundColor: '#0066ff',
+                height: 25,
+                width: 25,
+              }}
+              snapped={true}
+              smoothSnapped={true}
+              min={0}
+              max={300}
+              step={25}
+              values={[100, 200]}
+              onValuesChange={a => console.log(a)}
+              sliderLength={350}
+              onValuesChangeStart={() => setScrollEnabled(false)}
+              onValuesChangeFinish={() => setScrollEnabled(true)}
+            />
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
+              <Text
+                style={[
+                  Gutters.smallLMargin,
+                  { fontFamily: 'Nunito-Regular', fontSize: 15 },
+                ]}
+              >
+                00:00:00
+              </Text>
+              <Text style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}>
+                51 s
+              </Text>
+              <Text
+                style={[
+                  Gutters.smallRMargin,
+                  { fontFamily: 'Nunito-Regular', fontSize: 15 },
+                ]}
+              >
+                00:31:15
+              </Text>
+            </View>
+          </View>
 
-        <Input type="text" placeholder={t('options.bitrateLabel')} />
-        <Input type="text" placeholder={t('options.framerateLabel')} />
-
-        <MultiSlider values={[100, 200]} />
-        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>{t('options.timeLabel')}</Text>
-
-        <Slider
-          thumbTintColor="blue"
-          value={0.33}
-          thumbStyle={{ height: 30, width: 30 }}
-        />
-        <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>
-          {t('options.volumeLabel')}
-        </Text>
-      </View>
+        </View>
+        <View
+          style={[styles.container, { flexDirection: 'row', marginTop: 60 }]}
+        >
+          <View
+            style={{
+              height: 50,
+              width: '100%',
+            }}
+          >
+            <Text
+              style={[
+                Gutters.smallLMargin,
+                { fontFamily: 'Nunito-Regular', fontSize: 15 },
+              ]}
+            >
+              {t('options.volumeLabel')}
+            </Text>
+            <Slider
+              style={{ width: '95%', alignSelf: 'center' }}
+              thumbTintColor="#0066ff"
+              minimumTrackTintColor="#0066ff"
+              minimumValue={0}
+              maximumValue={1}
+              value={volume}
+              onValueChange={value => {
+                return setVolume(value)
+              }}
+              thumbStyle={{ height: 25, width: 25 }}
+            />
+            <Text
+              style={{
+                alignSelf: 'center',
+                fontFamily: 'Nunito-Regular',
+                fontSize: 15,
+              }}
+            >
+              100 %
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
     )
   }
 
@@ -249,5 +421,50 @@ const IndexExampleContainer = props => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // height: '100%',
+    // marginTop: 8,
+    // backgroundColor: 'aliceblue',
+  },
+  box: {
+    width: '50%',
+    height: 50,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  button: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 4,
+    backgroundColor: 'oldlace',
+    alignSelf: 'flex-start',
+    marginHorizontal: '1%',
+    marginBottom: 6,
+    minWidth: '48%',
+    textAlign: 'center',
+  },
+  selected: {
+    backgroundColor: 'coral',
+    borderWidth: 0,
+  },
+  buttonLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: 'coral',
+  },
+  selectedLabel: {
+    color: 'white',
+  },
+  label: {
+    textAlign: 'center',
+    marginBottom: 10,
+    fontSize: 24,
+  },
+})
 
 export default IndexExampleContainer

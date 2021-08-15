@@ -18,8 +18,9 @@ export default {
     framerateLabel: '帧率',
     volumeLabel: '音量',
     timeLabel: '时间',
-    fastLabel: '更快，有损',
-    slowLabel: '更慢，无损',
+    compressionLabel: '压缩速度',
+    fasterLabel: '更快\n有损',
+    slowerLabel: '更慢\n无损',
     startButton: '开始',
   },
   processing: {
