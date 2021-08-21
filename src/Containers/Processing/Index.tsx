@@ -109,6 +109,7 @@ const IndexExampleContainer = props => {
     let timeInMilliseconds = statistics.time
     if (timeInMilliseconds > 0) {
       let duration = props?.route?.params?.duration
+      // let duration = 30.526667
       let totalVideoDuration = duration * 1000
 
       let completePercentage = Math.round(

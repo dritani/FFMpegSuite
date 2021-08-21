@@ -8,12 +8,46 @@ import { navigate } from '@/Navigators/Root'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import StepIndicator from 'react-native-step-indicator'
+import { getMediaInformation } from '@/Utils'
 
 // ffprobe on the file received
-  // detect if the file is longer than 3 minutes
+// detect if the file is longer than 3 minutes
 // save prefs: default speed & advanced tab or not - don't bother
 
 
+
+
+// test scrollview on an iPhone 4 simulator
+  // add it to the Basic Tab as well
+
+
+// test the numerical inputs on a real device;
+  // popup numerical keyboard, SafeKeyboard.
+// Video Converter app; how does it handle converting the same file twice, teh filename??? How do the competitors handle it?
+  // first principles solution: (1), (2), last 4 before extension, OR: timestamp hash
+// Google: ffmpeg output same file type
+// Payment popup/modal needed before? How about after?? 
+// Volume Slider: min 0, max 5, default 1. setVolume. If value is !== 1 in the next screen.
+
+// in THIS screen. 
+// DEFAULT_VOLUME
+// if volume !== DEFAULT_VOLUME
+//   let new_volume = null
+//   navigate('Processing', {volume: null})
+// Processing screen just checks for null, accepts whatever else it receives.
+
+// also check the numerical inputs for wonky shit like alphabetical letters right before pushing to Processing
+// Time
+  // min default is always 0
+  // max default is FFProbe's resulting video duration, rounded, floored, or ceil-ed
+  // 00:00:00 => Display only
+  // actual scrubbing value should be in seconds? Yes.
+  
+// before pushing to processing, compare rounded down max to current max; If it's a match, don't feed in that parameter. Set it null
+
+
+// Click Basic Start longer than 3 minutes => Premium popup with 'Unlock longer than 3 minutes with such and such)
+// Advanced without pro => Similar popup, different message at the top
 
 
 
@@ -59,6 +93,16 @@ const IndexExampleContainer = props => {
 
   const [currentPreset, setPreset] = useState(2)
   const labels = [t('options.slowerLabel'), '', '', t('options.fasterLabel')]
+
+  useEffect(() => {
+    let ffprobeCommand = props?.route?.params?.filePath
+    getMediaInformation(ffprobeCommand).then(result => {
+      console.log(`result: ${result}`)
+      if (result !== 0) {
+        
+      }
+    })
+  }, [])
 
   const customStyles = {
     stepIndicatorSize: 25,
@@ -294,7 +338,6 @@ const IndexExampleContainer = props => {
               </Text>
             </View>
           </View>
-
         </View>
         <View
           style={[styles.container, { flexDirection: 'row', marginTop: 60 }]}
