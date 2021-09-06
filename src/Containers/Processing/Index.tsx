@@ -113,7 +113,7 @@ const IndexExampleContainer = props => {
       let totalVideoDuration = duration * 1000
 
       let completePercentage = Math.round(
-        (timeInMilliseconds * 99.9) / totalVideoDuration,
+        (timeInMilliseconds * 99) / totalVideoDuration,
       )
 
       console.log('completePercentage: ' + completePercentage)
@@ -181,9 +181,6 @@ const IndexExampleContainer = props => {
     // let videoFile = await getUniqueName(videoName)
     // console.log(`videoFile: ${videoFile}`)
 
-
-
-    
     // necessary to split from the default filepath
     // this should be moved to the get Unique fileName method.
 
@@ -213,10 +210,22 @@ const IndexExampleContainer = props => {
     //  ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4
     // audio volume
     // -filter:a "volume=1.5" => 150% audio level of input.
-    if (type === 'basic') {
+
+    let empty_advanced =
+      !width &&
+      !height &&
+      !time_start &&
+      !time_end &&
+      !volume &&
+      !bitrate &&
+      !framerate
+
+    if (type === 'basic' || empty_advanced) {
+      // if (type === 'basic') {
       // ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
 
-      ffmpegCommand = VideoUtil.generateBasicCompressionScript(
+      console.log('basicTab')
+      ffmpegCommand = await VideoUtil.generateBasicCompressionScript(
         filePath,
         preset,
         width,
@@ -248,6 +257,7 @@ const IndexExampleContainer = props => {
       } else {
         setFinished(true)
         setProgress(99.9)
+        setError(false)
         showInterstitialAd()
       }
     })
@@ -289,8 +299,8 @@ const IndexExampleContainer = props => {
             {finished
               ? t('processing.finishedLabel')
               : error
-              ? t('processing.processingLabel')
-              : t('processing.errorLabel')}
+              ? t('processing.errorLabel')
+              : t('processing.processingLabel')}
           </Text>
 
           <View

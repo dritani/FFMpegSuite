@@ -22,6 +22,35 @@ import {
 // how about on APp start you check if Documents/VideoCompressor exists
 // if not, create it
 // then with FFMpeg you write to DocumentsDirectory/VideoCompressor instead of CachesDirectory
+const getUniqueName = async (fileName, index = 0) => {
+  console.log(`INDEX: ${index}`)
+  let checkName = fileName,
+    ext = ''
+  if (index) {
+    if (checkName.indexOf('.') > -1) {
+      let tokens = checkName.split('.')
+      ext = '.' + tokens.pop()
+      checkName = tokens.join('.')
+    }
+
+    checkName = `${checkName}_${index}${ext}`
+  }
+
+  console.log(`checkName: ${checkName}`)
+
+  let existPath = `${RNFS.DocumentDirectoryPath}/${checkName}`
+  // console.log(`outputPath: ${RNFS.DocumentDirectoryPath}/${outputPath}`)
+  console.log(`existPath: ${existPath}`)
+
+  const nameExists = await VideoUtil.fileExists(existPath)
+  console.log(`nameExists: ${nameExists}`)
+
+  if (nameExists) {
+    return getUniqueName(fileName, index + 1)
+  } else {
+    return existPath // encodeURI(existPath)
+  }
+}
 
 export default class VideoUtil {
   static async assetToFile(assetName) {
@@ -46,7 +75,8 @@ export default class VideoUtil {
 
   static async fileExists(assetName) {
     let exists = await RNFS.exists(assetName)
-    console.log(`exists: ${exists}`)
+    console.log(`assetName: ${assetName}`)
+    // console.log(`exists: ${exists}`)
     return exists
   }
 
@@ -111,46 +141,29 @@ export default class VideoUtil {
     )
   }
 
-  // const getUniqueName = async (fileName, index = 0) => {
-  //   let checkName = fileName,
-  //     ext = ''
-  //   if (index) {
-  //     if (checkName.indexOf('.') > -1) {
-  //       let tokens = checkName.split('.')
-  //       ext = '.' + tokens.pop()
-  //       checkName = tokens.join('.')
-  //     }
-
-  //     checkName = `${checkName} (${index})${ext}`
-  //   }
-
-  //   console.log(`checkName: ${checkName}`)
-
-  //   const nameExists = await VideoUtil.fileExists(checkName)
-  //   console.log(`nameExists: ${nameExists}`)
-
-  //   return nameExists ? getUniqueName(fileName, index + 1) : checkName
-  // }
-
-  static generateBasicCompressionScript(filePath, preset, width, height) {
+  static async generateBasicCompressionScript(filePath, preset, width, height) {
     let crf = 28,
       f_preset = 'fast'
     // preset: 4, 3, 2, 1
 
     switch (preset) {
-      case '':
+      case 4:
+        crf = 32
+        f_preset = 'veryfast'
+        break
+      case 3:
         crf = 30
         f_preset = 'faster'
         break
-      case '':
+      case 2:
         crf = 28
         f_preset = 'fast'
         break
-      case '':
+      case 1:
         crf = 26
         f_preset = 'fast'
         break
-      case '':
+      case 0:
         crf = 24
         f_preset = 'medium'
         break
@@ -158,13 +171,21 @@ export default class VideoUtil {
         break
     }
 
+    // filePath is inputPath
     let command = `-i ${filePath} -c:v libx264 -crf ${crf} -preset ${f_preset} `
 
     if (width || height) {
       command += `-vf scale="${width}:${height}" `
     }
 
-    command += `${RNFS.DocumentDirectoryPath}/output.mp4`
+    let fileName = filePath.substring(
+      filePath.lastIndexOf('/') + 1,
+      filePath.length,
+    )
+    let outputPath = await getUniqueName(fileName)
+    console.log(`outputPath: ${outputPath}`)
+
+    command += outputPath
     // -vf scale="${width}:${height}"
     // -c:v libx265 -crf ${crf} -preset ${f_preset}
     // CachesDirectoryPath, DocumentDirectoryPath
@@ -205,7 +226,7 @@ export default class VideoUtil {
       command += `-vf scale="${width}:${height}" `
     }
 
-    command += `${RNFS.CachesDirectoryPath}/output.mp4`
+    command += `${RNFS.DocumentDirectoryPath}/output.mp4`
 
     return command
   }

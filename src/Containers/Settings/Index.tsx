@@ -67,7 +67,7 @@ const IndexExampleContainer = () => {
   const handleSelectLanguage = (lng: PickerItem) => {
     setPickedLang(lng)
     i18n.changeLanguage(lng.value)
-    // localstorage save
+    AsyncStorage.setItem('@language', lng.value)
   }
 
   const { Common, Fonts, Gutters, Layout } = useTheme()

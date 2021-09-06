@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
@@ -12,10 +12,30 @@ import LinearGradient from 'react-native-linear-gradient'
 import FileViewer from 'react-native-file-viewer'
 import MediaMeta from 'react-native-media-meta'
 import RNFS from 'react-native-fs'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { NativeModules, Platform } from 'react-native'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
+
+  const getSavedLocale = async () => {
+    let locale = 'en'
+    let language = await AsyncStorage.getItem('@language')
+
+    if (language) {
+      locale = language
+    } else {
+      let platform_language =
+        Platform.OS === 'ios'
+          ? NativeModules.SettingsManager.settings.AppleLocale ||
+            NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
+          : NativeModules.I18nManager.localeIdentifier
+      locale = platform_language.substring(0, 2)
+    }
+
+    return locale
+  }
 
   const handleLibraryPick = () => {
     launchImageLibrary(
@@ -79,6 +99,10 @@ const IndexExampleContainer = () => {
       }
     }
   }
+
+  useEffect(() => {
+    getSavedLocale()
+  }, [])
 
   return (
     <View

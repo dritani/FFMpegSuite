@@ -3,21 +3,11 @@ import { initReactI18next } from 'react-i18next'
 import * as resources from './resources'
 import { NativeModules, Platform } from 'react-native'
 
-// detect default device language and set accordingly here
 const locale =
   Platform.OS === 'ios'
     ? NativeModules.SettingsManager.settings.AppleLocale ||
       NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
     : NativeModules.I18nManager.localeIdentifier
-
-const getDefaultLocale = () => {
-  let locale = 'en'
-
-  // if save pref exists: use that
-  // else: detect
-
-  return 'en'
-}
 
 // should I check here if the language has been saved previously? Indeed.
 i18n.use(initReactI18next).init({
@@ -32,7 +22,7 @@ i18n.use(initReactI18next).init({
       {},
     ),
   },
-  lng: locale.substring(0, 2), // 'en'
+  lng: locale.substring(0, 2),
   fallbackLng: 'en',
 })
 

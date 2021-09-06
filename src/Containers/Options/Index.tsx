@@ -86,7 +86,6 @@ const IndexExampleContainer = props => {
   const [time_end, setTimeEnd] = useState(null)
   const [framerate, setFramerate] = useState(null)
   const [bitrate, setBitrate] = useState(null)
-  const [preset] = useState(null) // ffmpeg has normal, fast, fastest?
   // might be better to use crf values
 
   const [currentPreset, setPreset] = useState(2)
@@ -95,7 +94,9 @@ const IndexExampleContainer = props => {
   useEffect(() => {
     let ffprobeCommand = props?.route?.params?.filePath
     getMediaInformation(ffprobeCommand).then(result => {
-      console.log(`result: ${result}`)
+      console.log(`FFPROBE: ${result}`)
+      console.log(result.getMediaProperties())
+      console.log(result.getAllProperties())
       if (result !== 0) {
         
       }
@@ -388,7 +389,7 @@ const IndexExampleContainer = props => {
       filePath,
       duration,
       type: selectedIndex === 0 ? 'basic' : 'advanced',
-      preset,
+      currentPreset,
       width,
       height,
       time_start,
