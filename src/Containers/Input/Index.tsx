@@ -14,6 +14,7 @@ import MediaMeta from 'react-native-media-meta'
 import RNFS from 'react-native-fs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { NativeModules, Platform } from 'react-native'
+import i18n from 'i18next'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -34,7 +35,7 @@ const IndexExampleContainer = () => {
       locale = platform_language.substring(0, 2)
     }
 
-    return locale
+    i18n.changeLanguage(locale)
   }
 
   const handleLibraryPick = () => {

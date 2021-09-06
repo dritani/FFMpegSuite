@@ -19,9 +19,9 @@ export default {
     volumeLabel: 'Le volume',
     timeLabel: 'Temps',
     compressionLabel: 'Vitesse de compression',
-    fasterLabel: 'Plus rapide',
-    slowerLabel: 'Plus lent sans perte',
-    startButton: 'Début',
+    fasterLabel: 'Plus rapide, plus perdant',
+    slowerLabel: 'Plus lent, sans perte',
+    startButton: 'Commence',
   },
   processing: {
     finishButton: 'Finir',
@@ -34,7 +34,7 @@ export default {
     rateUs: 'Évaluez nous',
     recommendApp: 'Recommander l`application',
     removeAds: 'Supprimez la pub',
-    proVersion: 'proVersion',
+    proVersion: 'Version Professionnel',
     restorePurchases: 'Restaurer les achats',
   },
   general: {
