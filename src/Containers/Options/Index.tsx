@@ -15,8 +15,6 @@ import { getMediaInformation } from '@/Utils'
 // save prefs: default speed & advanced tab or not - don't bother
 
 
-
-
 // test scrollview on an iPhone 4 simulator
   // add it to the Basic Tab as well
 

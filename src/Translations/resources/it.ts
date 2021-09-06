@@ -1,0 +1,43 @@
+export default {
+  input: {
+    inputLabel: 'Ingresso',
+    outputLabel: 'Produzione',
+    photosTitle: 'Fotografie',
+    photosSubtitle: 'Biblioteca multimediale',
+    filesTitle: 'File',
+    filesSubtitle: 'La tua app di file',
+    historyTitle: 'Storia',
+    historySubtitle: 'Sfoglia i file convertiti',
+  },
+  options: {
+    basicTab: 'Di base',
+    advancedTab: 'Avanzate',
+    widthLabel: 'Larghezza',
+    heightLabel: 'Altezza',
+    bitrateLabel: 'bitrate',
+    framerateLabel: 'Frequenza dei fotogrammi',
+    volumeLabel: 'volume',
+    timeLabel: 'Tempo',
+    compressionLabel: 'Velocità di compressione',
+    fasterLabel: 'Più veloce lossier',
+    slowerLabel: 'Stelore senza perdita',
+    startButton: 'Cominciare',
+  },
+  processing: {
+    finishButton: 'Fine',
+    finishedLabel: 'Video salvato in file',
+    processingLabel: 'Video di compressione, per favore aspetta ...',
+    errorLabel: 'C`è stato un errore durante la compressione',
+  },
+  settings: {
+    language: 'Lingua',
+    rateUs: 'Vota noi',
+    recommendApp: 'Aggiungi app',
+    removeAds: 'Rimuovere gli annunci',
+    proVersion: 'proVersion',
+    restorePurchases: 'Ripristinare gli acquisti',
+  },
+  general: {
+    headerBackTitle: 'Di ritorno',
+  },
+}

@@ -1,0 +1,43 @@
+export default {
+  input: {
+    inputLabel: '入力',
+    outputLabel: '出力',
+    photosTitle: '写真',
+    photosSubtitle: 'メディアライブラリ',
+    filesTitle: 'ファイル',
+    filesSubtitle: 'あなたのファイルアプリ',
+    historyTitle: '歴史',
+    historySubtitle: '変換ファイルを参照',
+  },
+  options: {
+    basicTab: '基本',
+    advancedTab: '高度',
+    widthLabel: '幅',
+    heightLabel: '身長',
+    bitrateLabel: 'ビットレート ',
+    framerateLabel: 'フレームレート',
+    volumeLabel: '音量',
+    timeLabel: '時間',
+    compressionLabel: '圧縮速度',
+    fasterLabel: 'より速い損失のある',
+    slowerLabel: '遅いロスレス',
+    startButton: '始める',
+  },
+  processing: {
+    finishButton: '終了',
+    finishedLabel: 'ファイルに保存されたビデオ',
+    processingLabel: 'ビデオを圧縮してください、お待ちください...',
+    errorLabel: '圧縮中にエラーがありました',
+  },
+  settings: {
+    language: '言語',
+    rateUs: '私たちを評価してください',
+    recommendApp: '推薦アプリ',
+    removeAds: '広告を削除',
+    proVersion: 'Proバージョン',
+    restorePurchases: '購入を復元',
+  },
+  general: {
+    headerBackTitle: '戻る',
+  },
+}

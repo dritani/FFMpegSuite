@@ -152,13 +152,7 @@ const IndexExampleContainer = props => {
     }
   }
 
-  const runFFmpeg = () => {
-    // CachesDirectoryPath
-    let videoFile = `${RNFS.DocumentDirectoryPath}/output.mp4`
-    VideoUtil.deleteFile(videoFile)
-
-    // let filePath = props?.route?.params?.filePath
-    // let type = props?.route?.params?.filePath
+  const runFFmpeg = async () => {
     let {
       filePath,
       type,
@@ -171,6 +165,32 @@ const IndexExampleContainer = props => {
       bitrate,
       framerate,
     } = props?.route?.params
+
+    // CachesDirectoryPath
+    // let fileName = filePath.substring(
+    //   filePath.lastIndexOf('/') + 1,
+    //   filePath.length,
+    // )
+
+    // console.log(`filePath: ${filePath}`)
+    // console.log(`fileName: ${fileName}`)
+
+    // let videoName = `${RNFS.DocumentDirectoryPath}/${fileName}` // this is necessary because the filename is in the photos library or elsewhere.
+    // console.log(`videoName: ${videoName}`)
+
+    // let videoFile = await getUniqueName(videoName)
+    // console.log(`videoFile: ${videoFile}`)
+
+
+
+    
+    // necessary to split from the default filepath
+    // this should be moved to the get Unique fileName method.
+
+    // VideoUtil.deleteFile(videoFile) // unnecessary if unique fielaname
+
+    // let filePath = props?.route?.params?.filePath
+    // let type = props?.route?.params?.filePath
     let ffmpegCommand = ''
 
     // console.log(filePath, type)

@@ -10,6 +10,15 @@ const locale =
       NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
     : NativeModules.I18nManager.localeIdentifier
 
+const getDefaultLocale = () => {
+  let locale = 'en'
+
+  // if save pref exists: use that
+  // else: detect
+
+  return 'en'
+}
+
 // should I check here if the language has been saved previously? Indeed.
 i18n.use(initReactI18next).init({
   resources: {

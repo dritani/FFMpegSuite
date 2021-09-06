@@ -44,6 +44,12 @@ export default class VideoUtil {
     return fullTemporaryPath
   }
 
+  static async fileExists(assetName) {
+    let exists = await RNFS.exists(assetName)
+    console.log(`exists: ${exists}`)
+    return exists
+  }
+
   static deleteFile(videoFile) {
     return RNFS.unlink(videoFile).catch(_ => _)
   }
@@ -104,6 +110,27 @@ export default class VideoUtil {
       ' '
     )
   }
+
+  // const getUniqueName = async (fileName, index = 0) => {
+  //   let checkName = fileName,
+  //     ext = ''
+  //   if (index) {
+  //     if (checkName.indexOf('.') > -1) {
+  //       let tokens = checkName.split('.')
+  //       ext = '.' + tokens.pop()
+  //       checkName = tokens.join('.')
+  //     }
+
+  //     checkName = `${checkName} (${index})${ext}`
+  //   }
+
+  //   console.log(`checkName: ${checkName}`)
+
+  //   const nameExists = await VideoUtil.fileExists(checkName)
+  //   console.log(`nameExists: ${nameExists}`)
+
+  //   return nameExists ? getUniqueName(fileName, index + 1) : checkName
+  // }
 
   static generateBasicCompressionScript(filePath, preset, width, height) {
     let crf = 28,

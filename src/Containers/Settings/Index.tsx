@@ -56,6 +56,12 @@ const IndexExampleContainer = () => {
   const languages: Array<PickerItem> = [
     { label: '🇺🇸 English', value: 'en' },
     { label: '🇨🇳 中文', value: 'zh' },
+    { label: '🇫🇷 Français', value: 'fr' },
+    { label: '🇩🇪 Deutsch', value: 'de' },
+    { label: '🇯🇵 日本', value: 'jp' },
+    { label: '🇪🇸 Española', value: 'es' },
+    { label: '🇧🇷 Português', value: 'pt' },
+    { label: '🇮🇹 Italiana', value: 'it' },
   ]
 
   const handleSelectLanguage = (lng: PickerItem) => {
@@ -78,7 +84,7 @@ const IndexExampleContainer = () => {
   })
 
   const handlePurchaseAds = () => {
-
+    
   }
 
   const handlePurchasePro = () => {
