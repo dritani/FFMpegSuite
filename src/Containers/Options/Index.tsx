@@ -151,7 +151,7 @@ const IndexExampleContainer = props => {
               <Input
                 style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
                 type="number"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 placeholder="-"
               />
             </View>
@@ -167,7 +167,7 @@ const IndexExampleContainer = props => {
               <Input
                 style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
                 type="number"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 placeholder="-"
               />
             </View>
@@ -216,7 +216,7 @@ const IndexExampleContainer = props => {
             <Input
               style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
               type="number"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               placeholder="-"
             />
           </View>
@@ -232,7 +232,7 @@ const IndexExampleContainer = props => {
             <Input
               style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
               type="number"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               placeholder="-"
             />
           </View>
@@ -252,7 +252,7 @@ const IndexExampleContainer = props => {
             <Input
               style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
               type="number"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               placeholder="-"
             />
           </View>
@@ -268,7 +268,7 @@ const IndexExampleContainer = props => {
             <Input
               style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
               type="number"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               placeholder="-"
             />
           </View>

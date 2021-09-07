@@ -4,7 +4,7 @@ export default {
     outputLabel: 'Sortir',
     photosTitle: 'Photos',
     photosSubtitle: 'Médiathèque',
-    filesTitle: 'Des dossiers',
+    filesTitle: 'Dossiers',
     filesSubtitle: 'Votre application de fichiers',
     historyTitle: 'Histoire',
     historySubtitle: 'Parcourir les fichiers convertis',

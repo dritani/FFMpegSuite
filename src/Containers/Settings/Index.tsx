@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from 'react'
+import React, { useState, useEffect, createContext, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
@@ -17,16 +17,22 @@ import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
+// import RNIap, {
+//   Product,
+//   ProductPurchase,
+//   PurchaseError,
+//   InAppPurchase,
+//   finishTransaction,
+//   acknowledgePurchaseAndroid,
+//   purchaseErrorListener,
+//   purchaseUpdatedListener,
+// } from 'react-native-iap'
 import RNIap, {
-  Product,
-  ProductPurchase,
-  PurchaseError,
   InAppPurchase,
+  Product,
+  PurchaseError,
   finishTransaction,
-  acknowledgePurchaseAndroid,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-} from 'react-native-iap'
+} from 'react-native-iap';
 import i18n from 'i18next'
 import Rate, { AndroidMarket } from 'react-native-rate'
 import type { PickerItem } from 'react-native-woodpicker'
@@ -35,20 +41,66 @@ import { ListItem, Icon } from 'react-native-elements'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-let purchaseUpdateSubscription: EmitterSubscription
-let purchaseErrorSubscription: EmitterSubscription
+// let purchaseUpdateSubscription: EmitterSubscription
+// let purchaseErrorSubscription: EmitterSubscription
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
+  const { Common, Fonts, Gutters, Layout } = useTheme()
+
+  const languages: Array<PickerItem> = [
+    { label: '🇺🇸 English', value: 'en' },
+    { label: '🇨🇳 中文', value: 'zh' },
+    { label: '🇫🇷 Français', value: 'fr' },
+    { label: '🇩🇪 Deutsch', value: 'de' },
+    { label: '🇯🇵 日本', value: 'ja' },
+    { label: '🇪🇸 Española', value: 'es' },
+    { label: '🇧🇷 Português', value: 'pt' },
+    { label: '🇮🇹 Italiana', value: 'it' },
+  ]
 
   const [pickedLang, setPickedLang] = useState<PickerItem>({
     label: '🇺🇸 English',
     value: 'en',
   })
-  // this one should just be the index tbh...
+
+  const itemSkus = Platform.select({
+    ios: ['videoCompressor.noAds', 'videoCompressor.pro'],
+    android: ['videoCompressor.noAds', 'videoCompressor.pro'], // todo
+  })
+
+  const [productsList, setProductsList] = useState([])
+
+  const IAPContext = createContext<IAPContext>({
+    isSubscription: false,
+    subscription: undefined,
+    showPurchase: () => {},
+  })
+
+  const getProducts = useCallback(async (): Promise<void> => {
+    RNIap.clearProductsIOS()
+
+    try {
+      const result = await RNIap.initConnection()
+      // await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
+    } catch (err) {
+      //
+    }
+
+    const products = await RNIap.getProducts(itemSkus)
+    products.forEach((product) => {
+      product.type = 'inapp'
+    })
+
+    console.log('products: ')
+    console.log(products)
+
+    setProductsList(products)
+  }, [productsList])
 
   useEffect(() => {
     initializePicker()
+    getProducts()
   }, [])
 
   const initializePicker = async () => {
@@ -72,39 +124,15 @@ const IndexExampleContainer = () => {
     }
   }
 
-  const languages: Array<PickerItem> = [
-    { label: '🇺🇸 English', value: 'en' },
-    { label: '🇨🇳 中文', value: 'zh' },
-    { label: '🇫🇷 Français', value: 'fr' },
-    { label: '🇩🇪 Deutsch', value: 'de' },
-    { label: '🇯🇵 日本', value: 'ja' },
-    { label: '🇪🇸 Española', value: 'es' },
-    { label: '🇧🇷 Português', value: 'pt' },
-    { label: '🇮🇹 Italiana', value: 'it' },
-  ]
-
   const handleSelectLanguage = (lng: PickerItem) => {
     setPickedLang(lng)
     i18n.changeLanguage(lng.value)
     AsyncStorage.setItem('@language', lng.value)
   }
 
-  const { Common, Fonts, Gutters, Layout } = useTheme()
-
-  const itemSkus = Platform.select({
-    ios: ['videoCompressor.noAds', 'videoCompressor.pro'],
-    android: ['888', '999'], // todo
-  })
-
-  const IAPContext = createContext<IAPContext>({
-    isSubscription: false,
-    subscription: undefined,
-    showPurchase: () => {},
-  })
-
-  const handlePurchaseAds = () => {}
-
-  const handlePurchasePro = () => {}
+  const handlePurchase = (item: Product): void => {
+    RNIap.requestPurchase(item.productId)
+  }
 
   const handleRestorePurchases = async () => {
     try {
@@ -114,31 +142,28 @@ const IndexExampleContainer = () => {
 
       purchases.forEach(purchase => {
         switch (purchase.productId) {
-          case 'com.example.premium':
+          case 'videoCompressor.pro':
             newState.premium = true
             restoredTitles.push('Premium Version')
             break
 
-          case 'com.example.no_ads':
+          case 'videoCompressor.noAds':
             newState.ads = false
             restoredTitles.push('No Ads')
             break
-
-          // case 'com.example.coins100':
-          //   await RNIap.consumePurchaseAndroid(purchase.purchaseToken)
-          // CoinStore.addCoins(100)
         }
       })
-      // Alert.alert('Restore Successful', 'You successfully restored the following purchases: ' + restoredTitles.join(', '));
+
+      // setState
+      Alert.alert('Restore Successful', 'You successfully restored the following purchases: ' + restoredTitles.join(', '));
     } catch (err) {
       console.warn(err) // standardized err.code and err.message available
-      // Alert.alert(err.message);
     }
   }
 
   const handleRate = () => {
     const options = {
-      AppleAppID: '2193813192', // after publishin?
+      AppleAppID: '2193813192', // after publishing?
       GooglePackageName: 'ml.devcraft.videocompressor',
       AmazonPackageName: 'ml.devcraft.videocompressor',
       // OtherAndroidURL: 'http://www.randomappstore.com/app/47172391',
@@ -241,7 +266,8 @@ const IndexExampleContainer = () => {
             key={'row_ads'}
             topDivider
             bottomDivider
-            onPress={handlePurchaseAds}
+            // onPress={handlePurchaseAds}
+            onPress={() => handlePurchase('ads')}
           >
             <Icon name="close-circle-outline" type="ionicon" />
             <ListItem.Content>
@@ -254,7 +280,12 @@ const IndexExampleContainer = () => {
               </View>
             </ListItem.Content>
           </ListItem>
-          <ListItem key={'row_pro'} bottomDivider onPress={handlePurchasePro}>
+          <ListItem 
+            key={'row_pro'}
+            bottomDivider
+            // onPress={handlePurchasePro}
+            onPress={() => handlePurchase('pro')}
+          >
             <Icon name="key" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
