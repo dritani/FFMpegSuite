@@ -130,7 +130,7 @@ const IndexExampleContainer = props => {
 
   const basicTab = () => {
     return (
-      <View>
+      <ScrollView>
         <View
           style={[
             styles.container,
@@ -173,7 +173,7 @@ const IndexExampleContainer = props => {
             </View>
           </View>
         </View>
-        <View style={{ marginTop: 100 }} />
+        <View style={{ marginTop: 40 }} />
         <Text
           style={[
             Gutters.smallLMargin,
@@ -190,7 +190,7 @@ const IndexExampleContainer = props => {
           stepCount={5}
           onPress={e => setPreset(e)}
         />
-      </View>
+      </ScrollView>
     )
   }
 
@@ -290,7 +290,7 @@ const IndexExampleContainer = props => {
               {t('options.timeLabel')}
             </Text>
             <MultiSlider
-              containerStyle={{ marginLeft: 10 }}
+              containerStyle={{ marginLeft: 15 }}
               selectedStyle={{ height: 4, backgroundColor: '#0066ff' }}
               unselectedStyle={{ height: 4 }}
               markerStyle={{
@@ -308,8 +308,9 @@ const IndexExampleContainer = props => {
               max={300}
               step={25}
               values={[100, 200]}
+              // markerSize={1}
               onValuesChange={a => console.log(a)}
-              sliderLength={350}
+              sliderLength={340}
               onValuesChangeStart={() => setScrollEnabled(false)}
               onValuesChangeFinish={() => setScrollEnabled(true)}
             />
@@ -409,9 +410,11 @@ const IndexExampleContainer = props => {
         Layout.justifyContentBetween,
         Gutters.smallHPadding,
         Common.backgroundWhite,
+        // { flex: 1 }
       ]}
     >
-      <View>
+      {/* controls */}
+      <View style={{ flex: 1 }}>
         <View
           style={[
             Layout.row,
@@ -433,10 +436,15 @@ const IndexExampleContainer = props => {
         </View>
         {selectedIndex === 0 && basicTab()}
         {selectedIndex === 1 && advancedTab()}
+        
+      </View>
+
+      {/* button + ad */}
+      <View style={{ justifyContent: 'flex-end'}}>
         <View
           style={{
             alignItems: 'center',
-            marginTop: 15,
+            marginBottom: 15,
           }}
         >
           <Button
@@ -446,20 +454,21 @@ const IndexExampleContainer = props => {
             onPress={handleStart}
           />
         </View>
+
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.SMART_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          onAdLoaded={() => {
+            // console.log('Advert loaded')
+          }}
+          onAdFailedToLoad={error => {
+            // console.error('Advert failed to load: ', error)
+          }}
+        />
       </View>
-      <BannerAd
-        unitId={TestIds.BANNER}
-        size={BannerAdSize.SMART_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-        onAdLoaded={() => {
-          // console.log('Advert loaded')
-        }}
-        onAdFailedToLoad={error => {
-          // console.error('Advert failed to load: ', error)
-        }}
-      />
     </View>
   )
 }
