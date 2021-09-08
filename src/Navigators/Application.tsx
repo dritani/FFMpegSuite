@@ -40,6 +40,12 @@ const ApplicationNavigator = () => {
     }
   }
 
+  const optionOptions = () => {
+    return {
+      gestureEnabled: false,
+    }
+  }
+
   const processingOptions = () => {
     return {
       headerLeft: null,
@@ -66,7 +72,10 @@ const ApplicationNavigator = () => {
   return (
     <SafeAreaView style={[Layout.fill, { backgroundColor: '#FFFFFF' }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
-        <StatusBar hidden={true} />
+        <StatusBar
+        // hidden={true}
+          barStyle={darkMode ? 'light-content' : 'dark-content'}
+        />
         <Stack.Navigator
           headerMode="float"
           initialRouteName="Input"
@@ -99,7 +108,11 @@ const ApplicationNavigator = () => {
             name="Input"
             component={InputContainer}
           />
-          <Stack.Screen name="Options" component={OptionsContainer} />
+          <Stack.Screen 
+            options={optionOptions}
+            name="Options" 
+            component={OptionsContainer} 
+          />
           <Stack.Screen
             options={processingOptions}
             name="Processing"

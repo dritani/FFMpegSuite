@@ -172,6 +172,7 @@ export default class VideoUtil {
     }
 
     // filePath is inputPath
+    // libx265 => literally doesn't work
     let command = `-i ${filePath} -c:v libx264 -crf ${crf} -preset ${f_preset} `
 
     if (width || height) {
@@ -283,7 +284,7 @@ export default class VideoUtil {
 
 // the above trial and erorr: 264
 // 264
-// uperfast
+// superfast
 // veryfast
 // faster
 // fast
