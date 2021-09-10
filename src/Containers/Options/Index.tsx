@@ -6,6 +6,7 @@ import {
   Modal,
   Alert,
   Pressable,
+  Image,
   TouchableOpacity,
 } from 'react-native'
 import { Slider, Input, Text, Button, Icon } from 'react-native-elements'
@@ -19,6 +20,8 @@ import StepIndicator from 'react-native-step-indicator'
 import { getMediaInformation } from '@/Utils'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import RNIap from 'react-native-iap'
+import LinearGradient from 'react-native-linear-gradient'
+
 // 3 changes:
 // +Time selector right => Add a Margin
 // +Keyboard Avoiding View
@@ -92,7 +95,7 @@ import RNIap from 'react-native-iap'
 
 const IndexExampleContainer = props => {
   const { t } = useTranslation()
-  const { Common, Fonts, Gutters, Layout } = useTheme()
+  const { Common, Fonts, Gutters, Layout, Images } = useTheme()
 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [scrollEnabled, setScrollEnabled] = useState(true)
@@ -703,6 +706,7 @@ const IndexExampleContainer = props => {
         </View>
         {selectedIndex === 0 && basicTab()}
         {selectedIndex === 1 && advancedTab()}
+
         <Modal
           animationType="slide"
           // transparent={true}
@@ -711,30 +715,50 @@ const IndexExampleContainer = props => {
             setModalVisible(!modalVisible)
           }}
         >
-          <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
-            <TouchableOpacity
-              style={[Gutters.regularBMargin]}
-              onPress={handlePurchasePro}
+          <LinearGradient
+            colors={['#7d88ff', '#58a3ff', '#8fd6ff', '#bde9ff', '#cfedfc', '#ffffff']}
+            style={{ flex: 1 }}
+          >
+            <View
+              style={[Layout.fill, Layout.colCenter]}
             >
-              <Text style={[Fonts.textRegular, { color: 'blue' }]}>Buy Pro</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[Gutters.regularBMargin]}
-              onPress={handleRestorePurchases}
-            >
-              <Text style={[Fonts.textRegular, { color: 'green' }]}>
-                Restore Purchases
+              <Image
+                style={{ width: 80, height: 80 }}
+                source={Images.crown}
+              />
+              <Text style={[Fonts.textRegular, { color: 'white' }]}>
+                Pro Version
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[Gutters.regularBMargin]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={[Fonts.textRegular, { color: 'red' }]}>
-                Close Modal
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity onPress={toggleModal}>
+                <Text
+                  style={{
+                    fontFamily: 'Nunito-ExtraBold',
+                    fontSize: 35,
+                    color: 'white',
+                  }}
+                >
+                  x
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[Gutters.regularBMargin]}
+                onPress={handlePurchasePro}
+              >
+                <Text style={[Fonts.textRegular, { color: 'black' }]}>
+                  Buy Pro
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[Gutters.regularBMargin]}
+                onPress={handleRestorePurchases}
+              >
+                <Text style={[Fonts.textRegular, { color: 'black' }]}>
+                  Restore Purchases
+                </Text>
+              </TouchableOpacity>
+              
+            </View>
+          </LinearGradient>
         </Modal>
       </View>
 

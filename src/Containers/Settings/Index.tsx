@@ -41,7 +41,6 @@ import { Picker } from 'react-native-woodpicker'
 import { ListItem, Icon } from 'react-native-elements'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { tupleExpression } from '@babel/types'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
