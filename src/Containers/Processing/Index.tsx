@@ -33,6 +33,7 @@ import {
   resetStatistics,
 } from '@/Utils'
 import MediaMeta from 'react-native-media-meta'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // UI
 // +spinning icon at the top => Checkmark when done
@@ -67,8 +68,21 @@ const IndexExampleContainer = props => {
   const [started, setStarted] = useState(false)
   const [error, setError] = useState(false)
   const [adLoaded, setAdLoaded] = useState(false)
+  const [ads, setAds] = useState(null)
+
+  const getPaymentStatus = async () => {
+    let payment = await AsyncStorage.getItem('@payment')
+    if (payment) {
+      let payment_json = JSON.parse(payment)
+      setAds(payment_json.ads)
+    } else {
+      setAds(true)
+    }
+  }
 
   useEffect(() => {
+    getPaymentStatus()
+
     const eventListener = interstitial.onAdEvent(type => {
       if (type === AdEventType.LOADED) {
         setAdLoaded(true)
@@ -258,7 +272,9 @@ const IndexExampleContainer = props => {
         setFinished(true)
         setProgress(99.9)
         setError(false)
-        showInterstitialAd()
+        if (ads) {
+          showInterstitialAd()
+        }
       }
     })
   }
@@ -320,22 +336,21 @@ const IndexExampleContainer = props => {
         </View>
       </View>
 
-      {/* <View>
-
-      </View> */}
-      <BannerAd
-        unitId={TestIds.BANNER}
-        size={BannerAdSize.SMART_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-        onAdLoaded={() => {
-          // console.log('Advert loaded')
-        }}
-        onAdFailedToLoad={error => {
-          // console.error('Advert failed to load: ', error)
-        }}
-      />
+      {ads === null ? (
+        <View />
+      ) : ads === false ? (
+        <View />
+      ) : (
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.SMART_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          onAdLoaded={() => {}}
+          onAdFailedToLoad={error => {}}
+        />
+      )}
     </View>
   )
 }

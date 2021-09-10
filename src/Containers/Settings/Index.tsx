@@ -41,6 +41,7 @@ import { Picker } from 'react-native-woodpicker'
 import { ListItem, Icon } from 'react-native-elements'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { tupleExpression } from '@babel/types'
 
 // let purchaseUpdateSubscription: EmitterSubscription
 // let purchaseErrorSubscription: EmitterSubscription
@@ -84,6 +85,11 @@ const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
 
+  const [ads, setAds] = useState(null)
+  const [pro, setPro] = useState(null)
+  const [ads_price, setAdsPrice] = useState('$ 0.99')
+  const [pro_price, setProPrice] = useState('$ 1.99')
+
   const languages: Array<PickerItem> = [
     { label: '🇺🇸 English', value: 'en' },
     { label: '🇨🇳 中文', value: 'zh' },
@@ -118,7 +124,7 @@ const IndexExampleContainer = () => {
 
     try {
       const result = await RNIap.initConnection()
-      // await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
+      await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
     } catch (err) {
       //
     }
@@ -131,12 +137,31 @@ const IndexExampleContainer = () => {
     console.log('products: ')
     console.log(products)
 
+    // grab this only the first time. 
+    // Only if no localized prices exist in AsyncStorage.
+    // thereafter simply load them.
+
     setProductsList(products)
   }, [productsList])
 
+
+
+  const getPaymentStatus = async () => {
+    let payment = await AsyncStorage.getItem('@payment')
+    if (payment) {
+      let payment_json = JSON.parse(payment)
+      setAds(payment_json.ads)
+      setPro(payment_json.pro)
+    } else {
+      setAds(true)
+      setPro(false)
+    }
+  }
+
   useEffect(() => {
+    getPaymentStatus()
     initializePicker()
-    getProducts()
+    getProducts() // only need this for localized prices??? only the first time?
   }, [])
 
   const initializePicker = async () => {
@@ -166,19 +191,62 @@ const IndexExampleContainer = () => {
     AsyncStorage.setItem('@language', lng.value)
   }
 
-  const handlePurchase = async (productId: String) => {
+  const handlePurchaseAds = async () => {
     try {
-      // Will return a purchase object with a receipt which can be used to validate on your server.
-      const purchase = await RNIap.requestPurchase(productId)
-      console.log('purchase')
-      console.log(purchase)
-      // Alert.alert('Purchase Successful', 'Purchase completed successfully.')
+      const purchase = await RNIap.requestPurchase('videoCompressor.noAds')
+
+      if (purchase) {
+        setAds(false)
+
+        let new_payment = {
+          ads: false,
+          pro: false,
+        }
+
+        let payment = await AsyncStorage.getItem('@payment')
+        if (payment) {
+          let payment_json = JSON.parse(payment)
+          new_payment.pro = payment_json.pro
+        }
+
+        // this is kind of cringe but it works
+
+        await AsyncStorage.setItem('@payment', JSON.stringify(new_payment))
+      }
     } catch (err) {
-      console.log('err')
-      console.log(err)
+      // should be handled automatically by iOS
+      // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
     }
-    // Alert.alert('Purchase Successful', 'Pro version unlocked!')
-    // Alert.alert('Purchase Successful', 'All ads removed!')
+  }
+
+  const handlePurchasePro = async () => {
+    try {
+      const purchase = await RNIap.requestPurchase('videoCompressor.pro')
+
+      if (purchase) {
+        setPro(true)
+
+        if (purchase) {
+          setPro(true)
+
+          let new_payment = {
+            ads: true,
+            pro: true,
+          }
+
+          let payment = await AsyncStorage.getItem('@payment')
+          if (payment) {
+            let payment_json = JSON.parse(payment)
+            new_payment.ads = payment_json.ads
+          }
+
+          await AsyncStorage.setItem('@payment', JSON.stringify(new_payment))
+        }
+      }
+    } catch (err) {
+      // should be handled automatically by iOS
+      // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
+    }
   }
 
   // purchase object:
@@ -188,9 +256,9 @@ const IndexExampleContainer = () => {
   productId: 'videoCompressor.noAds',
   transactionId: '1000000874119604' }
  Purchase Started !!
- Purchase Successful !! 
+ Purchase Successful !!
 2021-09-08 13:09:24.764669+0200 FFMpegSuite[4864:740650] [javascript] purchase
-2021-09-08 13:09:24.765771+0200 FFMpegSuite[4864:740650] [javascript] { 
+2021-09-08 13:09:24.765771+0200 FFMpegSuite[4864:740650] [javascript] {
   transactionReceipt: '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',
   transactionDate: 1631099362000,
   productId: 'videoCompressor.pro',
@@ -200,29 +268,37 @@ const IndexExampleContainer = () => {
   const handleRestorePurchases = async () => {
     try {
       const purchases = await RNIap.getAvailablePurchases()
-      console.log('purchases')
-      console.log(purchases)
-      const newState = { premium: false, ads: true }
-      let restoredTitles = []
 
+      let ads_status = true,
+        pro_status = false
       purchases.forEach(purchase => {
         switch (purchase.productId) {
           case 'videoCompressor.pro':
-            newState.premium = true
-            restoredTitles.push('Premium Version')
+            pro_status = true
             break
 
           case 'videoCompressor.noAds':
-            newState.ads = false
-            restoredTitles.push('No Ads')
+            ads_status = false
             break
         }
       })
 
-      // setState
+      setAds(ads_status)
+      setPro(pro_status)
+
+      let payment_status = {
+        ads: ads_status,
+        pro: pro_status,
+      }
+
+      await AsyncStorage.setItem('@payment', JSON.stringify(payment_status))
+
       Alert.alert('Restore Successful', 'Purchases successfully restored!')
     } catch (err) {
-      console.warn(err) // standardized err.code and err.message available
+      Alert.alert(
+        'Restore Unsuccessful',
+        'There was an error while restoring purchases.',
+      )
     }
   }
 
@@ -331,8 +407,8 @@ const IndexExampleContainer = () => {
             key={'row_ads'}
             topDivider
             bottomDivider
-            // onPress={handlePurchaseAds}
-            onPress={() => handlePurchase('videoCompressor.noAds')}
+            onPress={handlePurchaseAds}
+            disabled={ads === null || !ads}
           >
             <Icon name="close-circle-outline" type="ionicon" />
             <ListItem.Content>
@@ -340,16 +416,18 @@ const IndexExampleContainer = () => {
                 <Text style={Fonts.blackSettings}>
                   {t('settings.removeAds')}
                 </Text>
-                <Text style={Fonts.greySettings}>$ 0.99</Text>
+                <Text style={Fonts.greySettings}>
+                  {ads !== null ? (ads ? ads_price : '👑') : ''}
+                </Text>
                 {/* <ListItem.Chevron /> */}
               </View>
             </ListItem.Content>
           </ListItem>
-          <ListItem
-            key={'row_pro'}
-            bottomDivider
-            // onPress={handlePurchasePro}
-            onPress={() => handlePurchase('videoCompressor.pro')}
+          <ListItem 
+            key={'row_pro'} 
+            bottomDivider 
+            onPress={handlePurchasePro}
+            disabled={pro === null || pro}
           >
             <Icon name="key" type="ionicon" />
             <ListItem.Content>
@@ -357,7 +435,10 @@ const IndexExampleContainer = () => {
                 <Text style={Fonts.blackSettings}>
                   {t('settings.proVersion')}
                 </Text>
-                <Text style={Fonts.greySettings}>$ 1.99</Text>
+                <Text style={Fonts.greySettings}>
+                  {pro !== null ? (pro ? '👑' : pro_price) : ''}
+                </Text>
+
                 {/* <ListItem.Chevron /> */}
               </View>
             </ListItem.Content>
@@ -380,19 +461,21 @@ const IndexExampleContainer = () => {
         </View>
       </View>
 
-      <BannerAd
-        unitId={TestIds.BANNER}
-        size={BannerAdSize.SMART_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-        onAdLoaded={() => {
-          // console.log('Advert loaded')
-        }}
-        onAdFailedToLoad={error => {
-          // console.error('Advert failed to load: ', error)
-        }}
-      />
+      {ads === null ? (
+        <View />
+      ) : ads === false ? (
+        <View />
+      ) : (
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.SMART_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          onAdLoaded={() => {}}
+          onAdFailedToLoad={error => {}}
+        />
+      )}
     </View>
   )
 }

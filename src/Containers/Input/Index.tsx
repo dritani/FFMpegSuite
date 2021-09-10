@@ -20,7 +20,8 @@ const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
 
-  const [titleString, setTitleString] = useState('GG')
+  const [ads, setAds] = useState(null)
+
   const getSavedLocale = async () => {
     let locale = 'en'
     let language = await AsyncStorage.getItem('@language')
@@ -37,6 +38,16 @@ const IndexExampleContainer = () => {
     }
 
     i18n.changeLanguage(locale)
+  }
+
+  const getPaymentStatus = async () => {
+    let payment = await AsyncStorage.getItem('@payment')
+    if (payment) { // initially it might not exist.
+      let payment_json = JSON.parse(payment)
+      setAds(payment_json.ads)
+    } else {
+      setAds(true)
+    }
   }
 
   const handleLibraryPick = () => {
@@ -103,24 +114,9 @@ const IndexExampleContainer = () => {
   }
 
   useEffect(() => {
-    // saveStorageTest()
-    // getStorageTest()
+    getPaymentStatus()
     getSavedLocale()
   }, [])
-
-  const saveStorageTest = async () => {
-    await AsyncStorage.setItem('@test', 'abc')
-    console.log('saved')
-  }
-
-  const getStorageTest = async () => {
-    let testString = await AsyncStorage.getItem('@test')
-    setTitleString(testString)
-    console.log('retrieved')
-
-    // solution: it should be blank until it is gotten. 
-    // the ads, the price, everything. Blank until retrieved from localStorage. Mhmmm. Fucking ghetto as fuck.
-  }
 
   return (
     <View
@@ -142,7 +138,6 @@ const IndexExampleContainer = () => {
             }}
           >
             {t('input.inputLabel')}
-            {/* {titleString} */}
           </Text>
 
           <ListItem
@@ -263,22 +258,21 @@ const IndexExampleContainer = () => {
         </View>
       </ScrollView>
 
-      {/* <View>
-
-      </View> */}
-      <BannerAd
-        unitId={TestIds.BANNER}
-        size={BannerAdSize.SMART_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-        onAdLoaded={() => {
-          // console.log('Advert loaded')
-        }}
-        onAdFailedToLoad={error => {
-          // console.error('Advert failed to load: ', error)
-        }}
-      />
+      {ads === null ? (
+        <View />
+      ) : ads === false ? (
+        <View />
+      ) : (
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.SMART_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          onAdLoaded={() => {}}
+          onAdFailedToLoad={error => {}}
+        />
+      )}
     </View>
   )
 }

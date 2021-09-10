@@ -9,6 +9,7 @@ import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import StepIndicator from 'react-native-step-indicator'
 import { getMediaInformation } from '@/Utils'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // 3 changes:
 // +Time selector right => Add a Margin
@@ -106,8 +107,20 @@ const IndexExampleContainer = props => {
   // const [seconds, setSeconds] = useState(0)
   const [volume, setVolume] = useState(0.1666)
   const [currentPreset, setPreset] = useState(2)
+  const [ads, setAds] = useState(null)
+
+  const getPaymentStatus = async () => {
+    let payment = await AsyncStorage.getItem('@payment')
+    if (payment) {
+      let payment_json = JSON.parse(payment)
+      setAds(payment_json.ads)
+    } else {
+      setAds(true)
+    }
+  }
 
   useEffect(() => {
+    getPaymentStatus()
     setTotalTime(props?.route?.params?.duration)
     handleTimeSlider([0, 300])
 
@@ -121,15 +134,6 @@ const IndexExampleContainer = props => {
       }
     })
   }, [])
-
-  const getDisplayString = seconds => {
-    let str = new Date(seconds * 1000).toISOString()
-    if (seconds < 3600) {
-      return str.substr(14, 8)
-    } else {
-      return str.substr(11, 8)
-    }
-  }
 
   const getDateString = seconds => {
     return new Date(seconds * 1000).toISOString()
@@ -514,7 +518,7 @@ const IndexExampleContainer = props => {
     )
   }
 
-  const handleStart2 = () => {
+  const handleStart = () => {
     let filePath = props?.route?.params?.filePath
     let duration = props?.route?.params?.duration
 
@@ -568,7 +572,7 @@ const IndexExampleContainer = props => {
     navigate('Processing', ffmpeg)
   }
 
-  const handleStart = () => {
+  const handleStar3 = () => {
     // navigate('PaymentModal')
     setModalVisible(true)
   }
@@ -611,54 +615,36 @@ const IndexExampleContainer = props => {
           // transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
+            Alert.alert("Modal has been closed.")
+            setModalVisible(!modalVisible)
           }}
         >
           <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
-      <Text style={[Fonts.textRegular, Gutters.smallBMargin]}>DarkMode :</Text>
-
-      <TouchableOpacity
-        style={[Common.button.rounded, Gutters.regularBMargin]}
-        onPress={() => changeTheme({ darkMode: null })}
-      >
-        <Text style={Fonts.textRegular}>Auto</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[Common.button.outlineRounded, Gutters.regularBMargin]}
-        onPress={() => changeTheme({ darkMode: true })}
-      >
-        <Text style={Fonts.textRegular}>Dark</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[Common.button.outline, Gutters.regularBMargin]}
-        onPress={() => setModalVisible(!modalVisible)}
-      >
-        <Text style={Fonts.textRegular}>Close Modal</Text>
-      </TouchableOpacity>
-
-    </View>
-          
+            <TouchableOpacity
+              style={[Gutters.regularBMargin]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={[Fonts.textRegular, { color: 'red' }]}>Close Modal</Text>
+            </TouchableOpacity>
+          </View>
         </Modal>
       </View>
 
-      <View
-        // style={{ justifyContent: 'flex-end'}}
-        style={{ height: 50 }}
-      />
-      {/* <BannerAd
+      {ads === null ? (
+        <View style={{ height: 50 }} />
+      ) : ads === false ? (
+        <View />
+      ) : (
+        <BannerAd
           unitId={TestIds.BANNER}
           size={BannerAdSize.SMART_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,
           }}
-          onAdLoaded={() => {
-            // console.log('Advert loaded')
-          }}
-          onAdFailedToLoad={error => {
-            // console.error('Advert failed to load: ', error)
-          }}
-        /> */}
+          onAdLoaded={() => {}}
+          onAdFailedToLoad={error => {}}
+        />
+      )}
     </View>
   )
 }
