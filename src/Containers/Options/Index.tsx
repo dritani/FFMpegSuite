@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, ScrollView, Modal, Alert, Pressable, TouchableOpacity } from 'react-native'
-import { Slider, Input, Text, Button } from 'react-native-elements'
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Modal,
+  Alert,
+  Pressable,
+  TouchableOpacity,
+} from 'react-native'
+import { Slider, Input, Text, Button, Icon } from 'react-native-elements'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
@@ -10,7 +18,7 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import StepIndicator from 'react-native-step-indicator'
 import { getMediaInformation } from '@/Utils'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import RNIap from 'react-native-iap'
 // 3 changes:
 // +Time selector right => Add a Margin
 // +Keyboard Avoiding View
@@ -108,6 +116,7 @@ const IndexExampleContainer = props => {
   const [volume, setVolume] = useState(0.1666)
   const [currentPreset, setPreset] = useState(2)
   const [ads, setAds] = useState(null)
+  const [pro, setPro] = useState(null)
 
   const getPaymentStatus = async () => {
     let payment = await AsyncStorage.getItem('@payment')
@@ -126,11 +135,13 @@ const IndexExampleContainer = props => {
 
     let ffprobeCommand = props?.route?.params?.filePath
     getMediaInformation(ffprobeCommand).then(result => {
-      // console.log(`FFPROBE: ${result}`)
-      // console.log(result.getMediaProperties())
-      // console.log(result.getAllProperties())
+      console.log(`FFPROBE: ${result}`)
+      // result.getMediaProperties().duration
+      // result.getMediaProperties().size
+      // if bigger than 1500000 and !pro
+
       if (result !== 0) {
-        //
+        // error. do jack shit.
       }
     })
   }, [])
@@ -510,12 +521,32 @@ const IndexExampleContainer = props => {
       >
         <Button
           title={t('options.startButton')}
+          icon={
+            selectedIndex === 1 &&
+            !pro && (
+              <Icon
+                name="lock-closed"
+                size={20}
+                color="white"
+                type="ionicon"
+                style={{ marginRight: 10 }}
+              />
+            )
+          }
           titleStyle={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}
-          containerStyle={{ width: 150, borderRadius: 5 }}
-          onPress={handleStart}
+          containerStyle={
+            selectedIndex === 1 && !pro
+              ? { width: 150, borderRadius: 5, opacity: 0.7 }
+              : { width: 150, borderRadius: 5 }
+          }
+          onPress={selectedIndex === 1 && !pro ? toggleModal : handleStart}
         />
       </View>
     )
+  }
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible)
   }
 
   const handleStart = () => {
@@ -572,9 +603,71 @@ const IndexExampleContainer = props => {
     navigate('Processing', ffmpeg)
   }
 
-  const handleStar3 = () => {
-    // navigate('PaymentModal')
-    setModalVisible(true)
+  const handleRestorePurchases = async () => {
+    try {
+      const purchases = await RNIap.getAvailablePurchases()
+
+      let ads_status = true,
+        pro_status = false
+      purchases.forEach(purchase => {
+        switch (purchase.productId) {
+          case 'videoCompressor.pro':
+            pro_status = true
+            break
+
+          case 'videoCompressor.noAds':
+            ads_status = false
+            break
+        }
+      })
+
+      setAds(ads_status)
+      setPro(pro_status)
+
+      let payment_status = {
+        ads: ads_status,
+        pro: pro_status,
+      }
+
+      await AsyncStorage.setItem('@payment', JSON.stringify(payment_status))
+
+      Alert.alert('Restore Successful', 'Purchases successfully restored!')
+    } catch (err) {
+      Alert.alert(
+        'Restore Unsuccessful',
+        'There was an error while restoring purchases.',
+      )
+    }
+  }
+
+  const handlePurchasePro = async () => {
+    try {
+      const purchase = await RNIap.requestPurchase('videoCompressor.pro')
+
+      if (purchase) {
+        setPro(true)
+
+        if (purchase) {
+          setPro(true)
+
+          let new_payment = {
+            ads: true,
+            pro: true,
+          }
+
+          let payment = await AsyncStorage.getItem('@payment')
+          if (payment) {
+            let payment_json = JSON.parse(payment)
+            new_payment.ads = payment_json.ads
+          }
+
+          await AsyncStorage.setItem('@payment', JSON.stringify(new_payment))
+        }
+      }
+    } catch (err) {
+      // should be handled automatically by iOS
+      // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
+    }
   }
 
   return (
@@ -615,16 +708,31 @@ const IndexExampleContainer = props => {
           // transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.")
             setModalVisible(!modalVisible)
           }}
         >
           <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
             <TouchableOpacity
               style={[Gutters.regularBMargin]}
+              onPress={handlePurchasePro}
+            >
+              <Text style={[Fonts.textRegular, { color: 'blue' }]}>Buy Pro</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[Gutters.regularBMargin]}
+              onPress={handleRestorePurchases}
+            >
+              <Text style={[Fonts.textRegular, { color: 'green' }]}>
+                Restore Purchases
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[Gutters.regularBMargin]}
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <Text style={[Fonts.textRegular, { color: 'red' }]}>Close Modal</Text>
+              <Text style={[Fonts.textRegular, { color: 'red' }]}>
+                Close Modal
+              </Text>
             </TouchableOpacity>
           </View>
         </Modal>

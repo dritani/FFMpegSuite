@@ -14,6 +14,7 @@ export default function ({}: ThemeVariables): ThemeImages {
     settings: require('@/Assets/Images/settings.png'),
     services: require('@/Assets/Images/services.gif'),
     checkmark: require('@/Assets/Images/checkmark.png'),
+    crown: require('@/Assets/Images/crown.png'),
     error: require('@/Assets/Images/error.png'),
   }
 }

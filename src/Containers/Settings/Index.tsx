@@ -43,44 +43,6 @@ import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { tupleExpression } from '@babel/types'
 
-// let purchaseUpdateSubscription: EmitterSubscription
-// let purchaseErrorSubscription: EmitterSubscription
-
-/*
-[ { productId: 'videoCompressor.noAds',
-    subscriptionPeriodUnitIOS: 'DAY',
-    introductoryPriceAsAmountIOS: '',
-    description: 'Removes all advertisements',
-    introductoryPrice: '',
-    countryCode: 'USA',
-    subscriptionPeriodNumberIOS: '0',
-    introductoryPriceSubscriptionPeriodIOS: '',
-    title: 'Remove Ads',
-    introductoryPriceNumberOfPeriodsIOS: '',
-    discounts: [],
-    type: 'inapp',
-    localizedPrice: '$0.99',
-    price: '0.99',
-    introductoryPricePaymentModeIOS: '',
-    currency: 'USD' },
-  { productId: 'videoCompressor.pro',
-    subscriptionPeriodUnitIOS: 'DAY',
-    introductoryPriceAsAmountIOS: '',
-    description: 'Unlocks advanced compression features',
-    introductoryPrice: '',
-    countryCode: 'USA',
-    subscriptionPeriodNumberIOS: '0',
-    introductoryPriceSubscriptionPeriodIOS: '',
-    title: 'Pro Version',
-    introductoryPriceNumberOfPeriodsIOS: '',
-    discounts: [],
-    type: 'inapp',
-    localizedPrice: '$1.99',
-    price: '1.99',
-    introductoryPricePaymentModeIOS: '',
-    currency: 'USD' } ]
-
-*/
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout } = useTheme()
@@ -111,40 +73,45 @@ const IndexExampleContainer = () => {
     android: ['videoCompressor.noAds', 'videoCompressor.pro'], // todo
   })
 
-  const [productsList, setProductsList] = useState([])
+  const getProducts = async () => {
+    let prices = AsyncStorage.getItem('@localizedPrices')
+    let localizedPrices = {}
 
-  const IAPContext = createContext<IAPContext>({
-    isSubscription: false,
-    subscription: undefined,
-    showPurchase: () => {},
-  })
+    if (prices) {
+      localizedPrices = JSON.parse(prices)
+      setAdsPrice(localizedPrices.ads_price)
+      setProPrice(localizedPrices.pro_price)
+    } else {
+      RNIap.clearProductsIOS()
 
-  const getProducts = useCallback(async (): Promise<void> => {
-    RNIap.clearProductsIOS()
+      try {
+        const result = await RNIap.initConnection()
+        await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
+      } catch (err) {
+        console.log(err) // error fetching product info
+      }
 
-    try {
-      const result = await RNIap.initConnection()
-      await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
-    } catch (err) {
-      //
+      const products = await RNIap.getProducts(itemSkus)
+      let ad = products.filter(a => a.productId === 'videoCompressor.noAds')
+      let pr = products.filter(a => a.productId === 'videoCompressor.pro')
+
+      if (ad.length > 0 && pr.length > 0) {
+        let ad_pr = ad[0].localizedPrice
+        let pr_pr = pr[0].localizedPrice
+        setAdsPrice(ad_pr)
+        setProPrice(pr_pr)
+
+        let localizedPrices = {
+          ads_price: ad_pr,
+          pro_price: pr_pr,
+        }
+        AsyncStorage.setItem(
+          '@localizedPrices',
+          JSON.stringify(localizedPrices),
+        )
+      }
     }
-
-    const products = await RNIap.getProducts(itemSkus)
-    products.forEach(product => {
-      product.type = 'inapp'
-    })
-
-    console.log('products: ')
-    console.log(products)
-
-    // grab this only the first time. 
-    // Only if no localized prices exist in AsyncStorage.
-    // thereafter simply load them.
-
-    setProductsList(products)
-  }, [productsList])
-
-
+  }
 
   const getPaymentStatus = async () => {
     let payment = await AsyncStorage.getItem('@payment')
@@ -423,9 +390,9 @@ const IndexExampleContainer = () => {
               </View>
             </ListItem.Content>
           </ListItem>
-          <ListItem 
-            key={'row_pro'} 
-            bottomDivider 
+          <ListItem
+            key={'row_pro'}
+            bottomDivider
             onPress={handlePurchasePro}
             disabled={pro === null || pro}
           >
