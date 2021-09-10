@@ -9,7 +9,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native'
-import { Slider, Input, Text, Button, Icon } from 'react-native-elements'
+import { ListItem, Slider, Input, Text, Button, Icon } from 'react-native-elements'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
@@ -21,6 +21,7 @@ import { getMediaInformation } from '@/Utils'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import RNIap from 'react-native-iap'
 import LinearGradient from 'react-native-linear-gradient'
+import TouchableScale from 'react-native-touchable-scale'
 
 // 3 changes:
 // +Time selector right => Add a Margin
@@ -710,6 +711,7 @@ const IndexExampleContainer = props => {
         <Modal
           animationType="slide"
           // transparent={true}
+          presentationStyle="pageSheet"
           visible={modalVisible}
           onRequestClose={() => {
             setModalVisible(!modalVisible)
@@ -719,16 +721,9 @@ const IndexExampleContainer = props => {
             colors={['#7d88ff', '#58a3ff', '#8fd6ff', '#bde9ff', '#cfedfc', '#ffffff']}
             style={{ flex: 1 }}
           >
-            <View
-              style={[Layout.fill, Layout.colCenter]}
+            <ScrollView
+              style={[Layout.fill, Gutters.smallHPadding]}
             >
-              <Image
-                style={{ width: 80, height: 80 }}
-                source={Images.crown}
-              />
-              <Text style={[Fonts.textRegular, { color: 'white' }]}>
-                Pro Version
-              </Text>
               <TouchableOpacity onPress={toggleModal}>
                 <Text
                   style={{
@@ -740,14 +735,59 @@ const IndexExampleContainer = props => {
                   x
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
+
+              <View style={{ alignItems: 'center' }}>
+                <Image
+                  style={{ width: 80, height: 80 }}
+                  source={Images.crown}
+                />
+                <Text style={[Fonts.textRegular, { color: 'white' , fontFamily: 'Nunito-ExtraBold', fontSize: 25 }]}>
+                  Pro Version
+                </Text>
+              </View>
+
+              <View style={{backgroundColor: 'green', borderRadius: 10, padding: 15 }}>
+                <Text style={{color: 'white'}}>
+                  Feature1 - Feature2
+                </Text>
+              </View>
+
+              <ListItem
+                containerStyle={{ borderRadius: 10, marginBottom: 15 }}
+                key={'img1'}
+                Component={TouchableScale}
+                friction={90} //
+                tension={100} // These props are passed to the parent component (here TouchableScale)
+                activeScale={0.95} //
+                linearGradientProps={{
+                  colors: ['#a459ab', '#911f9c'],
+                  start: { x: 0, y: 1 },
+                  end: { x: 0, y: 0 },
+                }}
+                ViewComponent={LinearGradient} // Only if no expo
+                onPress={handlePurchasePro}
+              >
+                <ListItem.Content>
+                  <ListItem.Title
+                    style={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontFamily: 'Nunito-Regular',
+                    }}
+                  >
+                    Hello
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+
+              {/* <TouchableOpacity
                 style={[Gutters.regularBMargin]}
                 onPress={handlePurchasePro}
               >
                 <Text style={[Fonts.textRegular, { color: 'black' }]}>
                   Buy Pro
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={[Gutters.regularBMargin]}
                 onPress={handleRestorePurchases}
@@ -757,7 +797,7 @@ const IndexExampleContainer = props => {
                 </Text>
               </TouchableOpacity>
               
-            </View>
+            </ScrollView>
           </LinearGradient>
         </Modal>
       </View>
