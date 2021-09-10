@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +20,7 @@ const IndexExampleContainer = () => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
 
+  const [titleString, setTitleString] = useState('GG')
   const getSavedLocale = async () => {
     let locale = 'en'
     let language = await AsyncStorage.getItem('@language')
@@ -102,8 +103,24 @@ const IndexExampleContainer = () => {
   }
 
   useEffect(() => {
+    // saveStorageTest()
+    // getStorageTest()
     getSavedLocale()
   }, [])
+
+  const saveStorageTest = async () => {
+    await AsyncStorage.setItem('@test', 'abc')
+    console.log('saved')
+  }
+
+  const getStorageTest = async () => {
+    let testString = await AsyncStorage.getItem('@test')
+    setTitleString(testString)
+    console.log('retrieved')
+
+    // solution: it should be blank until it is gotten. 
+    // the ads, the price, everything. Blank until retrieved from localStorage. Mhmmm. Fucking ghetto as fuck.
+  }
 
   return (
     <View
@@ -125,6 +142,7 @@ const IndexExampleContainer = () => {
             }}
           >
             {t('input.inputLabel')}
+            {/* {titleString} */}
           </Text>
 
           <ListItem

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, Modal, Alert, Pressable, TouchableOpacity } from 'react-native'
 import { Slider, Input, Text, Button } from 'react-native-elements'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
@@ -88,14 +88,17 @@ const IndexExampleContainer = props => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [scrollEnabled, setScrollEnabled] = useState(true)
   const labels = [t('options.slowerLabel'), '', '', t('options.fasterLabel')]
+  const MAX_MULTISLIDER = 300
+
+  const [modalVisible, setModalVisible] = useState(false)
 
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
   const [bitrate, setBitrate] = useState(0)
   const [framerate, setFramerate] = useState(0)
   const [time_start, setTimeStart] = useState(100)
-  const [time_end, setTimeEnd] = useState(200)
-  const [total_time, setTotalTime] = useState(0)
+  const [time_end, setTimeEnd] = useState(300)
+  const [total_time, setTotalTime] = useState('')
   const [display_start, setDisplayStart] = useState(0)
   const [display_end, setDisplayEnd] = useState(0)
   const [send_start, setSendStart] = useState(0)
@@ -105,13 +108,14 @@ const IndexExampleContainer = props => {
   const [currentPreset, setPreset] = useState(2)
 
   useEffect(() => {
-    let ffprobeCommand = props?.route?.params?.filePath
     setTotalTime(props?.route?.params?.duration)
     handleTimeSlider([0, 300])
+
+    let ffprobeCommand = props?.route?.params?.filePath
     getMediaInformation(ffprobeCommand).then(result => {
-      console.log(`FFPROBE: ${result}`)
-      console.log(result.getMediaProperties())
-      console.log(result.getAllProperties())
+      // console.log(`FFPROBE: ${result}`)
+      // console.log(result.getMediaProperties())
+      // console.log(result.getAllProperties())
       if (result !== 0) {
         //
       }
@@ -119,33 +123,67 @@ const IndexExampleContainer = props => {
   }, [])
 
   const getDisplayString = seconds => {
-    return new Date(seconds * 1000).toISOString().substr(11, 8)
+    let str = new Date(seconds * 1000).toISOString()
+    if (seconds < 3600) {
+      return str.substr(14, 8)
+    } else {
+      return str.substr(11, 8)
+    }
   }
-  
-  const getSendString = seconds => {
-    return new Date(seconds * 1000).toISOString().substr(11, 8)
+
+  const getDateString = seconds => {
+    return new Date(seconds * 1000).toISOString()
   }
 
   const handleTimeSlider = a => {
     let delta = ((a[1] - a[0]) / 300) * props?.route?.params?.duration
     let dur = Math.round((delta + Number.EPSILON) * 100) / 100
 
+    let hours = Math.floor(dur / 3600)
+    let hour_remainder = dur % 3600
+    let minutes = Math.floor(hour_remainder / 60)
+    let seconds = hour_remainder % 60
+    let string_duration = ''
+
+    if (hours) {
+      string_duration += `${hours} h `
+    }
+
+    if (minutes) {
+      string_duration += `${minutes} m `
+    }
+
+    string_duration += `${seconds} s`
+
+    let formatted_start = '',
+      final_start = ''
     let seconds_start = (a[0] / 300) * props?.route?.params?.duration
-    let formatted_start = getDisplayString(seconds_start)
+    let string_start = getDateString(seconds_start)
+    final_start = string_start.substr(11, 12)
+    if (seconds_start < 3600) {
+      formatted_start = string_start.substr(14, 8)
+    } else {
+      formatted_start = string_start.substr(11, 8)
+    }
 
+    let formatted_end = '',
+      final_end = ''
     let seconds_end = (a[1] / 300) * props?.route?.params?.duration
-    let formatted_end = getDisplayString(seconds_end)
-
-    // "1970-01-01T00:16:40.500Z"
-    // if seconds < 3600
+    let string_end = getDateString(seconds_end)
+    final_end = string_start.substr(11, 12)
+    if (seconds_end < 3600) {
+      formatted_end = string_end.substr(14, 8)
+    } else {
+      formatted_end = string_end.substr(11, 8)
+    }
 
     setTimeStart(a[0])
     setTimeEnd(a[1])
-    setTotalTime(dur)
+    setTotalTime(string_duration)
     setDisplayStart(formatted_start)
     setDisplayEnd(formatted_end)
-    setSendStart(formatted_start)
-    setSendEnd(formatted_end)
+    setSendStart(final_start)
+    setSendEnd(final_end)
   }
 
   const customStyles = {
@@ -353,7 +391,8 @@ const IndexExampleContainer = props => {
             <MultiSlider
               containerStyle={{
                 marginLeft: 15,
-                marginRight: 15,
+                marginRight: 10,
+                marginTop: 15,
                 width: '100%',
                 flex: 1,
               }}
@@ -371,7 +410,7 @@ const IndexExampleContainer = props => {
               snapped={true}
               smoothSnapped={true}
               min={0}
-              max={300}
+              max={MAX_MULTISLIDER}
               step={0.1}
               values={[time_start, time_end]}
               // markerSize={1}
@@ -381,7 +420,11 @@ const IndexExampleContainer = props => {
               onValuesChangeFinish={() => setScrollEnabled(true)}
             />
             <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 15,
+              }}
             >
               <Text
                 style={[
@@ -393,7 +436,7 @@ const IndexExampleContainer = props => {
                 {display_start}
               </Text>
               <Text style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}>
-                {`${total_time} s`}
+                {total_time}
               </Text>
               <Text
                 style={[
@@ -471,24 +514,63 @@ const IndexExampleContainer = props => {
     )
   }
 
-  const handleStart = () => {
+  const handleStart2 = () => {
     let filePath = props?.route?.params?.filePath
     let duration = props?.route?.params?.duration
 
+    let final_type = selectedIndex === 0 ? 'basic' : 'advanced'
+
+    let final_width = 0,
+      final_height = 0
+
+    if (width > 0 && height > 0) {
+      final_width = width
+      final_height = height
+    } else if (width > 0) {
+      final_height = -1
+    } else if (height > 0) {
+      final_width = -1
+    } else {
+      final_width = 0
+      final_height = 0
+    }
+
+    let final_start = 0
+    let final_end = 0
+
+    if (time_start > 0) {
+      final_start = send_start
+    }
+
+    if (final_end === MAX_MULTISLIDER) {
+      final_end = 0
+    } else {
+      final_end = send_end
+    }
+
+    let final_volume = volume === 0.1666 ? 0 : volume * 6
+
     let ffmpeg = {
       filePath,
-      duration,
-      type: selectedIndex === 0 ? 'basic' : 'advanced',
-      currentPreset,
-      width,
-      height,
-      bitrate,
-      framerate,
-      time_start,
-      time_end,
-      volume: volume === 0.1666 ? 0 : volume * 6, // done
+      duration, // todo: proper one
+      type: final_type, // done
+      currentPreset, // done
+      width: final_width, // done
+      height: final_height, // done
+      bitrate, // done
+      framerate, // done
+      time_start: final_start, //
+      time_end: final_end, //
+      volume: final_volume, // done
     }
+    console.log('ffmpeg')
+    console.log(ffmpeg)
     navigate('Processing', ffmpeg)
+  }
+
+  const handleStart = () => {
+    // navigate('PaymentModal')
+    setModalVisible(true)
   }
 
   return (
@@ -524,6 +606,40 @@ const IndexExampleContainer = props => {
         </View>
         {selectedIndex === 0 && basicTab()}
         {selectedIndex === 1 && advancedTab()}
+        <Modal
+          animationType="slide"
+          // transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={[Layout.fill, Layout.colCenter, Gutters.smallHPadding]}>
+      <Text style={[Fonts.textRegular, Gutters.smallBMargin]}>DarkMode :</Text>
+
+      <TouchableOpacity
+        style={[Common.button.rounded, Gutters.regularBMargin]}
+        onPress={() => changeTheme({ darkMode: null })}
+      >
+        <Text style={Fonts.textRegular}>Auto</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[Common.button.outlineRounded, Gutters.regularBMargin]}
+        onPress={() => changeTheme({ darkMode: true })}
+      >
+        <Text style={Fonts.textRegular}>Dark</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[Common.button.outline, Gutters.regularBMargin]}
+        onPress={() => setModalVisible(!modalVisible)}
+      >
+        <Text style={Fonts.textRegular}>Close Modal</Text>
+      </TouchableOpacity>
+
+    </View>
+          
+        </Modal>
       </View>
 
       <View

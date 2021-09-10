@@ -216,7 +216,15 @@ export default class VideoUtil {
     }
 
     if (time_start || time_end) {
-      command += `-ss ${time_start} -to ${time_end} -c copy `
+      if (time_start) {
+        command += `-ss ${time_start} `
+      }
+
+      if (time_end) {
+        command += `-to ${time_end} `
+      }
+
+      command += `-c copy `
     }
 
     if (volume) {

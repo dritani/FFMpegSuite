@@ -5,6 +5,7 @@ import {
   OptionsContainer,
   ProcessingContainer,
   SettingsContainer,
+  PaymentModalContainer,
 } from '@/Containers'
 import { useSelector } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
@@ -53,6 +54,12 @@ const ApplicationNavigator = () => {
     }
   }
 
+  const paymentModalOptions = () => {
+    return {
+      presentation: 'modal',
+    }
+  }
+
   useEffect(() => {
     if (MainNavigator == null && !applicationIsLoading) {
       MainNavigator = require('@/Navigators/Main').default
@@ -90,7 +97,6 @@ const ApplicationNavigator = () => {
             headerTintColor: '#0066FF',
             headerBackTitle: t('general.headerBackTitle'),
           }}
-
           // title="title"
           // headerTitle="headerTitle"
           // navigationOptions={{
@@ -119,6 +125,11 @@ const ApplicationNavigator = () => {
             component={ProcessingContainer}
           />
           <Stack.Screen name="Settings" component={SettingsContainer} />
+          <Stack.Screen 
+            options={paymentModalOptions}
+            name="PaymentModal"
+            component={PaymentModalContainer}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
