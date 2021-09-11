@@ -131,7 +131,7 @@ const IndexExampleContainer = props => {
 
     let formatted_start = '',
       final_start = ''
-    let seconds_start = (a[0] / 300.00) * duration.toFixed(2)
+    let seconds_start = ((a[0] / 300.00) * duration).toFixed(2)
     let string_start = getDateString(seconds_start)
     final_start = string_start.substr(11, 12)
     if (seconds_start < 3600) {
@@ -142,7 +142,7 @@ const IndexExampleContainer = props => {
 
     let formatted_end = '',
       final_end = ''
-    let seconds_end = (a[1] / 300.00) * duration.toFixed(2)
+    let seconds_end = ((a[1] / 300.00) * duration).toFixed(2)
     console.log(`seconds_end: ${seconds_end}`)
     let string_end = getDateString(seconds_end)
     final_end = string_start.substr(11, 12)
