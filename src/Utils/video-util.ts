@@ -144,6 +144,7 @@ export default class VideoUtil {
     let crf = 33,
       f_preset = 'veryfast'
 
+    console.log(`received preset: ${preset}`)
     switch (preset) {
       case 4:
         crf = 36

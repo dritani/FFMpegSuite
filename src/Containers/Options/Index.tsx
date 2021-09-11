@@ -30,6 +30,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import RNIap from 'react-native-iap'
 import LinearGradient from 'react-native-linear-gradient'
 import TouchableScale from 'react-native-touchable-scale'
+import { Config } from '@/Config'
+
+const bannerId = __DEV__ ? TestIds.BANNER : Config.BANNER_ID
 
 const IndexExampleContainer = props => {
   const { t } = useTranslation()
@@ -68,15 +71,17 @@ const IndexExampleContainer = props => {
     if (payment) {
       let payment_json = JSON.parse(payment)
       setAds(payment_json.ads)
+      setPro(payment_json.pro)
     } else {
       setAds(true)
+      setPro(false)
     }
   }
 
   useEffect(() => {
     getPaymentStatus()
-
     let ffprobeCommand = props?.route?.params?.filePath
+
     getMediaInformation(ffprobeCommand).then(result => {
       let vid_duration = result.getMediaProperties().duration
       let vid_size = result.getMediaProperties().size
@@ -148,7 +153,7 @@ const IndexExampleContainer = props => {
     let seconds_end = ((a[1] / MAX_MULTISLIDER) * duration).toFixed(2)
     console.log(`seconds_end: ${seconds_end}`)
     let string_end = getDateString(seconds_end)
-    final_end = string_start.substr(11, 12)
+    final_end = string_end.substr(11, 12)
     if (seconds_end < 3600) {
       formatted_end = string_end.substr(14, 8)
     } else {
@@ -184,7 +189,7 @@ const IndexExampleContainer = props => {
       final_end = ''
     let seconds_end = (a[1] / MAX_MULTISLIDER) * dur_float
     let string_end = getDateString(seconds_end)
-    final_end = string_start.substr(11, 12)
+    final_end = string_end.substr(11, 12)
     if (seconds_end < 3600) {
       formatted_end = string_end.substr(14, 8)
     } else {
@@ -586,7 +591,7 @@ const IndexExampleContainer = props => {
       final_start = send_start
     }
 
-    if (final_end === MAX_MULTISLIDER) {
+    if (time_end === MAX_MULTISLIDER) {
       final_end = 0
     } else {
       final_end = send_end
@@ -866,7 +871,7 @@ const IndexExampleContainer = props => {
         <View />
       ) : (
         <BannerAd
-          unitId={TestIds.BANNER}
+          unitId={bannerId}
           size={BannerAdSize.SMART_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,

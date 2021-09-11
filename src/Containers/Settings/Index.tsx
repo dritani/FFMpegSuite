@@ -18,16 +18,8 @@ import ChangeTheme from '@/Store/Theme/ChangeTheme'
 import { useTranslation } from 'react-i18next'
 import { UserState } from '@/Store/User'
 import { ThemeState } from '@/Store/Theme'
-// import RNIap, {
-//   Product,
-//   ProductPurchase,
-//   PurchaseError,
-//   InAppPurchase,
-//   finishTransaction,
-//   acknowledgePurchaseAndroid,
-//   purchaseErrorListener,
-//   purchaseUpdatedListener,
-// } from 'react-native-iap'
+import { Config } from '@/Config'
+
 import RNIap, {
   InAppPurchase,
   Product,
@@ -41,6 +33,8 @@ import { Picker } from 'react-native-woodpicker'
 import { ListItem, Icon } from 'react-native-elements'
 import { TestIds, BannerAd, BannerAdSize } from '@react-native-firebase/admob'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+const bannerId = __DEV__ ? TestIds.BANNER : Config.BANNER_ID
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -449,7 +443,7 @@ const IndexExampleContainer = () => {
         <View />
       ) : (
         <BannerAd
-          unitId={TestIds.BANNER}
+          unitId={bannerId}
           size={BannerAdSize.SMART_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,

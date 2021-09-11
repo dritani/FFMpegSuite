@@ -34,6 +34,7 @@ import {
 } from '@/Utils'
 import MediaMeta from 'react-native-media-meta'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Config } from '@/Config'
 
 // UI
 // +spinning icon at the top => Checkmark when done
@@ -52,11 +53,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 // +get it to the point where it can accept a file as input
 // +find an arbitrary ffmpeg command and execute it
 
-// const adUnitId = __DEV__
-//   ? TestIds.INTERSTITIAL
-//   : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy'
-const adUnitId = TestIds.INTERSTITIAL
-const interstitial = InterstitialAd.createForAdRequest(adUnitId)
+const bannerId = __DEV__ ? TestIds.BANNER : Config.BANNER_ID
+const interstitialId = __DEV__ ? TestIds.INTERSTITIAL : Config.INTERSTITIAL_ID
+const interstitial = InterstitialAd.createForAdRequest(interstitialId)
 
 const IndexExampleContainer = props => {
   const { t } = useTranslation()
@@ -185,8 +184,8 @@ const IndexExampleContainer = props => {
     let empty_advanced =
       !width &&
       !height &&
-      !time_start &&
-      !time_end &&
+      (time_start === 0 || time_start === '00:00:00.000') &&
+      (time_end === 0 || time_end === '00:00:00.000') &&
       !volume &&
       !bitrate &&
       !framerate
@@ -216,7 +215,6 @@ const IndexExampleContainer = props => {
     }
 
     executeFFmpeg(ffmpegCommand).then(result => {
-      console.log('ffmpeg result: ', result)
       if (result !== 0) {
         setFinished(true)
         setError(true) // red icon at the top.
@@ -233,8 +231,6 @@ const IndexExampleContainer = props => {
 
   const showInterstitialAd = () => {
     let randomNumber = Math.random()
-    console.log(`interstitial randomNumber: ${randomNumber}`)
-    console.log(`adLoaded: ${adLoaded}`)
     if (randomNumber > 0.5 && adLoaded) {
       interstitial.show()
     }
@@ -296,7 +292,7 @@ const IndexExampleContainer = props => {
         <View />
       ) : (
         <BannerAd
-          unitId={TestIds.BANNER}
+          unitId={bannerId}
           size={BannerAdSize.SMART_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,

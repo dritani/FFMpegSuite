@@ -16,6 +16,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { NativeModules, Platform, Alert } from 'react-native'
 import i18n from 'i18next'
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions'
+import { Config } from '@/Config'
+
+const bannerId = __DEV__ ? TestIds.BANNER : Config.BANNER_ID
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -353,7 +356,7 @@ const IndexExampleContainer = () => {
         <View />
       ) : (
         <BannerAd
-          unitId={TestIds.BANNER}
+          unitId={bannerId}
           size={BannerAdSize.SMART_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,
