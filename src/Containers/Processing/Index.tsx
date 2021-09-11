@@ -330,7 +330,7 @@ const IndexExampleContainer = props => {
               title={t('processing.finishButton')}
               containerStyle={{ width: 150, borderRadius: 5 }}
               titleStyle={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}
-              onPress={() => navigate('Input')}
+              onPress={() => navigate('Input', {})}
             />
           </View>
         </View>

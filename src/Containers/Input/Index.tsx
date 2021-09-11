@@ -21,6 +21,7 @@ const IndexExampleContainer = () => {
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
 
   const [ads, setAds] = useState(null)
+  const [allowPicker, setAllowPicker] = useState(true)
 
   const getSavedLocale = async () => {
     let locale = 'en'
@@ -51,22 +52,26 @@ const IndexExampleContainer = () => {
   }
 
   const handleLibraryPick = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'video',
-      },
-      res => {
-        if (!res.didCancel) {
-          if (res.assets.length) {
-            let asset = res.assets[0]
-            let filePath = asset.uri
-            let duration = asset.duration
-            navigate('Options', { filePath, duration })
+    if (allowPicker) {
+      setAllowPicker(false)
+      launchImageLibrary(
+        {
+          mediaType: 'video',
+        },
+        res => {
+          setAllowPicker(true)
+          if (!res.didCancel) {
+            if (res.assets.length) {
+              let asset = res.assets[0]
+              let filePath = asset.uri
+              let duration = asset.duration
+              navigate('Options', { filePath, duration })
+            }
           }
-        }
-        // assets.uri // => will be different for Android Check out the launchImageLibrary docs
-      },
-    )
+          // assets.uri // => will be different for Android Check out the launchImageLibrary docs
+        },
+      )
+    }
   }
 
   const handleFilePick = async () => {

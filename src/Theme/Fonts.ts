@@ -52,5 +52,7 @@ export default function ({ FontSize, Colors }: ThemeVariables): ThemeFonts {
     },
     greySettings: { fontSize: 17, color: 'grey' },
     blackSettings: { fontSize: 17, color: 'black' },
+    nunitoRegular: { fontFamily: 'Nunito-Regular' },
+    nunitoBold: { fontFamily: 'Nunito-ExtraBold' },
   })
 }

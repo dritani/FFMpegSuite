@@ -48,8 +48,8 @@ const IndexExampleContainer = () => {
 
   const [ads, setAds] = useState(null)
   const [pro, setPro] = useState(null)
-  const [ads_price, setAdsPrice] = useState('$ 0.99')
-  const [pro_price, setProPrice] = useState('$ 1.99')
+  const [ads_price, setAdsPrice] = useState('$0.99')
+  const [pro_price, setProPrice] = useState('$1.99')
 
   const languages: Array<PickerItem> = [
     { label: '🇺🇸 English', value: 'en' },
@@ -323,7 +323,7 @@ const IndexExampleContainer = () => {
             <Icon name="globe-outline" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
-                <Text style={Fonts.blackSettings}>
+                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>
                   {t('settings.language')}
                 </Text>
                 <Picker
@@ -334,6 +334,7 @@ const IndexExampleContainer = () => {
                   title="Language Picker"
                   placeholder="Select Language"
                   isNullable
+                  textInputStyle={{fontFamily: 'Nunito-Regular'}}
                   //backdropAnimation={{ opactity: 0 }}
                   //mode="dropdown"
                   //isNullable
@@ -346,7 +347,7 @@ const IndexExampleContainer = () => {
             <Icon name="star" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
-                <Text style={Fonts.blackSettings}>{t('settings.rateUs')}</Text>
+                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>{t('settings.rateUs')}</Text>
                 <ListItem.Chevron />
               </View>
             </ListItem.Content>
@@ -359,7 +360,7 @@ const IndexExampleContainer = () => {
             <Icon name="share-social" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
-                <Text style={Fonts.blackSettings}>
+                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>
                   {t('settings.recommendApp')}
                 </Text>
                 <ListItem.Chevron />
@@ -379,10 +380,10 @@ const IndexExampleContainer = () => {
             <Icon name="close-circle-outline" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
-                <Text style={Fonts.blackSettings}>
+                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>
                   {t('settings.removeAds')}
                 </Text>
-                <Text style={Fonts.greySettings}>
+                <Text style={[Fonts.greySettings, Fonts.nunitoRegular]}>
                   {ads !== null ? (ads ? ads_price : '👑') : ''}
                 </Text>
                 {/* <ListItem.Chevron /> */}
@@ -398,10 +399,10 @@ const IndexExampleContainer = () => {
             <Icon name="key" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
-                <Text style={Fonts.blackSettings}>
+                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>
                   {t('settings.proVersion')}
                 </Text>
-                <Text style={Fonts.greySettings}>
+                <Text style={[Fonts.greySettings, Fonts.nunitoRegular]}>
                   {pro !== null ? (pro ? '👑' : pro_price) : ''}
                 </Text>
 
@@ -417,7 +418,7 @@ const IndexExampleContainer = () => {
             <Icon name="refresh" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
-                <Text style={Fonts.blackSettings}>
+                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>
                   {t('settings.restorePurchases')}
                 </Text>
                 <ListItem.Chevron />

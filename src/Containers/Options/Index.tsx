@@ -9,7 +9,14 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native'
-import { ListItem, Slider, Input, Text, Button, Icon } from 'react-native-elements'
+import {
+  ListItem,
+  Slider,
+  Input,
+  Text,
+  Button,
+  Icon,
+} from 'react-native-elements'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
@@ -23,77 +30,6 @@ import RNIap from 'react-native-iap'
 import LinearGradient from 'react-native-linear-gradient'
 import TouchableScale from 'react-native-touchable-scale'
 
-// 3 changes:
-// +Time selector right => Add a Margin
-// +Keyboard Avoiding View
-// Bottom View (no ads) add a Height => test this.
-
-// add payment functionalities
-
-// accurate duration to fix circular bug.
-
-// edge cases numerical
-
-// premium popup
-
-// Photo permission rejected
-
-// ffprobe on the file received
-// detect if the file is longer than 3 minutes
-// save prefs: default speed & advanced tab or not - don't bother
-
-// test scrollview on an iPhone 4 simulator
-// add it to the Basic Tab as well
-
-// test the numerical inputs on a real device;
-// popup numerical keyboard, SafeKeyboard.
-// Video Converter app; how does it handle converting the same file twice, teh filename??? How do the competitors handle it?
-// first principles solution: (1), (2), last 4 before extension, OR: timestamp hash
-// Google: ffmpeg output same file type
-// Payment popup/modal needed before? How about after??
-// Volume Slider: min 0, max 5, default 1. setVolume. If value is !== 1 in the next screen.
-
-// in THIS screen.
-// DEFAULT_VOLUME
-// if volume !== DEFAULT_VOLUME
-//   let new_volume = null
-//   navigate('Processing', {volume: null})
-// Processing screen just checks for null, accepts whatever else it receives.
-
-// also check the numerical inputs for wonky shit like alphabetical letters right before pushing to Processing
-// Time
-// min default is always 0
-// max default is FFProbe's resulting video duration, rounded, floored, or ceil-ed
-// 00:00:00 => Display only
-// actual scrubbing value should be in seconds? Yes.
-
-// before pushing to processing, compare rounded down max to current max; If it's a match, don't feed in that parameter. Set it null
-
-// Click Basic Start longer than 3 minutes => Premium popup with 'Unlock longer than 3 minutes with such and such)
-// Advanced without pro => Similar popup, different message at the top
-
-// width, height
-// number inputBackground// keypad only
-// check that they are numbers, otherwise refuse to push
-// greater than 10, less than 10000
-// greater than 10, less than 10000
-
-// framerate
-// greater than 1, less than 1000
-
-// bitrate: 50k - 1M ???
-
-// time
-// 0 => 00:00:00
-// video max length accurately. convert seconds to hours:minutes:seconds in display
-// max selected by default
-// max 3m free
-
-// volume
-// 0 to 5, default is 1
-
-// Premium button => crown, locked. Click => Buy
-
 const IndexExampleContainer = props => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
@@ -102,6 +38,8 @@ const IndexExampleContainer = props => {
   const [scrollEnabled, setScrollEnabled] = useState(true)
   const labels = [t('options.slowerLabel'), '', '', t('options.fasterLabel')]
   const MAX_MULTISLIDER = 300
+  const MAX_DURATION = 180
+  const MAX_SIZE = 157286400
 
   const [modalVisible, setModalVisible] = useState(false)
 
@@ -116,11 +54,13 @@ const IndexExampleContainer = props => {
   const [display_end, setDisplayEnd] = useState(0)
   const [send_start, setSendStart] = useState(0)
   const [send_end, setSendEnd] = useState(0)
-  // const [seconds, setSeconds] = useState(0)
   const [volume, setVolume] = useState(0.1666)
   const [currentPreset, setPreset] = useState(2)
   const [ads, setAds] = useState(null)
   const [pro, setPro] = useState(null)
+  const [proLimit, setProLimit] = useState('Advanced features require premium.')
+  const [duration, setDuration] = useState(0)
+  const [size, setSize] = useState(0)
 
   const getPaymentStatus = async () => {
     let payment = await AsyncStorage.getItem('@payment')
@@ -134,15 +74,26 @@ const IndexExampleContainer = props => {
 
   useEffect(() => {
     getPaymentStatus()
-    setTotalTime(props?.route?.params?.duration)
     handleTimeSlider([0, 300])
 
     let ffprobeCommand = props?.route?.params?.filePath
     getMediaInformation(ffprobeCommand).then(result => {
       console.log(`FFPROBE: ${result}`)
-      // result.getMediaProperties().duration
-      // result.getMediaProperties().size
-      // if bigger than 1500000 and !pro
+
+      let vid_duration = result.getMediaProperties().duration
+      let vid_size = result.getMediaProperties().size
+
+      setDuration(vid_duration)
+      setSize(vid_size)
+      setTotalTime(vid_duration) // might need to add a delay
+
+      if (vid_duration > MAX_DURATION) {
+        setProLimit('Videos over 3 minutes require premium.')
+        toggleModal()
+      } else if (vid_size > MAX_SIZE) {
+        setProLimit('Videos over 150 MB require premium.')
+        toggleModal()
+      }
 
       if (result !== 0) {
         // error. do jack shit.
@@ -155,7 +106,7 @@ const IndexExampleContainer = props => {
   }
 
   const handleTimeSlider = a => {
-    let delta = ((a[1] - a[0]) / 300) * props?.route?.params?.duration
+    let delta = ((a[1] - a[0]) / 300) * duration
     let dur = Math.round((delta + Number.EPSILON) * 100) / 100
 
     let hours = Math.floor(dur / 3600)
@@ -176,7 +127,7 @@ const IndexExampleContainer = props => {
 
     let formatted_start = '',
       final_start = ''
-    let seconds_start = (a[0] / 300) * props?.route?.params?.duration
+    let seconds_start = (a[0] / 300) * duration
     let string_start = getDateString(seconds_start)
     final_start = string_start.substr(11, 12)
     if (seconds_start < 3600) {
@@ -187,7 +138,7 @@ const IndexExampleContainer = props => {
 
     let formatted_end = '',
       final_end = ''
-    let seconds_end = (a[1] / 300) * props?.route?.params?.duration
+    let seconds_end = (a[1] / 300) * duration
     let string_end = getDateString(seconds_end)
     final_end = string_start.substr(11, 12)
     if (seconds_end < 3600) {
@@ -550,12 +501,20 @@ const IndexExampleContainer = props => {
   }
 
   const toggleModal = () => {
+    if (modalVisible) {
+      if (duration > MAX_DURATION && !pro) {
+        navigate('Input', {})
+      }
+
+      if (size > MAX_SIZE && !pro) {
+        navigate('Input', {})
+      }
+    }
     setModalVisible(!modalVisible)
   }
 
   const handleStart = () => {
     let filePath = props?.route?.params?.filePath
-    let duration = props?.route?.params?.duration
 
     let final_type = selectedIndex === 0 ? 'basic' : 'advanced'
 
@@ -591,7 +550,7 @@ const IndexExampleContainer = props => {
 
     let ffmpeg = {
       filePath,
-      duration, // todo: proper one
+      duration,
       type: final_type, // done
       currentPreset, // done
       width: final_width, // done
@@ -635,6 +594,7 @@ const IndexExampleContainer = props => {
 
       await AsyncStorage.setItem('@payment', JSON.stringify(payment_status))
 
+      toggleModal()
       Alert.alert('Restore Successful', 'Purchases successfully restored!')
     } catch (err) {
       Alert.alert(
@@ -666,6 +626,8 @@ const IndexExampleContainer = props => {
           }
 
           await AsyncStorage.setItem('@payment', JSON.stringify(new_payment))
+
+          toggleModal()
         }
       }
     } catch (err) {
@@ -700,7 +662,6 @@ const IndexExampleContainer = props => {
             selectedIndex={selectedIndex}
             onTabPress={index => {
               setSelectedIndex(index)
-
               // console.log(index)
             }}
           />
@@ -713,17 +674,23 @@ const IndexExampleContainer = props => {
           // transparent={true}
           presentationStyle="pageSheet"
           visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible)
-          }}
+          // onRequestClose={() => {
+          //   setModalVisible(!modalVisible)
+          // }}
+          onRequestClose={toggleModal}
         >
           <LinearGradient
-            colors={['#7d88ff', '#58a3ff', '#8fd6ff', '#bde9ff', '#cfedfc', '#ffffff']}
+            colors={[
+              '#7d88ff',
+              '#58a3ff',
+              '#8fd6ff',
+              '#bde9ff',
+              '#cfedfc',
+              '#ffffff',
+            ]}
             style={{ flex: 1 }}
           >
-            <ScrollView
-              style={[Layout.fill, Gutters.smallHPadding]}
-            >
+            <ScrollView style={[Layout.fill, Gutters.smallHPadding]}>
               <TouchableOpacity onPress={toggleModal}>
                 <Text
                   style={{
@@ -741,26 +708,65 @@ const IndexExampleContainer = props => {
                   style={{ width: 80, height: 80 }}
                   source={Images.crown}
                 />
-                <Text style={[Fonts.textRegular, { color: 'white' , fontFamily: 'Nunito-ExtraBold', fontSize: 25 }]}>
+                <Text
+                  style={[
+                    Fonts.textRegular,
+                    {
+                      color: 'white',
+                      fontFamily: 'Nunito-ExtraBold',
+                      fontSize: 25,
+                    },
+                  ]}
+                >
                   Pro Version
                 </Text>
               </View>
 
-              <View style={{backgroundColor: 'green', borderRadius: 10, padding: 15 }}>
-                <Text style={{color: 'white'}}>
-                  Feature1 - Feature2
+              <View style={{ alignSelf: 'center' }}>
+                <Text
+                  style={[
+                    Fonts.textRegular,
+                    Fonts.nunitoRegular,
+                    { color: 'white', fontSize: 16 },
+                  ]}
+                >
+                  {proLimit}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  backgroundColor: '#0066ff',
+                  borderRadius: 10,
+                  padding: 15,
+                  marginTop: 50,
+                }}
+              >
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'Nunito-ExtraBold',
+                    fontSize: 18,
+                  }}
+                >
+                  Edit Time · Change Volume · Change Bitrate · Change Framerate
+                  · Videos over 3 minutes · Videos over 150 MB
                 </Text>
               </View>
 
               <ListItem
-                containerStyle={{ borderRadius: 10, marginBottom: 15 }}
+                containerStyle={{
+                  borderRadius: 10,
+                  marginBottom: 10,
+                  marginTop: 70,
+                }}
                 key={'img1'}
                 Component={TouchableScale}
                 friction={90} //
                 tension={100} // These props are passed to the parent component (here TouchableScale)
                 activeScale={0.95} //
                 linearGradientProps={{
-                  colors: ['#a459ab', '#911f9c'],
+                  colors: ['#58a3ff', '#7d88ff'],
                   start: { x: 0, y: 1 },
                   end: { x: 0, y: 0 },
                 }}
@@ -771,32 +777,31 @@ const IndexExampleContainer = props => {
                   <ListItem.Title
                     style={{
                       color: 'white',
-                      fontWeight: 'bold',
-                      fontFamily: 'Nunito-Regular',
+                      // fontWeight: 'bold',
+                      fontFamily: 'Nunito-ExtraBold',
+                      alignSelf: 'center',
+                      fontSize: 20,
                     }}
                   >
-                    Hello
+                    Buy Now <Text style={{ color: '#ccf2ff' }}>$1.99</Text>
                   </ListItem.Title>
                 </ListItem.Content>
               </ListItem>
 
-              {/* <TouchableOpacity
-                style={[Gutters.regularBMargin]}
-                onPress={handlePurchasePro}
-              >
-                <Text style={[Fonts.textRegular, { color: 'black' }]}>
-                  Buy Pro
-                </Text>
-              </TouchableOpacity> */}
               <TouchableOpacity
-                style={[Gutters.regularBMargin]}
+                style={[Gutters.regularBMargin, { alignSelf: 'center' }]}
                 onPress={handleRestorePurchases}
               >
-                <Text style={[Fonts.textRegular, { color: 'black' }]}>
+                <Text
+                  style={[
+                    Fonts.textRegular,
+                    Fonts.nunitoRegular,
+                    { color: '#0066ff', fontSize: 18 },
+                  ]}
+                >
                   Restore Purchases
                 </Text>
               </TouchableOpacity>
-              
             </ScrollView>
           </LinearGradient>
         </Modal>
