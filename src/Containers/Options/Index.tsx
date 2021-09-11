@@ -8,6 +8,7 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native'
 import {
   ListItem,
@@ -37,7 +38,7 @@ const IndexExampleContainer = props => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [scrollEnabled, setScrollEnabled] = useState(true)
   const labels = [t('options.slowerLabel'), '', '', t('options.fasterLabel')]
-  const MAX_MULTISLIDER = 300
+  const MAX_MULTISLIDER = 300.0
   const MAX_DURATION = 180
   const MAX_SIZE = 157286400
 
@@ -48,7 +49,7 @@ const IndexExampleContainer = props => {
   const [bitrate, setBitrate] = useState(0)
   const [framerate, setFramerate] = useState(0)
   const [time_start, setTimeStart] = useState(100)
-  const [time_end, setTimeEnd] = useState(300)
+  const [time_end, setTimeEnd] = useState(MAX_MULTISLIDER)
   const [total_time, setTotalTime] = useState('')
   const [display_start, setDisplayStart] = useState(0)
   const [display_end, setDisplayEnd] = useState(0)
@@ -82,7 +83,7 @@ const IndexExampleContainer = props => {
 
       setDuration(parseFloat(vid_duration))
       setSize(vid_size)
-      handleTimeSliderInit([0, 300], vid_duration)
+      handleTimeSliderInit([0, MAX_MULTISLIDER], vid_duration)
 
       if (vid_duration > MAX_DURATION) {
         setProLimit('Videos over 3 minutes require premium.')
@@ -94,6 +95,8 @@ const IndexExampleContainer = props => {
 
       if (result !== 0) {
         // error. do jack shit.
+        console.log('ffprobe error:')
+        console.log(result)
       }
     })
   }, [])
@@ -102,7 +105,7 @@ const IndexExampleContainer = props => {
     return new Date(seconds * 1000).toISOString()
   }
 
-  const getDuration = (dur) => {
+  const getDuration = dur => {
     let hours = Math.floor(dur / 3600)
     let hour_remainder = dur % 3600
     let minutes = Math.floor(hour_remainder / 60)
@@ -123,7 +126,7 @@ const IndexExampleContainer = props => {
   }
 
   const handleTimeSlider = a => {
-    let delta = ((a[1] - a[0]) / 300.00) * duration
+    let delta = ((a[1] - a[0]) / MAX_MULTISLIDER) * duration
     // let dur = Math.round((delta + Number.EPSILON) * 100) / 100
     console.log(`delta: ${delta}`)
     let dur = delta.toFixed(2)
@@ -131,7 +134,7 @@ const IndexExampleContainer = props => {
 
     let formatted_start = '',
       final_start = ''
-    let seconds_start = ((a[0] / 300.00) * duration).toFixed(2)
+    let seconds_start = ((a[0] / MAX_MULTISLIDER) * duration).toFixed(2)
     let string_start = getDateString(seconds_start)
     final_start = string_start.substr(11, 12)
     if (seconds_start < 3600) {
@@ -142,7 +145,7 @@ const IndexExampleContainer = props => {
 
     let formatted_end = '',
       final_end = ''
-    let seconds_end = ((a[1] / 300.00) * duration).toFixed(2)
+    let seconds_end = ((a[1] / MAX_MULTISLIDER) * duration).toFixed(2)
     console.log(`seconds_end: ${seconds_end}`)
     let string_end = getDateString(seconds_end)
     final_end = string_start.substr(11, 12)
@@ -168,7 +171,7 @@ const IndexExampleContainer = props => {
 
     let formatted_start = '',
       final_start = ''
-    let seconds_start = (a[0] / 300.00) * dur_float
+    let seconds_start = (a[0] / MAX_MULTISLIDER) * dur_float
     let string_start = getDateString(seconds_start)
     final_start = string_start.substr(11, 12)
     if (seconds_start < 3600) {
@@ -179,7 +182,7 @@ const IndexExampleContainer = props => {
 
     let formatted_end = '',
       final_end = ''
-    let seconds_end = (a[1] / 300.00) * dur_float
+    let seconds_end = (a[1] / MAX_MULTISLIDER) * dur_float
     let string_end = getDateString(seconds_end)
     final_end = string_start.substr(11, 12)
     if (seconds_end < 3600) {
@@ -387,7 +390,7 @@ const IndexExampleContainer = props => {
           <View
             style={{
               height: 50,
-              width: '100%',
+              width: '10%',
               flex: 1,
             }}
           >
@@ -402,7 +405,7 @@ const IndexExampleContainer = props => {
             <MultiSlider
               containerStyle={{
                 marginLeft: 15,
-                marginRight: 10,
+                marginRight: 15,
                 marginTop: 15,
                 width: '100%',
                 flex: 1,
@@ -426,7 +429,7 @@ const IndexExampleContainer = props => {
               values={[time_start, time_end]}
               // markerSize={1}
               onValuesChange={handleTimeSlider}
-              sliderLength={320}
+              sliderLength={Dimensions.get('window').width - 50}
               onValuesChangeStart={() => setScrollEnabled(false)}
               onValuesChangeFinish={() => setScrollEnabled(true)}
             />
@@ -503,6 +506,8 @@ const IndexExampleContainer = props => {
         </View>
 
         {startButton()}
+
+        <View style={{ height: 50 }} />
       </ScrollView>
     )
   }
@@ -638,6 +643,8 @@ const IndexExampleContainer = props => {
       toggleModal()
       Alert.alert('Restore Successful', 'Purchases successfully restored!')
     } catch (err) {
+      console.log('restore purchases Options error:')
+      console.log(err)
       Alert.alert(
         'Restore Unsuccessful',
         'There was an error while restoring purchases.',
@@ -672,6 +679,8 @@ const IndexExampleContainer = props => {
         }
       }
     } catch (err) {
+      console.log('purchase Pro Options error:')
+      console.log(err)
       // should be handled automatically by iOS
       // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
     }
@@ -746,7 +755,10 @@ const IndexExampleContainer = props => {
 
               <View style={{ alignItems: 'center' }}>
                 <Image
-                  style={{ width: 80, height: 80 }}
+                  style={{
+                    width: 80,
+                    height: 80,
+                  }}
                   source={Images.crown}
                 />
                 <Text

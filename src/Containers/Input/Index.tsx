@@ -13,8 +13,9 @@ import FileViewer from 'react-native-file-viewer'
 import MediaMeta from 'react-native-media-meta'
 import RNFS from 'react-native-fs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { NativeModules, Platform } from 'react-native'
+import { NativeModules, Platform, Alert } from 'react-native'
 import i18n from 'i18next'
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions'
 
 const IndexExampleContainer = () => {
   const { t } = useTranslation()
@@ -43,7 +44,8 @@ const IndexExampleContainer = () => {
 
   const getPaymentStatus = async () => {
     let payment = await AsyncStorage.getItem('@payment')
-    if (payment) { // initially it might not exist.
+    if (payment) {
+      // initially it might not exist.
       let payment_json = JSON.parse(payment)
       setAds(payment_json.ads)
     } else {
@@ -52,6 +54,86 @@ const IndexExampleContainer = () => {
   }
 
   const handleLibraryPick = () => {
+    // if (1) {
+    //   openPicker()
+    // }
+    // return
+    if (Platform.OS === 'ios') {
+      // AsyncStorage => NOPE!!! Check every time.
+      check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+        .then(result => {
+          switch (result) {
+            case RESULTS.UNAVAILABLE:
+              console.log('Error: unavailable')
+              Alert.alert(
+                'Error',
+                'Importing images is not available on this device.',
+              )
+              break
+            case RESULTS.DENIED:
+              console.log(
+                'The permission has not been requested / is denied but requestable',
+              )
+              request(PERMISSIONS.IOS.PHOTO_LIBRARY).then(result => {
+                switch (result) {
+                  case RESULTS.UNAVAILABLE:
+                    console.log(
+                      'This feature is not available (on this device / in this context)',
+                    )
+                    break
+                  case RESULTS.DENIED:
+                    console.log(
+                      'The permission has not been requested / is denied but requestable',
+                    )
+                    break
+                  case RESULTS.LIMITED:
+                    console.log(
+                      'The permission is limited: some actions are possible',
+                    )
+                    openPicker()
+                    break
+                  case RESULTS.GRANTED:
+                    console.log('The permission is granted')
+                    openPicker()
+                    break
+                  case RESULTS.BLOCKED:
+                    console.log(
+                      'The permission is denied and not requestable anymore',
+                    )
+                    break
+                }
+              })
+              break
+            case RESULTS.LIMITED:
+              console.log(
+                'The permission is limited: some actions are possible',
+              )
+              openPicker()
+              break
+            case RESULTS.GRANTED:
+              console.log('The permission is granted')
+              openPicker()
+              break
+            case RESULTS.BLOCKED:
+              Alert.alert(
+                'Permissions',
+                'Please grant the app image library permissions in Settings.',
+              )
+              break
+          }
+        })
+        .catch(error => {
+          Alert.alert(
+            'Permissions',
+            'Please grant the app image library permissions in Settings.',
+          )
+        })
+    } else {
+      openPicker()
+    }
+  }
+
+  const openPicker = () => {
     if (allowPicker) {
       setAllowPicker(false)
       launchImageLibrary(
@@ -62,8 +144,10 @@ const IndexExampleContainer = () => {
           setAllowPicker(true)
           if (!res.didCancel) {
             if (res.assets.length) {
+              console.log('res')
+              console.log(res)
               let asset = res.assets[0]
-              let filePath = asset.uri
+              let filePath = decodeURIComponent(asset.uri)
               // let duration = asset.duration
               navigate('Options', { filePath })
             }
@@ -80,7 +164,7 @@ const IndexExampleContainer = () => {
         type: [DocumentPicker.types.video], // => necessary
       })
 
-      let filePath = res.uri
+      let filePath = decodeURIComponent(res.uri)
       console.log('res: ', res)
 
       navigate('Options', { filePath })

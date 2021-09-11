@@ -73,42 +73,43 @@ const IndexExampleContainer = () => {
   })
 
   const getProducts = async () => {
-    let prices = AsyncStorage.getItem('@localizedPrices')
-    let localizedPrices = {}
+    // let prices = AsyncStorage.getItem('@localizedPrices')
+    // let localizedPrices = {}    
+    // if (prices) {
+    //   localizedPrices = JSON.parse(prices)
+    //   setAdsPrice(localizedPrices.ads_price)
+    //   setProPrice(localizedPrices.pro_price)
+    // } else {
+    //   // 
+    // }
 
-    if (prices) {
-      localizedPrices = JSON.parse(prices)
-      setAdsPrice(localizedPrices.ads_price)
-      setProPrice(localizedPrices.pro_price)
-    } else {
-      RNIap.clearProductsIOS()
+    RNIap.clearProductsIOS()
 
-      try {
-        const result = await RNIap.initConnection()
-        await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
-      } catch (err) {
-        console.log(err) // error fetching product info
-      }
+    try {
+      const result = await RNIap.initConnection()
+      await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
+    } catch (err) {
+      console.log(err) // error fetching product info
+    }
 
-      const products = await RNIap.getProducts(itemSkus)
-      let ad = products.filter(a => a.productId === 'videoCompressor.noAds')
-      let pr = products.filter(a => a.productId === 'videoCompressor.pro')
+    const products = await RNIap.getProducts(itemSkus)
+    let ad = products.filter(a => a.productId === 'videoCompressor.noAds')
+    let pr = products.filter(a => a.productId === 'videoCompressor.pro')
 
-      if (ad.length > 0 && pr.length > 0) {
-        let ad_pr = ad[0].localizedPrice
-        let pr_pr = pr[0].localizedPrice
-        setAdsPrice(ad_pr)
-        setProPrice(pr_pr)
+    if (ad.length > 0 && pr.length > 0) {
+      let ad_pr = ad[0].localizedPrice
+      let pr_pr = pr[0].localizedPrice
+      setAdsPrice(ad_pr)
+      setProPrice(pr_pr)
 
-        let localizedPrices = {
-          ads_price: ad_pr,
-          pro_price: pr_pr,
-        }
-        AsyncStorage.setItem(
-          '@localizedPrices',
-          JSON.stringify(localizedPrices),
-        )
-      }
+      // let localizedPrices = {
+      //   ads_price: ad_pr,
+      //   pro_price: pr_pr,
+      // }
+      // AsyncStorage.setItem(
+      //   '@localizedPrices',
+      //   JSON.stringify(localizedPrices),
+      // )
     }
   }
 
@@ -180,6 +181,8 @@ const IndexExampleContainer = () => {
         await AsyncStorage.setItem('@payment', JSON.stringify(new_payment))
       }
     } catch (err) {
+      console.log('purchase NoAds Settings error:')
+      console.log(err)
       // should be handled automatically by iOS
       // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
     }
@@ -210,6 +213,8 @@ const IndexExampleContainer = () => {
         }
       }
     } catch (err) {
+      console.log('purchase Pro Settings error:')
+      console.log(err)
       // should be handled automatically by iOS
       // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
     }
@@ -246,6 +251,8 @@ const IndexExampleContainer = () => {
           case 'videoCompressor.noAds':
             ads_status = false
             break
+          default:
+            break
         }
       })
 
@@ -261,6 +268,8 @@ const IndexExampleContainer = () => {
 
       Alert.alert('Restore Successful', 'Purchases successfully restored!')
     } catch (err) {
+      console.log('restore purchases Settings error:')
+      console.log(err)
       Alert.alert(
         'Restore Unsuccessful',
         'There was an error while restoring purchases.',
@@ -277,13 +286,18 @@ const IndexExampleContainer = () => {
       preferredAndroidMarket: AndroidMarket.Google,
       preferInApp: false,
       openAppStoreIfInAppFails: true,
-      fallbackPlatformURL: 'http://www.mywebsite.com/myapp.html', // put your app link
+      fallbackPlatformURL: 'https://apps.apple.com/US/app/id2193813192?l=en', // put your app link
     }
     Rate.rate(options, success => {
       if (success) {
+        console.log('rating success')
+        console.log(success)
         // this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
         // this.setState({rated:true})
         // setRated(true)
+      } else {
+        console.log('rating error')
+        console.log(success)
       }
     })
   }
@@ -291,7 +305,7 @@ const IndexExampleContainer = () => {
   const handleRecommend = async () => {
     try {
       const result = await Share.share({
-        message: 'google.com',
+        message: 'https://apps.apple.com/US/app/id2193813192?l=en',
       })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -300,10 +314,11 @@ const IndexExampleContainer = () => {
           // shared
         }
       } else if (result.action === Share.dismissedAction) {
-        // dismissed
+        console.log('dismissed')
       }
     } catch (error) {
-      // alert(error.message)
+      console.log('error')
+      console.log(error)
     }
   }
 

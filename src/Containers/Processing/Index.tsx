@@ -180,50 +180,7 @@ const IndexExampleContainer = props => {
       framerate,
     } = props?.route?.params
 
-    // CachesDirectoryPath
-    // let fileName = filePath.substring(
-    //   filePath.lastIndexOf('/') + 1,
-    //   filePath.length,
-    // )
-
-    // console.log(`filePath: ${filePath}`)
-    // console.log(`fileName: ${fileName}`)
-
-    // let videoName = `${RNFS.DocumentDirectoryPath}/${fileName}` // this is necessary because the filename is in the photos library or elsewhere.
-    // console.log(`videoName: ${videoName}`)
-
-    // let videoFile = await getUniqueName(videoName)
-    // console.log(`videoFile: ${videoFile}`)
-
-    // necessary to split from the default filepath
-    // this should be moved to the get Unique fileName method.
-
-    // VideoUtil.deleteFile(videoFile) // unnecessary if unique fielaname
-
-    // let filePath = props?.route?.params?.filePath
-    // let type = props?.route?.params?.filePath
     let ffmpegCommand = ''
-
-    // console.log(filePath, type)
-
-    // ffmpeg multiple filters:
-    // -vf "movie=watermark.png [logo]; [in][logo] overlay=W-w-10:H-h-10, fade=in:0:20 [out]"
-
-    // usethe faster 265 compression algorithm
-    // -c:v libx265
-    // width and height:
-    // -vf scale="720:480"
-    // framerate:
-    // OR: -vf fps=30
-    // bitrate: separate for audio and video
-    // -b:v 1M -b:a 192k
-    // presets:
-    // -preset ultrafast, veryfast, medium (default), slower
-    // ultrafast, superfast, veryfast, faster, fast, medium. Use the 4 fastest ones only
-    // time_start, time_end
-    //  ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4
-    // audio volume
-    // -filter:a "volume=1.5" => 150% audio level of input.
 
     let empty_advanced =
       !width &&
@@ -234,23 +191,18 @@ const IndexExampleContainer = props => {
       !bitrate &&
       !framerate
 
-    if (type === 'basic' || empty_advanced) {
-      // if (type === 'basic') {
-      // ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
+    console.log(`empty_advanced: ${empty_advanced}`)
+    console.log(width, height, time_start, time_end, volume, bitrate, framerate)
 
-      console.log('basicTab')
+    if (type === 'basic' || empty_advanced) {
+      let final_preset = empty_advanced ? 3 : preset
       ffmpegCommand = await VideoUtil.generateBasicCompressionScript(
         filePath,
-        preset,
+        final_preset,
         width,
         height,
       )
-
-      // console.log('ffmpegCommand: ', ffmpegCommand)
-      // console.log('ffmpegCommand2: ', ffmpegCommand2)
     } else {
-      // advanced
-      // ffmpegCommand = `-i ${filePath} ${RNFS.CachesDirectoryPath}/output.avi`
       ffmpegCommand = VideoUtil.generateAdvancedCompressionScript(
         filePath,
         width,
@@ -281,6 +233,8 @@ const IndexExampleContainer = props => {
 
   const showInterstitialAd = () => {
     let randomNumber = Math.random()
+    console.log(`interstitial randomNumber: ${randomNumber}`)
+    console.log(`adLoaded: ${adLoaded}`)
     if (randomNumber > 0.5 && adLoaded) {
       interstitial.show()
     }

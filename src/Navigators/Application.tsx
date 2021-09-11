@@ -36,7 +36,7 @@ const ApplicationNavigator = () => {
     return {
       title: '',
       headerRight: () => (
-        <Avatar source={Images.settings} onPress={() => navigate('Settings')} />
+        <Avatar source={Images.settings} onPress={() => navigate('Settings', {})} />
       ),
     }
   }

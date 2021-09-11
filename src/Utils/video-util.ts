@@ -7,9 +7,8 @@ import {
   setFontDirectory,
 } from './react-native-ffmpeg-api-wrapper'
 
-
 // save differently on Android and iOS // wait, I won't even need this method then (assetPath)
-  // what I will need is that RNFS exception on Android.
+// what I will need is that RNFS exception on Android.
 // duplicate file name deal with: (1)
 // assetToFile ?? This seems to copy existing assets in VSCode to file storage
 // create a custom App folder with:
@@ -142,30 +141,29 @@ export default class VideoUtil {
   }
 
   static async generateBasicCompressionScript(filePath, preset, width, height) {
-    let crf = 28,
-      f_preset = 'fast'
-    // preset: 4, 3, 2, 1
+    let crf = 33,
+      f_preset = 'veryfast'
 
     switch (preset) {
       case 4:
-        crf = 32
-        f_preset = 'veryfast'
+        crf = 36
+        f_preset = 'superfast'
         break
       case 3:
-        crf = 30
-        f_preset = 'faster'
+        crf = 33
+        f_preset = 'veryfast'
         break
       case 2:
-        crf = 28
-        f_preset = 'fast'
+        crf = 30
+        f_preset = 'veryfast'
         break
       case 1:
-        crf = 26
-        f_preset = 'fast'
+        crf = 29
+        f_preset = 'faster'
         break
       case 0:
-        crf = 24
-        f_preset = 'medium'
+        crf = 28
+        f_preset = 'fast'
         break
       default:
         break
@@ -224,7 +222,7 @@ export default class VideoUtil {
         command += `-to ${time_end} `
       }
 
-      command += `-c copy `
+      command += '-c copy '
     }
 
     if (volume) {
@@ -256,14 +254,13 @@ export default class VideoUtil {
   // actually, it does work, you just forgot to put -vf in front.
   // instead: -r 25
 
-
   // possible, but only if you'd like to split audio and video bitrates
   // -b:v ${bitrate} -b:a ${bitrate}
   // for the same bitrate: -b 12000
-  // -b is ambiguous: use b:v for video. 
+  // -b is ambiguous: use b:v for video.
   // 1k, 1M, or 1000000
 
-  // no need for the multiple filter command 
+  // no need for the multiple filter command
   // -vf "filter1, filter2"
   // comma separated if you do end up needing it.
   // it works:
@@ -300,7 +297,6 @@ export default class VideoUtil {
 // slow
 // slower
 // veryslow
-
 
 // 265
 // ultrafast
