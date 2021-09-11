@@ -64,8 +64,8 @@ const IndexExampleContainer = () => {
             if (res.assets.length) {
               let asset = res.assets[0]
               let filePath = asset.uri
-              let duration = asset.duration
-              navigate('Options', { filePath, duration })
+              // let duration = asset.duration
+              navigate('Options', { filePath })
             }
           }
           // assets.uri // => will be different for Android Check out the launchImageLibrary docs
@@ -83,7 +83,7 @@ const IndexExampleContainer = () => {
       let filePath = res.uri
       console.log('res: ', res)
 
-      navigate('Options', { filePath, duration: 31 })
+      navigate('Options', { filePath })
       // MediaMeta.get(filePath)
       //   .then(metadata => {
       //     console.log('file pick successful: ', metadata)

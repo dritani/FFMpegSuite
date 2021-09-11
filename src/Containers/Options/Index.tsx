@@ -59,7 +59,7 @@ const IndexExampleContainer = props => {
   const [ads, setAds] = useState(null)
   const [pro, setPro] = useState(null)
   const [proLimit, setProLimit] = useState('Advanced features require premium.')
-  const [duration, setDuration] = useState(0)
+  const [duration, setDuration] = useState(0.0)
   const [size, setSize] = useState(0)
 
   const getPaymentStatus = async () => {
@@ -74,18 +74,15 @@ const IndexExampleContainer = props => {
 
   useEffect(() => {
     getPaymentStatus()
-    handleTimeSlider([0, 300])
 
     let ffprobeCommand = props?.route?.params?.filePath
     getMediaInformation(ffprobeCommand).then(result => {
-      console.log(`FFPROBE: ${result}`)
-
       let vid_duration = result.getMediaProperties().duration
       let vid_size = result.getMediaProperties().size
 
-      setDuration(vid_duration)
+      setDuration(parseFloat(vid_duration))
       setSize(vid_size)
-      setTotalTime(vid_duration) // might need to add a delay
+      handleTimeSliderInit([0, 300], vid_duration)
 
       if (vid_duration > MAX_DURATION) {
         setProLimit('Videos over 3 minutes require premium.')
@@ -105,10 +102,7 @@ const IndexExampleContainer = props => {
     return new Date(seconds * 1000).toISOString()
   }
 
-  const handleTimeSlider = a => {
-    let delta = ((a[1] - a[0]) / 300) * duration
-    let dur = Math.round((delta + Number.EPSILON) * 100) / 100
-
+  const getDuration = (dur) => {
     let hours = Math.floor(dur / 3600)
     let hour_remainder = dur % 3600
     let minutes = Math.floor(hour_remainder / 60)
@@ -125,9 +119,19 @@ const IndexExampleContainer = props => {
 
     string_duration += `${seconds} s`
 
+    return string_duration
+  }
+
+  const handleTimeSlider = a => {
+    let delta = ((a[1] - a[0]) / 300.00) * duration
+    // let dur = Math.round((delta + Number.EPSILON) * 100) / 100
+    console.log(`delta: ${delta}`)
+    let dur = delta.toFixed(2)
+    let string_duration = getDuration(dur)
+
     let formatted_start = '',
       final_start = ''
-    let seconds_start = (a[0] / 300) * duration
+    let seconds_start = (a[0] / 300.00) * duration.toFixed(2)
     let string_start = getDateString(seconds_start)
     final_start = string_start.substr(11, 12)
     if (seconds_start < 3600) {
@@ -138,7 +142,44 @@ const IndexExampleContainer = props => {
 
     let formatted_end = '',
       final_end = ''
-    let seconds_end = (a[1] / 300) * duration
+    let seconds_end = (a[1] / 300.00) * duration.toFixed(2)
+    console.log(`seconds_end: ${seconds_end}`)
+    let string_end = getDateString(seconds_end)
+    final_end = string_start.substr(11, 12)
+    if (seconds_end < 3600) {
+      formatted_end = string_end.substr(14, 8)
+    } else {
+      formatted_end = string_end.substr(11, 8)
+    }
+
+    // console.log(`formatted_end: ${formatted_end}`)
+    // console.log(`total_time: ${string_duration}`)
+    setTimeStart(a[0])
+    setTimeEnd(a[1])
+    setTotalTime(string_duration)
+    setDisplayStart(formatted_start)
+    setDisplayEnd(formatted_end)
+    setSendStart(final_start)
+    setSendEnd(final_end)
+  }
+
+  const handleTimeSliderInit = (a, dur_start) => {
+    let dur_float = parseFloat(dur_start).toFixed(2)
+
+    let formatted_start = '',
+      final_start = ''
+    let seconds_start = (a[0] / 300.00) * dur_float
+    let string_start = getDateString(seconds_start)
+    final_start = string_start.substr(11, 12)
+    if (seconds_start < 3600) {
+      formatted_start = string_start.substr(14, 8)
+    } else {
+      formatted_start = string_start.substr(11, 8)
+    }
+
+    let formatted_end = '',
+      final_end = ''
+    let seconds_end = (a[1] / 300.00) * dur_float
     let string_end = getDateString(seconds_end)
     final_end = string_start.substr(11, 12)
     if (seconds_end < 3600) {
@@ -149,7 +190,7 @@ const IndexExampleContainer = props => {
 
     setTimeStart(a[0])
     setTimeEnd(a[1])
-    setTotalTime(string_duration)
+    setTotalTime(dur_float)
     setDisplayStart(formatted_start)
     setDisplayEnd(formatted_end)
     setSendStart(final_start)
@@ -736,7 +777,7 @@ const IndexExampleContainer = props => {
 
               <View
                 style={{
-                  backgroundColor: '#0066ff',
+                  backgroundColor: '#3999ed',
                   borderRadius: 10,
                   padding: 15,
                   marginTop: 50,
