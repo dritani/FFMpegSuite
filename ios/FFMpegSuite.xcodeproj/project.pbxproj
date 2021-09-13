@@ -58,6 +58,7 @@
 		2D02E4901E0B4A5D006451C7 /* FFMpegSuite-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FFMpegSuite-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		625C1A21FCDEFC00692EE57F /* libPods-FFMpegSuite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FFMpegSuite.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FFMpegSuite/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		92E1563D26ED43CB004D6210 /* FFMpegSuite.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FFMpegSuite.entitlements; path = FFMpegSuite/FFMpegSuite.entitlements; sourceTree = "<group>"; };
 		92E226BE26ADF4A7003E0025 /* Nunito-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-ExtraBold.ttf"; sourceTree = "<group>"; };
 		92E226BF26ADF4A7003E0025 /* Nunito-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Regular.ttf"; sourceTree = "<group>"; };
 		92EA954F26A21BF700FCF991 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -124,6 +125,7 @@
 		13B07FAE1A68108700A75B9A /* FFMpegSuite */ = {
 			isa = PBXGroup;
 			children = (
+				92E1563D26ED43CB004D6210 /* FFMpegSuite.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -738,13 +740,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FFMpegSuite/FFMpegSuite.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = PK3D83SCBL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FFMpegSuite/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -753,6 +758,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ml.devcraft.VideoCompressor;
 				PRODUCT_NAME = FFMpegSuite;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -766,12 +772,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FFMpegSuite/FFMpegSuite.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = PK3D83SCBL;
 				INFOPLIST_FILE = FFMpegSuite/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -780,6 +789,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ml.devcraft.VideoCompressor;
 				PRODUCT_NAME = FFMpegSuite;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
