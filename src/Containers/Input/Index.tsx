@@ -10,8 +10,6 @@ import { ListItem, Avatar } from 'react-native-elements'
 import TouchableScale from 'react-native-touchable-scale'
 import LinearGradient from 'react-native-linear-gradient'
 import FileViewer from 'react-native-file-viewer'
-import MediaMeta from 'react-native-media-meta'
-import RNFS from 'react-native-fs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { NativeModules, Platform, Alert } from 'react-native'
 import i18n from 'i18next'
@@ -57,64 +55,47 @@ const IndexExampleContainer = () => {
   }
 
   const handleLibraryPick = () => {
-    // if (1) {
-    //   openPicker()
-    // }
-    // return
     if (Platform.OS === 'ios') {
       // AsyncStorage => NOPE!!! Check every time.
       check(PERMISSIONS.IOS.PHOTO_LIBRARY)
         .then(result => {
           switch (result) {
             case RESULTS.UNAVAILABLE:
-              console.log('Error: unavailable')
               Alert.alert(
                 'Error',
                 'Importing images is not available on this device.',
               )
               break
             case RESULTS.DENIED:
-              console.log(
-                'The permission has not been requested / is denied but requestable',
-              )
+              // The permission has not been requested / is denied but requestable
               request(PERMISSIONS.IOS.PHOTO_LIBRARY).then(result => {
                 switch (result) {
                   case RESULTS.UNAVAILABLE:
-                    console.log(
-                      'This feature is not available (on this device / in this context)',
-                    )
+                    // This feature is not available (on this device / in this context)
                     break
                   case RESULTS.DENIED:
-                    console.log(
-                      'The permission has not been requested / is denied but requestable',
-                    )
+                    // The permission has not been requested / is denied but requestable
                     break
                   case RESULTS.LIMITED:
-                    console.log(
-                      'The permission is limited: some actions are possible',
-                    )
+                    // The permission is limited: some actions are possible
                     openPicker()
                     break
                   case RESULTS.GRANTED:
-                    console.log('The permission is granted')
+                    // The permission is granted
                     openPicker()
                     break
                   case RESULTS.BLOCKED:
-                    console.log(
-                      'The permission is denied and not requestable anymore',
-                    )
+                    // The permission is denied and not requestable anymore
                     break
                 }
               })
               break
             case RESULTS.LIMITED:
-              console.log(
-                'The permission is limited: some actions are possible',
-              )
+              // The permission is limited: some actions are possible
               openPicker()
               break
             case RESULTS.GRANTED:
-              console.log('The permission is granted')
+              // The permission is granted
               openPicker()
               break
             case RESULTS.BLOCKED:
@@ -147,11 +128,8 @@ const IndexExampleContainer = () => {
           setAllowPicker(true)
           if (!res.didCancel) {
             if (res.assets.length) {
-              console.log('res')
-              console.log(res)
               let asset = res.assets[0]
               let filePath = decodeURIComponent(asset.uri)
-              // let duration = asset.duration
               navigate('Options', { filePath })
             }
           }
@@ -168,18 +146,7 @@ const IndexExampleContainer = () => {
       })
 
       let filePath = decodeURIComponent(res.uri)
-      console.log('res: ', res)
-
       navigate('Options', { filePath })
-      // MediaMeta.get(filePath)
-      //   .then(metadata => {
-      //     console.log('file pick successful: ', metadata)
-      //     let duration = metadata.duration
-      //     navigate('Options', { filePath, duration })
-      //   })
-      //   .catch(err => {
-      //     console.log('file pick error: ', err)
-      //   })
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker

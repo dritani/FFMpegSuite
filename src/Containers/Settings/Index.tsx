@@ -54,6 +54,9 @@ const IndexExampleContainer = () => {
     { label: '🇪🇸 Española', value: 'es' },
     { label: '🇧🇷 Português', value: 'pt' },
     { label: '🇮🇹 Italiana', value: 'it' },
+    { label: '🇰🇷 한국인', value: 'ko' },
+    { label: '🇷🇺 русский', value: 'ru' },
+    { label: '🇮🇳 हिंदी', value: 'hi' },
   ]
 
   const [pickedLang, setPickedLang] = useState<PickerItem>({
@@ -83,7 +86,7 @@ const IndexExampleContainer = () => {
       const result = await RNIap.initConnection()
       await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
     } catch (err) {
-      console.log(err) // error fetching product info
+      
     }
 
     const products = await RNIap.getProducts(itemSkus)
@@ -175,8 +178,6 @@ const IndexExampleContainer = () => {
         await AsyncStorage.setItem('@payment', JSON.stringify(new_payment))
       }
     } catch (err) {
-      console.log('purchase NoAds Settings error:')
-      console.log(err)
       // should be handled automatically by iOS
       // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
     }
@@ -207,8 +208,6 @@ const IndexExampleContainer = () => {
         }
       }
     } catch (err) {
-      console.log('purchase Pro Settings error:')
-      console.log(err)
       // should be handled automatically by iOS
       // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
     }
@@ -262,8 +261,6 @@ const IndexExampleContainer = () => {
 
       Alert.alert('Restore Successful', 'Purchases successfully restored!')
     } catch (err) {
-      console.log('restore purchases Settings error:')
-      console.log(err)
       Alert.alert(
         'Restore Unsuccessful',
         'There was an error while restoring purchases.',
@@ -284,14 +281,10 @@ const IndexExampleContainer = () => {
     }
     Rate.rate(options, success => {
       if (success) {
-        console.log('rating success')
-        console.log(success)
         // this technically only tells us if the user successfully went to the Review Page. Whether they actually did anything, we do not know.
         // this.setState({rated:true})
         // setRated(true)
       } else {
-        console.log('rating error')
-        console.log(success)
       }
     })
   }
@@ -308,11 +301,8 @@ const IndexExampleContainer = () => {
           // shared
         }
       } else if (result.action === Share.dismissedAction) {
-        console.log('dismissed')
       }
     } catch (error) {
-      console.log('error')
-      console.log(error)
     }
   }
 

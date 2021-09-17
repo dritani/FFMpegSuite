@@ -1,0 +1,43 @@
+export default {
+  input: {
+    inputLabel: 'Вход',
+    outputLabel: 'Выход',
+    photosTitle: 'Фото',
+    photosSubtitle: 'Медиа библиотека',
+    filesTitle: 'Файлы',
+    filesSubtitle: 'Ваши файлы приложения',
+    historyTitle: 'История',
+    historySubtitle: 'Обзор преобразованных файлов',
+  },
+  options: {
+    basicTab: 'Базовый',
+    advancedTab: 'Передовой',
+    widthLabel: 'Ширина',
+    heightLabel: 'Рост',
+    bitrateLabel: 'Битрейт',
+    framerateLabel: 'Частота кадров',
+    volumeLabel: 'Объем',
+    timeLabel: 'Время',
+    compressionLabel: 'Скорость сжатия',
+    fasterLabel: 'Более быстрый убыток',
+    slowerLabel: 'Медленнее без потерь',
+    startButton: 'Начинать',
+  },
+  processing: {
+    finishButton: 'Заканчивать',
+    finishedLabel: 'Видео сохранено в файлы',
+    processingLabel: 'Сжатие видео, пожалуйста, подождите ...',
+    errorLabel: 'Во время сжатия была ошибка',
+  },
+  settings: {
+    language: 'Язык',
+    rateUs: 'Оцените нас',
+    recommendApp: 'Рекомендовать приложение',
+    removeAds: 'Убрать рекламу',
+    proVersion: 'PRO версия',
+    restorePurchases: 'Восстановить покупки',
+  },
+  general: {
+    headerBackTitle: 'Назад',
+  },
+}

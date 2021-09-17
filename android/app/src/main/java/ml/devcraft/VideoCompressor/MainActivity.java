@@ -1,4 +1,4 @@
-package com.ffmpegsuite;
+package ml.devcraft.VideoCompressor;
 
 import com.facebook.react.ReactActivity;
 import android.content.Intent;

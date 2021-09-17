@@ -32,7 +32,6 @@ import {
   executeFFmpeg,
   resetStatistics,
 } from '@/Utils'
-import MediaMeta from 'react-native-media-meta'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Config } from '@/Config'
 
@@ -104,17 +103,11 @@ const IndexExampleContainer = props => {
   }, [started])
 
   const statisticsCallback = statistics => {
-    // console.log('statisticsCallback')
-    // console.log(statistics)
     // setStatistics(statistics)
     updateProgressDialog(statistics)
   }
 
   const updateProgressDialog = statistics => {
-    // console.log('updateProgressDialog')
-    // console.log('statistics')
-    // console.log(statistics)
-
     if (statistics === undefined) {
       return
     }
@@ -129,29 +122,21 @@ const IndexExampleContainer = props => {
         (timeInMilliseconds * 99) / totalVideoDuration,
       )
 
-      console.log('completePercentage: ' + completePercentage)
-
       // bug: the first tick goes to max right away
-      // console.log('started: ', started)
       // let SSS = getStarted()
-      // console.log('SSS: ', SSS)
-      console.log('statistics: ', statistics)
 
       // setStarted(true) // 2 ticks?
 
       // if (progress === 0)
       // oh. We can't read variables from the outside, we can only set them.
       // well we CAN read them, but statically. From when the method is first set up.
-      // console.log('progress: ', progress, 'started: ', started)
       setProgress(completePercentage)
       setStarted(true)
       // array of stat.time?
       // if (progress === 0) {
-      //   console.log('!progress')
       //   setProgress(1)
       //   setStarted(true)
       // } else {
-      //   console.log('yes progress')
       //   setProgress(completePercentage)
       // }
       // setTicks(ticks + 3)
@@ -159,7 +144,6 @@ const IndexExampleContainer = props => {
       // if (started) {
       //   setProgress(completePercentage)
       // } else {
-      //   console.log('STARTING!')
       //   setStarted(true)
       // }
     }
@@ -189,9 +173,6 @@ const IndexExampleContainer = props => {
       !volume &&
       !bitrate &&
       !framerate
-
-    console.log(`empty_advanced: ${empty_advanced}`)
-    console.log(width, height, time_start, time_end, volume, bitrate, framerate)
 
     if (type === 'basic' || empty_advanced) {
       let final_preset = empty_advanced ? 3 : preset

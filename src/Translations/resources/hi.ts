@@ -1,0 +1,43 @@
+export default {
+  input: {
+    inputLabel: 'इनपुट',
+    outputLabel: 'आउटपुट',
+    photosTitle: 'तस्वीरें',
+    photosSubtitle: 'मीडिया लाइब्रेरी',
+    filesTitle: 'फाइलें',
+    filesSubtitle: 'आपकी फाइलें ऐप',
+    historyTitle: 'इतिहास',
+    historySubtitle: 'परिवर्तित फ़ाइलों को ब्राउज़ करें',
+  },
+  options: {
+    basicTab: 'बुनियादी',
+    advancedTab: 'उन्नत',
+    widthLabel: 'चौड़ाई',
+    heightLabel: 'ऊंचाई',
+    bitrateLabel: 'बिटरेट',
+    framerateLabel: 'फ्रेम रेट',
+    volumeLabel: 'आयतन',
+    timeLabel: 'समय',
+    compressionLabel: 'संपीड़न गति',
+    fasterLabel: 'तेज हानिकारक',
+    slowerLabel: 'धीमी हानि रहित',
+    startButton: 'शुरू',
+  },
+  processing: {
+    finishButton: 'खत्म हो',
+    finishedLabel: 'वीडियो को फाइलों में सहेजा गया',
+    processingLabel: 'वीडियो को संपीड़ित करना, कृपया प्रतीक्षा करें ...',
+    errorLabel: 'संपीड़न के दौरान एक त्रुटि थी',
+  },
+  settings: {
+    language: 'भाषा',
+    rateUs: 'हमें रेटिंग दें',
+    recommendApp: 'ऐप की सिफारिश करें',
+    removeAds: 'विज्ञापन हटाएँ',
+    proVersion: 'प्रो संस्करण',
+    restorePurchases: 'खरीदारी वापस लौटाएं',
+  },
+  general: {
+    headerBackTitle: 'वापस',
+  },
+}

@@ -64,12 +64,10 @@ export default class CommandTab extends React.Component {
       const res = await DocumentPicker.pick({
         // type: [DocumentPicker.types.images],
       })
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.name,
-        res.size,
-      )
+      // res.uri
+      // res.type
+      // res.name
+      // res.size
       this.setState({ videoURI: res.uri })
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {

@@ -100,8 +100,6 @@ const IndexExampleContainer = props => {
 
       if (result !== 0) {
         // error. do jack shit.
-        console.log('ffprobe error:')
-        console.log(result)
       }
     })
   }, [])
@@ -133,7 +131,6 @@ const IndexExampleContainer = props => {
   const handleTimeSlider = a => {
     let delta = ((a[1] - a[0]) / MAX_MULTISLIDER) * duration
     // let dur = Math.round((delta + Number.EPSILON) * 100) / 100
-    console.log(`delta: ${delta}`)
     let dur = delta.toFixed(2)
     let string_duration = getDuration(dur)
 
@@ -151,7 +148,6 @@ const IndexExampleContainer = props => {
     let formatted_end = '',
       final_end = ''
     let seconds_end = ((a[1] / MAX_MULTISLIDER) * duration).toFixed(2)
-    console.log(`seconds_end: ${seconds_end}`)
     let string_end = getDateString(seconds_end)
     final_end = string_end.substr(11, 12)
     if (seconds_end < 3600) {
@@ -160,8 +156,6 @@ const IndexExampleContainer = props => {
       formatted_end = string_end.substr(11, 8)
     }
 
-    // console.log(`formatted_end: ${formatted_end}`)
-    // console.log(`total_time: ${string_duration}`)
     setTimeStart(a[0])
     setTimeEnd(a[1])
     setTotalTime(string_duration)
@@ -612,8 +606,6 @@ const IndexExampleContainer = props => {
       time_end: final_end, //
       volume: final_volume, // done
     }
-    console.log('ffmpeg')
-    console.log(ffmpeg)
     navigate('Processing', ffmpeg)
   }
 
@@ -648,8 +640,6 @@ const IndexExampleContainer = props => {
       toggleModal()
       Alert.alert('Restore Successful', 'Purchases successfully restored!')
     } catch (err) {
-      console.log('restore purchases Options error:')
-      console.log(err)
       Alert.alert(
         'Restore Unsuccessful',
         'There was an error while restoring purchases.',
@@ -684,8 +674,6 @@ const IndexExampleContainer = props => {
         }
       }
     } catch (err) {
-      console.log('purchase Pro Options error:')
-      console.log(err)
       // should be handled automatically by iOS
       // Alert.alert('Purchase Erorr', 'The purchase could not be completed.')
     }
@@ -717,7 +705,6 @@ const IndexExampleContainer = props => {
             selectedIndex={selectedIndex}
             onTabPress={index => {
               setSelectedIndex(index)
-              // console.log(index)
             }}
           />
         </View>

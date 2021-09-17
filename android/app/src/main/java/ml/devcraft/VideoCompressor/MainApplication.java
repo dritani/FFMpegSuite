@@ -1,4 +1,4 @@
-package com.ffmpegsuite;
+package ml.devcraft.VideoCompressor;
 
 import android.app.Application;
 import android.content.Context;

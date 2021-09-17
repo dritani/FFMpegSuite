@@ -22,7 +22,6 @@ import {
 // if not, create it
 // then with FFMpeg you write to DocumentsDirectory/VideoCompressor instead of CachesDirectory
 const getUniqueName = async (fileName, index = 0) => {
-  console.log(`INDEX: ${index}`)
   let checkName = fileName,
     ext = ''
   if (index) {
@@ -35,14 +34,9 @@ const getUniqueName = async (fileName, index = 0) => {
     checkName = `${checkName}_${index}${ext}`
   }
 
-  console.log(`checkName: ${checkName}`)
-
   let existPath = `${RNFS.DocumentDirectoryPath}/${checkName}`
-  // console.log(`outputPath: ${RNFS.DocumentDirectoryPath}/${outputPath}`)
-  console.log(`existPath: ${existPath}`)
 
   const nameExists = await VideoUtil.fileExists(existPath)
-  console.log(`nameExists: ${nameExists}`)
 
   if (nameExists) {
     return getUniqueName(fileName, index + 1)
@@ -74,8 +68,6 @@ export default class VideoUtil {
 
   static async fileExists(assetName) {
     let exists = await RNFS.exists(assetName)
-    console.log(`assetName: ${assetName}`)
-    // console.log(`exists: ${exists}`)
     return exists
   }
 
@@ -144,7 +136,6 @@ export default class VideoUtil {
     let crf = 33,
       f_preset = 'veryfast'
 
-    console.log(`received preset: ${preset}`)
     switch (preset) {
       case 4:
         crf = 36
@@ -183,7 +174,6 @@ export default class VideoUtil {
       filePath.length,
     )
     let outputPath = await getUniqueName(fileName)
-    console.log(`outputPath: ${outputPath}`)
 
     command += outputPath
     // -vf scale="${width}:${height}"

@@ -132,7 +132,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.ffmpegsuite"
+        applicationId "ml.devcraft.VideoCompressor"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -182,6 +182,22 @@ android {
 
         }
     }
+
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
+
+    flavorDimensions "appstore"
+    productFlavors{
+      googlePlay{
+          dimension "appstore"
+          missingDimensionStrategy "store", "play"
+      }
+      amazon{
+          dimension "appstore"
+          missingDimensionStrategy "store", "amazon"
+      }
+  }
 }
 
 dependencies {
@@ -191,7 +207,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation platform('com.google.firebase:firebase-bom:28.2.1')
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
     
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
@@ -222,4 +238,8 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
+project.ext.vectoricons = [
+    iconFontNames: [ 'Zocial.ttf', 'Ionicons.ttf' ] // Name of the font files you want to copy
+]
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

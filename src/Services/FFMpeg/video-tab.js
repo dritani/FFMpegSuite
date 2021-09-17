@@ -111,12 +111,10 @@ export default class VideoTab extends React.Component {
       const res = await DocumentPicker.pick({
         // type: [DocumentPicker.types.images],
       })
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.name,
-        res.size,
-      )
+      // res.uri
+      // res.type
+      // res.name
+      // res.size
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on
