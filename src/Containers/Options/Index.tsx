@@ -38,15 +38,14 @@ const IndexExampleContainer = props => {
   const { t } = useTranslation()
   const { Common, Fonts, Gutters, Layout, Images } = useTheme()
 
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [scrollEnabled, setScrollEnabled] = useState(true)
   const labels = [t('options.slowerLabel'), '', '', t('options.fasterLabel')]
   const MAX_MULTISLIDER = 300.0
   const MAX_DURATION = 180
   const MAX_SIZE = 157286400
 
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [scrollEnabled, setScrollEnabled] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
-
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
   const [bitrate, setBitrate] = useState(0)

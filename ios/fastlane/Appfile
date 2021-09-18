@@ -1,0 +1,8 @@
+app_identifier("ml.devcraft.VideoCompressor") # The bundle identifier of your app
+apple_id("raid_23@hotmail.com") # Your Apple email address
+
+itc_team_id("118618581") # App Store Connect Team ID
+team_id("PK3D83SCBL") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

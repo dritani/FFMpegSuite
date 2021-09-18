@@ -1,0 +1,13 @@
+Ferramenta de compactação de vídeo gratuita que economizará espaço em disco encolhendo seus tamanhos de arquivos de vídeo.
+
+Recursos:
+- Importar arquivos de vídeo de diferentes fontes
+- Selecione novas dimensões / resolução de vídeo e velocidade de compressão
+- Modo avançado para selecionar a taxa de bits, encaixar, volume e hora
+- Processamento offline para máxima privacidade;Seus arquivos nunca são carregados para a Internet.
+- Funciona com iPhone, iPad e iPod
+- Funciona com diferentes formatos de vídeo: MP4, MOV, AVI, MKV, WMV e muito mais
+- Funciona com diferentes resoluções de vídeo: 4K, 1080p, 720p
+- Simples e fácil de usar com um design elegante
+
+Os vídeos compactados são salvos no aplicativo de arquivos.

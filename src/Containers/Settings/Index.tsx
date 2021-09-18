@@ -270,14 +270,14 @@ const IndexExampleContainer = () => {
 
   const handleRate = () => {
     const options = {
-      AppleAppID: '2193813192', // after publishing?
-      GooglePackageName: 'ml.devcraft.videocompressor',
-      AmazonPackageName: 'ml.devcraft.videocompressor',
+      AppleAppID: '1576425812', // after publishing?
+      GooglePackageName: 'ml.devcraft.videocompressor', // PascalCase? check console
+      AmazonPackageName: 'ml.devcraft.videocompressor', // PascalCase? 
       // OtherAndroidURL: 'http://www.randomappstore.com/app/47172391',
       preferredAndroidMarket: AndroidMarket.Google,
       preferInApp: false,
       openAppStoreIfInAppFails: true,
-      fallbackPlatformURL: 'https://apps.apple.com/US/app/id2193813192?l=en', // put your app link
+      fallbackPlatformURL: 'https://apps.apple.com/US/app/id1576425812?l=en', // put your app link
     }
     Rate.rate(options, success => {
       if (success) {

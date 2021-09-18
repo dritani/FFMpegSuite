@@ -1,0 +1,14 @@
+Kostenloses Video-Komprimierungswerkzeug, das den Speicherplatz speichert, indem Sie Ihre Videodateien-Größen schrumpfen.
+
+Merkmale:
+- Videodateien aus verschiedenen Quellen importieren
+- Wählen Sie neue Videoabmessungen / Auflösung und Komprimierungsgeschwindigkeit
+- Erweiterter Modus, um Bitrate, Framerate, Datenträger und Zeit auszuwählen
+- Offline-Verarbeitung für maximale Privatsphäre;Ihre Dateien werden nie in das Internet hochgeladen.
+- Funktioniert mit iPhone, iPad und iPod
+- Arbeitet mit verschiedenen Videoformaten: MP4, MOV, AVI, MKV, WMV und vieles mehr
+- Arbeitet mit verschiedenen Video-Auflösungen: 4k, 1080p, 720p
+- Einfach und einfach zu bedienen mit einem schlanken Design
+
+Die komprimierten Videos werden in Ihrer Datei-App gespeichert.
+

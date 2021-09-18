@@ -1,0 +1,13 @@
+Herramienta de compresión de video gratuita que le ahorrará espacio en el disco al reducir los tamaños de los archivos de video.
+
+Características:
+- Importar archivos de video de diferentes fuentes.
+- Seleccione Nuevas dimensiones de video / resolución y velocidad de compresión
+- Modo avanzado para seleccionar la tasa de bits, FRAMERATE, VOLUMEN y TIEMPO
+- Procesamiento fuera de línea para la máxima privacidad;Sus archivos nunca se suben a Internet.
+- Funciona con iPhone, iPad y iPod.
+- Funciona con diferentes formatos de video: MP4, MOV, AVI, MKV, WMV, y muchos más
+- Funciona con diferentes resoluciones de video: 4K, 1080p, 720p
+- Simple y fácil de usar con un diseño elegante.
+
+Los videos comprimidos se guardan en la aplicación de su archivo.
