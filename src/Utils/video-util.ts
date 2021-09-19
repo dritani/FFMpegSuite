@@ -175,6 +175,10 @@ export default class VideoUtil {
     )
     let outputPath = await getUniqueName(fileName)
 
+    console.log('outputPath')
+    console.log(outputPath)
+    // /data/user/0/ml.devcraft.VideoCompressor/files/511490755.mp4
+    // 565146801
     command += outputPath
     // -vf scale="${width}:${height}"
     // -c:v libx265 -crf ${crf} -preset ${f_preset}
@@ -225,6 +229,16 @@ export default class VideoUtil {
     }
 
     command += `${RNFS.DocumentDirectoryPath}/output.mp4`
+    console.log('output path:')
+    console.log(`file://${RNFS.DownloadDirectoryPath}/output.mp4`)
+    // DownloadDirectoryPath
+    // for Android => Maybe create a folder in Downloads???
+    // how to open a particular folder with RNFS???
+    // DocumentPicker, not RNFS. Doesn't seem feasible with this library.
+    // file://   => only in Android? It has no effect
+    // adb shell 'ls /data' etc
+    // adb root
+    // command += `/data/ml.devcraft.VideoCompressor/files/output.mp4`
 
     return command
   }

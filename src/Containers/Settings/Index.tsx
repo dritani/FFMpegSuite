@@ -66,7 +66,7 @@ const IndexExampleContainer = () => {
 
   const itemSkus = Platform.select({
     ios: ['videoCompressor.noAds', 'videoCompressor.pro'],
-    android: ['videoCompressor.noAds', 'videoCompressor.pro'], // todo
+    android: ['videocompressor.noAds', 'videocompressor.pro'], // todo
   })
 
   const getProducts = async () => {
@@ -90,8 +90,12 @@ const IndexExampleContainer = () => {
     }
 
     const products = await RNIap.getProducts(itemSkus)
-    let ad = products.filter(a => a.productId === 'videoCompressor.noAds')
-    let pr = products.filter(a => a.productId === 'videoCompressor.pro')
+    let ad = products.filter(
+      a => a.productId.toLowerCase() === 'videocompressor.noads',
+    )
+    let pr = products.filter(
+      a => a.productId.toLowerCase() === 'videocompressor.pro',
+    )
 
     if (ad.length > 0 && pr.length > 0) {
       let ad_pr = ad[0].localizedPrice
@@ -157,6 +161,7 @@ const IndexExampleContainer = () => {
 
   const handlePurchaseAds = async () => {
     try {
+      // different for android
       const purchase = await RNIap.requestPurchase('videoCompressor.noAds')
 
       if (purchase) {
@@ -185,6 +190,7 @@ const IndexExampleContainer = () => {
 
   const handlePurchasePro = async () => {
     try {
+      // different for android
       const purchase = await RNIap.requestPurchase('videoCompressor.pro')
 
       if (purchase) {
