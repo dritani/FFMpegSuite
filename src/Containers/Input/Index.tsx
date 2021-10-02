@@ -196,7 +196,7 @@ const IndexExampleContainer = () => {
       console.log(filePath)
       // content://com.android.providers.downloads.documents/document/raw:/storage/emulated/0/Download/sample2.mp4
       // ^ Permission Denial requires that you obtain access using ACTION_OPEN_DOCUMENT or related APIs
-      if (filePath.startsWith('content://')) {
+      if (filePath.startsWith('content://')) { // android
         const stat = await RNFetchBlob.fs.stat(filePath)
         console.log('stat')
         console.log(stat)
@@ -212,7 +212,7 @@ const IndexExampleContainer = () => {
         // console.log('destPath file')
         // console.log(destPath)
         // navigate('Options', { filePath: destPath })
-      } else {
+      } else { // ios
         let fp = decodeURIComponent(res.uri)
         navigate('Options', { filePath: fp })
       }
