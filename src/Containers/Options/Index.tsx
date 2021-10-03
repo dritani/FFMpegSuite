@@ -648,6 +648,7 @@ const IndexExampleContainer = props => {
 
   const handlePurchasePro = async () => {
     try {
+      
       const purchase = await RNIap.requestPurchase('videoCompressor.pro')
 
       if (purchase) {

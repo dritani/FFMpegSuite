@@ -26,6 +26,7 @@ export default {
   processing: {
     finishButton: 'Заканчивать',
     finishedLabel: 'Видео сохранено в файлы',
+    finishedLabelAndroid: 'Видео сохранено для загрузки',
     processingLabel: 'Сжатие видео, пожалуйста, подождите ...',
     errorLabel: 'Во время сжатия была ошибка',
   },

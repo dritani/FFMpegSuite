@@ -26,6 +26,7 @@ export default {
   processing: {
     finishButton: '完成',
     finishedLabel: '视频保存到文件',
+    finishedLabelAndroid: '视频保存到下载',
     processingLabel: '正在压缩视频，请稍候...',
     errorLabel: '压缩过程中出现错误',
   },

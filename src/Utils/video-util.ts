@@ -24,6 +24,12 @@ import {
 const getUniqueName = async (fileName, index = 0) => {
   let checkName = fileName,
     ext = ''
+
+  let dir =
+    Platform.OS === 'android'
+      ? RNFS.DownloadDirectoryPath
+      : RNFS.DocumentDirectoryPath
+
   if (index) {
     if (checkName.indexOf('.') > -1) {
       let tokens = checkName.split('.')
@@ -34,7 +40,7 @@ const getUniqueName = async (fileName, index = 0) => {
     checkName = `${checkName}_${index}${ext}`
   }
 
-  let existPath = `${RNFS.DocumentDirectoryPath}/${checkName}`
+  let existPath = `${dir}/${checkName}`
 
   const nameExists = await VideoUtil.fileExists(existPath)
 
@@ -187,7 +193,7 @@ export default class VideoUtil {
     return command
   }
 
-  static generateAdvancedCompressionScript(
+  static async generateAdvancedCompressionScript(
     filePath,
     width, // 720
     height, // 480
@@ -228,9 +234,16 @@ export default class VideoUtil {
       command += `-vf scale="${width}:${height}" `
     }
 
-    command += `${RNFS.DocumentDirectoryPath}/output.mp4`
-    console.log('output path:')
-    console.log(`file://${RNFS.DownloadDirectoryPath}/output.mp4`)
+    let fileName = filePath.substring(
+      filePath.lastIndexOf('/') + 1,
+      filePath.length,
+    )
+    let outputPath = await getUniqueName(fileName)
+    command += outputPath
+
+    // command += `${RNFS.DocumentDirectoryPath}/output.mp4`
+    // console.log('output path:')
+    // console.log(`file://${RNFS.DownloadDirectoryPath}/output.mp4`)
     // DownloadDirectoryPath
     // for Android => Maybe create a folder in Downloads???
     // how to open a particular folder with RNFS???

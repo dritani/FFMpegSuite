@@ -26,6 +26,7 @@ export default {
   processing: {
     finishButton: '終了',
     finishedLabel: 'ファイルに保存されたビデオ',
+    finishedLabelAndroid: 'ダウンロードに保存されたビデオ',
     processingLabel: 'ビデオを圧縮してください、お待ちください...',
     errorLabel: '圧縮中にエラーがありました',
   },

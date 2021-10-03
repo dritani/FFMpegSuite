@@ -26,6 +26,7 @@ export default {
   processing: {
     finishButton: '마치다',
     finishedLabel: '파일에 저장된 비디오',
+    finishedLabelAndroid: '다운로드에 저장된 비디오',
     processingLabel: '비디오 압축, 기다려주십시오 ...',
     errorLabel: '압축 중에 오류가 발생했습니다.',
   },

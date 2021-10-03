@@ -26,6 +26,7 @@ export default {
   processing: {
     finishButton: 'Finish',
     finishedLabel: 'Video saved to Files',
+    finishedLabelAndroid: 'Video saved to Downloads',
     processingLabel: 'Compressing video, please wait...',
     errorLabel: 'There was an error during compression',
   },

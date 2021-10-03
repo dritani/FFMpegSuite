@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Brand, CircularSlider } from '@/Components'
@@ -256,7 +257,9 @@ const IndexExampleContainer = props => {
         <View style={{ marginTop: 15 }}>
           <Text style={{ fontFamily: 'Nunito-Regular', fontSize: 20 }}>
             {finished
-              ? t('processing.finishedLabel')
+              ? Platform.OS === 'android'
+                ? t('processing.finishedLabelAndroid')
+                : t('processing.finishedLabel')
               : error
               ? t('processing.errorLabel')
               : t('processing.processingLabel')}

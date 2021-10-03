@@ -26,6 +26,7 @@ export default {
   processing: {
     finishButton: 'खत्म हो',
     finishedLabel: 'वीडियो को फाइलों में सहेजा गया',
+    finishedLabelAndroid: 'वीडियो डाउनलोड में सहेजा गया',
     processingLabel: 'वीडियो को संपीड़ित करना, कृपया प्रतीक्षा करें ...',
     errorLabel: 'संपीड़न के दौरान एक त्रुटि थी',
   },
