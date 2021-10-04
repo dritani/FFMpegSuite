@@ -43,7 +43,7 @@ import { Config } from '@/Config'
 // if doesn't pass regex, error highlight the Input, disallow passing to next screen? Or ignore those inputs
   // -error syntax RNElements Input
 // parse both commas and periods to floats
-  // parseFloat(str.replace(',','')
+  // parseFloat(str.replace(',',''))
 
 const bannerId = __DEV__ ? TestIds.BANNER : Config.BANNER_ID
 
@@ -71,7 +71,7 @@ const IndexExampleContainer = props => {
   const [framerate, setFramerate] = useState(0)
 
   const [errors, setErrors] = useState({
-    width: true,
+    width: false,
     height: false,
     bitrate: false,
     framerate: false,
@@ -280,10 +280,82 @@ const IndexExampleContainer = props => {
     labelFontFamily: 'Nunito-Regular',
   }
 
-  // const handleWidth = e => {}
-  // const handleHeight = e => {}
-  // const handleFramerate = e => {}
-  // const handleBitrate = e => {}
+  const handleWidth = e => {
+    let val = e.nativeEvent.text
+    let valid = checkValue(val)
+    if (valid) {
+      let float_val = parseFloat(val.replace(',',''))
+      setWidth(float_val)
+      setErrors(prevState => ({
+        ...prevState,
+        width: false,
+      }))
+    } else {
+      setErrors(prevState => ({
+        ...prevState,
+        width: true,
+      }))
+    }
+  }
+  const handleHeight = e => {
+    let val = e.nativeEvent.text
+    let valid = checkValue(val)
+    if (valid) {
+      let float_val = parseFloat(val.replace(',',''))
+      setHeight(float_val)
+      setErrors(prevState => ({
+        ...prevState,
+        height: false,
+      }))
+    } else {
+      setErrors(prevState => ({
+        ...prevState,
+        height: true,
+      }))
+    }
+  }
+
+  const handleFramerate = e => {
+    let val = e.nativeEvent.text
+    let valid = checkValue(val)
+    if (valid) {
+      let float_val = parseFloat(val.replace(',',''))
+      setFramerate(float_val)
+      setErrors(prevState => ({
+        ...prevState,
+        framerate: false,
+      }))
+    } else {
+      setErrors(prevState => ({
+        ...prevState,
+        framerate: true,
+      }))
+    }
+  }
+
+  const handleBitrate = e => {
+    let val = e.nativeEvent.text
+    let valid = checkValue(val)
+    if (valid) {
+      let float_val = parseFloat(val.replace(',',''))
+      setBitrate(float_val)
+      setErrors(prevState => ({
+        ...prevState,
+        bitrate: false,
+      }))
+    } else {
+      setErrors(prevState => ({
+        ...prevState,
+        bitrate: true,
+      }))
+    }
+  }
+
+  const checkValue = val => {
+    let pattern = new RegExp("^([0-9]*[.,])?[0-9]+$")
+    let result = pattern.test(val)
+    return result
+  }
 
   const basicTab = () => {
     return (
@@ -313,7 +385,7 @@ const IndexExampleContainer = props => {
                 type="number"
                 keyboardType="number-pad"
                 placeholder="-"
-                // onChange={e => setWidth(parseInt(e.nativeEvent.text, 10))}
+                onChange={handleWidth}
                 errorStyle={{ color: 'red' }}
                 errorMessage={errors.width && t('options.errorLabel')}
               />
@@ -332,7 +404,7 @@ const IndexExampleContainer = props => {
                 type="number"
                 keyboardType="number-pad"
                 placeholder="-"
-                onChange={e => setHeight(parseInt(e.nativeEvent.text, 10))}
+                onChange={handleHeight}
                 errorStyle={{ color: 'red' }}
                 errorMessage={errors.height && t('options.errorLabel')}
               />
@@ -359,7 +431,6 @@ const IndexExampleContainer = props => {
 
         {startButton()}
       </ScrollView>
-    
     )
   }
 
@@ -390,8 +461,9 @@ const IndexExampleContainer = props => {
               type="number"
               keyboardType="number-pad"
               placeholder="-"
-              onChange={e => setWidth(parseInt(e.nativeEvent.text, 10))}
+              onChange={handleWidth}
               errorStyle={{ color: 'red' }}
+              errorMessage={errors.width && t('options.errorLabel')}
             />
           </View>
           <View style={[styles.box]}>
@@ -408,8 +480,9 @@ const IndexExampleContainer = props => {
               type="number"
               keyboardType="number-pad"
               placeholder="-"
-              onChange={e => setHeight(parseInt(e.nativeEvent.text, 10))}
+              onChange={handleHeight}
               errorStyle={{ color: 'red' }}
+              errorMessage={errors.height && t('options.errorLabel')}
             />
           </View>
         </View>
@@ -430,8 +503,9 @@ const IndexExampleContainer = props => {
               type="number"
               keyboardType="number-pad"
               placeholder="-"
-              onChange={e => setBitrate(parseInt(e.nativeEvent.text, 10))}
+              onChange={handleBitrate}
               errorStyle={{ color: 'red' }}
+              errorMessage={errors.bitrate && t('options.errorLabel')}
             />
           </View>
           <View style={[styles.box]}>
@@ -448,8 +522,9 @@ const IndexExampleContainer = props => {
               type="number"
               keyboardType="number-pad"
               placeholder="-"
-              onChange={e => setFramerate(parseInt(e.nativeEvent.text, 10))}
+              onChange={handleFramerate}
               errorStyle={{ color: 'red' }}
+              errorMessage={errors.framerate && t('options.errorLabel')}
             />
           </View>
         </View>
@@ -645,7 +720,9 @@ const IndexExampleContainer = props => {
     let final_type = selectedIndex === 0 ? 'basic' : 'advanced'
 
     let final_width = 0,
-      final_height = 0
+      final_height = 0,
+      final_bitrate = bitrate,
+      final_framerate = framerate
 
     if (width > 0 && height > 0) {
       final_width = width
@@ -657,6 +734,22 @@ const IndexExampleContainer = props => {
     } else {
       final_width = 0
       final_height = 0
+    }
+
+    if (errors.width) {
+      final_width = 0
+    }
+
+    if (errors.height) {
+      final_height = 0
+    }
+
+    if (errors.bitrate) {
+      final_bitrate = 0
+    }
+
+    if (errors.framerate) {
+      final_framerate = 0
     }
 
     let final_start = 0
@@ -681,8 +774,8 @@ const IndexExampleContainer = props => {
       currentPreset, // done
       width: final_width, // done
       height: final_height, // done
-      bitrate, // done
-      framerate, // done
+      bitrate: final_bitrate, // done
+      framerate: final_framerate, // done
       time_start: final_start, //
       time_end: final_end, //
       volume: final_volume, // done
