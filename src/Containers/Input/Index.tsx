@@ -46,6 +46,12 @@ const IndexExampleContainer = () => {
   }
 
   const getPaymentStatus = async () => {
+    // test pro feature:
+    // let new_payment = {
+    //   ads: false,
+    //   pro: true,
+    // }
+    // await AsyncStorage.setItem('@payment', JSON.stringify(new_payment))
     let payment = await AsyncStorage.getItem('@payment')
     if (payment) {
       // initially it might not exist.
@@ -128,49 +134,24 @@ const IndexExampleContainer = () => {
         },
         async res => {
           setAllowPicker(true)
-          console.log('res')
-          console.log(res)
           if (res && !res.didCancel) {
             if (res && res.assets && res.assets.length) {
               let asset = res.assets[0]
-              console.log('assets image picker')
-              console.log(asset.uri)
-              // content://com.google.android.apps.photos.contentprovider/0/2/mediakey%3A%2Flocal%253A66cda7a8-78e7-4437-8718-c42b61d89494/ORIGINAL/NONE/video%2Fmpeg/273752150
-              // ^ doesn't work
-              // importing worked though??
-              // let filePath = decodeURIComponent(asset.uri)
-              // console.log('filePath')
-              // console.log(filePath)
               let filePath = asset.uri
-              // this works, but in the end gives:
-              // [NULL @ 0xe5de94e0] Unable to find a suitable output format for '/data/user/0/ml.devcraft.VideoCompressor/files/1235143560'
 
-              // content://com.google.android.apps.photos.contentprovider/0/2/mediakey:/local%3A66cda7a8-78e7-4437-8718-c42b61d89494/ORIGINAL/NONE/video/mpeg/1523332324
-              // ^ permission denial requires the provider be exported, or grantUriPermission()
               if (filePath.startsWith('content://')) {
                 const uriComponents = filePath.split('/')
-                console.log('uriComponents')
-                console.log(uriComponents)
-                // uriComponents
-                // ["content:", "", "com.google.android.apps.photos.contentprovider", "0", "2", "mediakey%3A%2Flocal%253A66cda7a8-78e7-4437-8718-c42b61d89494", "ORIGINAL", "NONE", "video%2Fmpeg", "374009142"]
                 const fileNameAndExtension =
                   uriComponents[uriComponents.length - 1]
-                console.log('fileNameAndExtension')
-                console.log(fileNameAndExtension)
 
-                // need to add the extension in the next screen through FFMpeg and MIME types, using a switch statement
-                // default case: .mp4
-                const destPath = `${RNFS.TemporaryDirectoryPath}/${fileNameAndExtension}.mp4`
+                // const destPath = `${RNFS.TemporaryDirectoryPath}/${fileNameAndExtension}.mp4`
+                const destPath = `${RNFS.TemporaryDirectoryPath}/${fileNameAndExtension}`
                 await RNFS.copyFile(filePath, destPath)
 
-                console.log('destPath image')
-                console.log(destPath)
-                // navigate('Options', { filePath })
-
-                navigate('Options', { filePath: destPath })
+                navigate('Options', { filePath: destPath, no_extension: true })
               } else {
                 let fp = decodeURIComponent(asset.uri)
-                navigate('Options', { filePath: fp })
+                navigate('Options', { filePath: fp, no_extension: false })
               }
             }
           }
@@ -186,33 +167,13 @@ const IndexExampleContainer = () => {
         type: [DocumentPicker.types.video], // => necessary
       })
 
-      console.log('assets file picker')
-      console.log(res.uri)
-      // content://com.android.providers.downloads.documents/document/raw%3A%2Fstorage%2Femulated%2F0%2FDownload%2Fsample2.mp4
-      // ^ doesn't work. No such file or directory
-      // let filePath = decodeURIComponent(res.uri)
       let filePath = res.uri
-      console.log('filePath')
-      console.log(filePath)
-      // content://com.android.providers.downloads.documents/document/raw:/storage/emulated/0/Download/sample2.mp4
-      // ^ Permission Denial requires that you obtain access using ACTION_OPEN_DOCUMENT or related APIs
-      if (filePath.startsWith('content://')) { // android
+      if (filePath.startsWith('content://')) {
+        // android
         const stat = await RNFetchBlob.fs.stat(filePath)
-        console.log('stat')
-        console.log(stat)
-        navigate('Options', { filePath: stat.path }) 
-        // const uriComponents = filePath.split('/')
-        // console.log('uriComponents')
-        // console.log(uriComponents)
-        // const fileNameAndExtension = uriComponents[uriComponents.length - 1]
-        // const destPath = `${RNFS.TemporaryDirectoryPath}/${fileNameAndExtension}`
-        // await RNFS.copyFile(filePath, destPath)
-        // // let filePath = decodeURIComponent(asset.uri)
-        // // navigate('Options', { filePath })
-        // console.log('destPath file')
-        // console.log(destPath)
-        // navigate('Options', { filePath: destPath })
-      } else { // ios
+        navigate('Options', { filePath: stat.path, no_extension: false })
+      } else {
+        // ios
         let fp = decodeURIComponent(res.uri)
         navigate('Options', { filePath: fp })
       }

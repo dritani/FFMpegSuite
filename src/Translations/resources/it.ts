@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'Più veloce lossier',
     slowerLabel: 'Stelore senza perdita',
     startButton: 'Cominciare',
+    errorLabel: 'Inserimento non valido',
   },
   processing: {
     finishButton: 'Fine',

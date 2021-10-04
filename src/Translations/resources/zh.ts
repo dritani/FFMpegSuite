@@ -22,6 +22,7 @@ export default {
     fasterLabel: '更快\n有损',
     slowerLabel: '更慢\n无损',
     startButton: '开始',
+    errorLabel: '输入无效',
   },
   processing: {
     finishButton: '完成',

@@ -162,6 +162,7 @@ const IndexExampleContainer = props => {
       volume,
       bitrate,
       framerate,
+      no_extension,
     } = props?.route?.params
 
     let ffmpegCommand = ''
@@ -182,6 +183,7 @@ const IndexExampleContainer = props => {
         final_preset,
         width,
         height,
+        no_extension,
       )
     } else {
       ffmpegCommand = VideoUtil.generateAdvancedCompressionScript(
@@ -193,22 +195,11 @@ const IndexExampleContainer = props => {
         volume,
         bitrate,
         framerate,
+        no_extension,
       )
     }
 
     executeFFmpeg(ffmpegCommand).then(async result => {
-      console.log('result')
-      console.log(result)
-      // let fileName = filePath.substring(
-      //   filePath.lastIndexOf('/') + 1,
-      //   filePath.length,
-      // )
-      // let existPath = `${RNFS.DocumentDirectoryPath}/${fileName}`
-      // const fileExists = await VideoUtil.fileExists(existPath)
-      // console.log(`fileExists: ${fileExists}`)
-      // you can always writeFile after creating it with FFMpeg.
-      // Create it in Caches then write it to Directories.
-      // or moveFile
       if (result !== 0) {
         setFinished(true)
         setError(true) // red icon at the top.
@@ -216,7 +207,7 @@ const IndexExampleContainer = props => {
         setFinished(true)
         setProgress(99.9)
         setError(false)
-        if (ads) {
+        if (ads === null || ads === true) {
           showInterstitialAd()
         }
       }
@@ -225,7 +216,7 @@ const IndexExampleContainer = props => {
 
   const showInterstitialAd = () => {
     let randomNumber = Math.random()
-    if (randomNumber > 0.5 && adLoaded) {
+    if (randomNumber >= 0.5 && adLoaded) {
       interstitial.show()
     }
   }

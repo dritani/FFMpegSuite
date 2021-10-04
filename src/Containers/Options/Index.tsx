@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   View,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native'
 import {
   ListItem,
@@ -32,6 +33,18 @@ import LinearGradient from 'react-native-linear-gradient'
 import TouchableScale from 'react-native-touchable-scale'
 import { Config } from '@/Config'
 
+// input Android
+// regex to make sure [0-9] and comma, dot
+  // -JS regex syntax
+    // var str = "The best things in life are free";
+    // var patt = new RegExp("e");
+    // var res = patt.test(str); 
+  // ^([0-9]*[.,])?[0-9]+$
+// if doesn't pass regex, error highlight the Input, disallow passing to next screen? Or ignore those inputs
+  // -error syntax RNElements Input
+// parse both commas and periods to floats
+  // parseFloat(str.replace(',','')
+
 const bannerId = __DEV__ ? TestIds.BANNER : Config.BANNER_ID
 
 const IndexExampleContainer = props => {
@@ -46,10 +59,24 @@ const IndexExampleContainer = props => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [scrollEnabled, setScrollEnabled] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
+
+  // const [basic_width, setBasicWidth] = useState(0)
+  // const [basic_height, setBasicHeight] = useState(0)
+  // const [advanced_width, setAdvancedWidth] = useState(0)
+  // const [advanced_height, setAdvancedHeight] = useState(0)
+
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
   const [bitrate, setBitrate] = useState(0)
   const [framerate, setFramerate] = useState(0)
+
+  const [errors, setErrors] = useState({
+    width: true,
+    height: false,
+    bitrate: false,
+    framerate: false,
+  })
+
   const [time_start, setTimeStart] = useState(100)
   const [time_end, setTimeEnd] = useState(MAX_MULTISLIDER)
   const [total_time, setTotalTime] = useState('')
@@ -64,6 +91,12 @@ const IndexExampleContainer = props => {
   const [proLimit, setProLimit] = useState('Advanced features require premium.')
   const [duration, setDuration] = useState(0.0)
   const [size, setSize] = useState(0)
+  const itemSkus = Platform.select({
+    ios: ['videoCompressor.noAds', 'videoCompressor.pro'],
+    android: ['videocompressor.noads', 'videocompressor.pro'],
+    // amazon? Make them lowercase too in their console.
+  })
+  const [pro_price, setProPrice] = useState('$1.99')
 
   const getPaymentStatus = async () => {
     let payment = await AsyncStorage.getItem('@payment')
@@ -79,6 +112,11 @@ const IndexExampleContainer = props => {
 
   useEffect(() => {
     getPaymentStatus()
+    getMediaInfo()
+    getProducts()
+  }, [])
+
+  const getMediaInfo = () => {
     let ffprobeCommand = props?.route?.params?.filePath
 
     getMediaInformation(ffprobeCommand).then(result => {
@@ -101,7 +139,26 @@ const IndexExampleContainer = props => {
         // error. do jack shit.
       }
     })
-  }, [])
+  }
+
+  const getProducts = async () => {
+    RNIap.clearProductsIOS()
+
+    try {
+      const result = await RNIap.initConnection()
+      await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
+    } catch (err) {}
+
+    const products = await RNIap.getProducts(itemSkus)
+    let pr = products.filter(
+      a => a.productId.toLowerCase() === 'videocompressor.pro',
+    )
+
+    if (ad.length > 0 && pr.length > 0) {
+      let pr_pr = pr[0].localizedPrice
+      setProPrice(pr_pr)
+    }
+  }
 
   const getDateString = seconds => {
     return new Date(seconds * 1000).toISOString()
@@ -223,6 +280,11 @@ const IndexExampleContainer = props => {
     labelFontFamily: 'Nunito-Regular',
   }
 
+  // const handleWidth = e => {}
+  // const handleHeight = e => {}
+  // const handleFramerate = e => {}
+  // const handleBitrate = e => {}
+
   const basicTab = () => {
     return (
       <ScrollView>
@@ -235,7 +297,6 @@ const IndexExampleContainer = props => {
             },
           ]}
         >
-          {/* <Text>Preset</Text> */}
           <View style={[styles.container, { flexDirection: 'row' }]}>
             <View style={[styles.box]}>
               <Text
@@ -247,11 +308,14 @@ const IndexExampleContainer = props => {
                 {t('options.widthLabel')}
               </Text>
               <Input
+                name="basic_width"
                 style={[{ fontFamily: 'Nunito-Regular', fontSize: 15 }]}
                 type="number"
                 keyboardType="number-pad"
                 placeholder="-"
-                onChange={e => setWidth(parseInt(e.nativeEvent.text, 10))}
+                // onChange={e => setWidth(parseInt(e.nativeEvent.text, 10))}
+                errorStyle={{ color: 'red' }}
+                errorMessage={errors.width && t('options.errorLabel')}
               />
             </View>
             <View style={[styles.box]}>
@@ -269,6 +333,8 @@ const IndexExampleContainer = props => {
                 keyboardType="number-pad"
                 placeholder="-"
                 onChange={e => setHeight(parseInt(e.nativeEvent.text, 10))}
+                errorStyle={{ color: 'red' }}
+                errorMessage={errors.height && t('options.errorLabel')}
               />
             </View>
           </View>
@@ -293,6 +359,7 @@ const IndexExampleContainer = props => {
 
         {startButton()}
       </ScrollView>
+    
     )
   }
 
@@ -324,6 +391,7 @@ const IndexExampleContainer = props => {
               keyboardType="number-pad"
               placeholder="-"
               onChange={e => setWidth(parseInt(e.nativeEvent.text, 10))}
+              errorStyle={{ color: 'red' }}
             />
           </View>
           <View style={[styles.box]}>
@@ -341,6 +409,7 @@ const IndexExampleContainer = props => {
               keyboardType="number-pad"
               placeholder="-"
               onChange={e => setHeight(parseInt(e.nativeEvent.text, 10))}
+              errorStyle={{ color: 'red' }}
             />
           </View>
         </View>
@@ -362,6 +431,7 @@ const IndexExampleContainer = props => {
               keyboardType="number-pad"
               placeholder="-"
               onChange={e => setBitrate(parseInt(e.nativeEvent.text, 10))}
+              errorStyle={{ color: 'red' }}
             />
           </View>
           <View style={[styles.box]}>
@@ -379,6 +449,7 @@ const IndexExampleContainer = props => {
               keyboardType="number-pad"
               placeholder="-"
               onChange={e => setFramerate(parseInt(e.nativeEvent.text, 10))}
+              errorStyle={{ color: 'red' }}
             />
           </View>
         </View>
@@ -510,6 +581,16 @@ const IndexExampleContainer = props => {
     )
   }
 
+  const handleChangeTab = index => {
+    setSelectedIndex(index)
+    setErrors({
+      width: false,
+      height: false,
+      bitrate: false,
+      framerate: false,
+    })
+  }
+
   const startButton = () => {
     return (
       <View
@@ -559,6 +640,7 @@ const IndexExampleContainer = props => {
 
   const handleStart = () => {
     let filePath = props?.route?.params?.filePath
+    let no_extension = props?.route?.params?.no_extension
 
     let final_type = selectedIndex === 0 ? 'basic' : 'advanced'
 
@@ -604,6 +686,7 @@ const IndexExampleContainer = props => {
       time_start: final_start, //
       time_end: final_end, //
       volume: final_volume, // done
+      no_extension: no_extension, // if android and photo picked.
     }
     navigate('Processing', ffmpeg)
   }
@@ -703,9 +786,7 @@ const IndexExampleContainer = props => {
             values={[t('options.basicTab'), t('options.advancedTab')]}
             tabTextStyle={{ fontFamily: 'Nunito-Regular', fontSize: 15 }}
             selectedIndex={selectedIndex}
-            onTabPress={index => {
-              setSelectedIndex(index)
-            }}
+            onTabPress={handleChangeTab}
           />
         </View>
         {selectedIndex === 0 && basicTab()}
@@ -828,7 +909,7 @@ const IndexExampleContainer = props => {
                       fontSize: 20,
                     }}
                   >
-                    Buy Now <Text style={{ color: '#ccf2ff' }}>$1.99</Text>
+                    Buy Now <Text style={{ color: '#ccf2ff' }}>{pro_price}</Text>
                   </ListItem.Title>
                 </ListItem.Content>
               </ListItem>

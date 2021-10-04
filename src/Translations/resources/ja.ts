@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'より速い損失のある',
     slowerLabel: '遅いロスレス',
     startButton: '始める',
+    errorLabel: '無効入力',
   },
   processing: {
     finishButton: '終了',

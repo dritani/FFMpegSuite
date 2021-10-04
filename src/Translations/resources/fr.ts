@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'Plus rapide, plus perdant',
     slowerLabel: 'Plus lent, sans perte',
     startButton: 'Commence',
+    errorLabel: 'Entrée invalide',
   },
   processing: {
     finishButton: 'Finir',

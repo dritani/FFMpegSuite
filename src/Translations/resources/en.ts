@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'Faster\nLossier',
     slowerLabel: 'Slower\n   Lossless',
     startButton: 'Start',
+    errorLabel: 'Invalid Input',
   },
   processing: {
     finishButton: 'Finish',

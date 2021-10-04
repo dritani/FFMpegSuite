@@ -1,23 +1,9 @@
-import React, { useState, useEffect} from 'react'
-import {
-  View,
-  Text,
-  Platform,
-  NativeModules,
-  Share,
-  Alert,
-} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, Platform, NativeModules, Share, Alert } from 'react-native'
 import { useTheme } from '@/Theme'
 import { useTranslation } from 'react-i18next'
-import { UserState } from '@/Store/User'
-import { ThemeState } from '@/Store/Theme'
 import { Config } from '@/Config'
-import RNIap, {
-  InAppPurchase,
-  Product,
-  PurchaseError,
-  finishTransaction,
-} from 'react-native-iap'
+import RNIap from 'react-native-iap'
 import i18n from 'i18next'
 import Rate, { AndroidMarket } from 'react-native-rate'
 import type { PickerItem } from 'react-native-woodpicker'
@@ -64,13 +50,13 @@ const IndexExampleContainer = () => {
 
   const getProducts = async () => {
     // let prices = AsyncStorage.getItem('@localizedPrices')
-    // let localizedPrices = {}    
+    // let localizedPrices = {}
     // if (prices) {
     //   localizedPrices = JSON.parse(prices)
     //   setAdsPrice(localizedPrices.ads_price)
     //   setProPrice(localizedPrices.pro_price)
     // } else {
-    //   // 
+    //   //
     // }
 
     RNIap.clearProductsIOS()
@@ -78,9 +64,7 @@ const IndexExampleContainer = () => {
     try {
       const result = await RNIap.initConnection()
       await RNIap.flushFailedPurchasesCachedAsPendingAndroid()
-    } catch (err) {
-      
-    }
+    } catch (err) {}
 
     const products = await RNIap.getProducts(itemSkus)
     let ad = products.filter(
@@ -254,7 +238,7 @@ const IndexExampleContainer = () => {
     const options = {
       AppleAppID: '1576425812', // after publishing?
       GooglePackageName: 'ml.devcraft.videocompressor', // PascalCase? check console
-      AmazonPackageName: 'ml.devcraft.videocompressor', // PascalCase? 
+      AmazonPackageName: 'ml.devcraft.videocompressor', // PascalCase?
       // OtherAndroidURL: 'http://www.randomappstore.com/app/47172391',
       preferredAndroidMarket: AndroidMarket.Google,
       preferInApp: false,
@@ -274,7 +258,10 @@ const IndexExampleContainer = () => {
   const handleRecommend = async () => {
     try {
       const result = await Share.share({
-        message: 'https://apps.apple.com/US/app/id2193813192?l=en',
+        message:
+          Platform.OS === 'android'
+            ? 'https://play.google.com/store/apps/details?id=ml.devcraft.VideoCompressor'
+            : 'https://apps.apple.com/US/app/id1576425812?l=en',
       })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -284,8 +271,7 @@ const IndexExampleContainer = () => {
         }
       } else if (result.action === Share.dismissedAction) {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   // language picker component:
@@ -315,7 +301,7 @@ const IndexExampleContainer = () => {
                   title="Language Picker"
                   placeholder="Select Language"
                   isNullable
-                  textInputStyle={{fontFamily: 'Nunito-Regular'}}
+                  textInputStyle={{ fontFamily: 'Nunito-Regular' }}
                   //backdropAnimation={{ opactity: 0 }}
                   //mode="dropdown"
                   //isNullable
@@ -328,7 +314,9 @@ const IndexExampleContainer = () => {
             <Icon name="star" type="ionicon" />
             <ListItem.Content>
               <View style={Layout.rowBetween}>
-                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>{t('settings.rateUs')}</Text>
+                <Text style={[Fonts.blackSettings, Fonts.nunitoRegular]}>
+                  {t('settings.rateUs')}
+                </Text>
                 <ListItem.Chevron />
               </View>
             </ListItem.Content>

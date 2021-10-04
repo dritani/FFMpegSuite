@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'तेज हानिकारक',
     slowerLabel: 'धीमी हानि रहित',
     startButton: 'शुरू',
+    errorLabel: 'अमान्य निवेश',
   },
   processing: {
     finishButton: 'खत्म हो',

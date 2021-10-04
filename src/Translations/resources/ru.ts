@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'Более быстрый убыток',
     slowerLabel: 'Медленнее без потерь',
     startButton: 'Начинать',
+    errorLabel: 'Некорректный ввод',
   },
   processing: {
     finishButton: 'Заканчивать',

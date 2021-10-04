@@ -22,6 +22,7 @@ export default {
     fasterLabel: '빠른 손익경',
     slowerLabel: '손해없는 느린',
     startButton: '시작',
+    errorLabel: '잘못된 입력',
   },
   processing: {
     finishButton: '마치다',

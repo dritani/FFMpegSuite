@@ -138,7 +138,7 @@ export default class VideoUtil {
     )
   }
 
-  static async generateBasicCompressionScript(filePath, preset, width, height) {
+  static async generateBasicCompressionScript(filePath, preset, width, height, no_extension) {
     let crf = 33,
       f_preset = 'veryfast'
 
@@ -175,6 +175,10 @@ export default class VideoUtil {
       command += `-vf scale="${width}:${height}" `
     }
 
+    if (no_extension) {
+      command += '-f mp4 '
+    }
+
     let fileName = filePath.substring(
       filePath.lastIndexOf('/') + 1,
       filePath.length,
@@ -185,7 +189,11 @@ export default class VideoUtil {
     console.log(outputPath)
     // /data/user/0/ml.devcraft.VideoCompressor/files/511490755.mp4
     // 565146801
+
     command += outputPath
+
+    console.log('command')
+    console.log(command)
     // -vf scale="${width}:${height}"
     // -c:v libx265 -crf ${crf} -preset ${f_preset}
     // CachesDirectoryPath, DocumentDirectoryPath
@@ -202,6 +210,7 @@ export default class VideoUtil {
     volume, // 1.5 => up to 3.0?
     bitrate, // 192k or 1M
     framerate, // 30
+    no_extension
     // crf: 18-51? 51 fastest, 28 default.
   ) {
     let command = `-i ${filePath} `
@@ -232,6 +241,10 @@ export default class VideoUtil {
 
     if (width || height) {
       command += `-vf scale="${width}:${height}" `
+    }
+
+    if (no_extension) {
+      command += '-f mp4 '
     }
 
     let fileName = filePath.substring(

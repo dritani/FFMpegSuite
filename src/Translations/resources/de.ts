@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'Fasterer Verlust',
     slowerLabel: 'Langsamer verlustfrei',
     startButton: 'anfang',
+    errorLabel: 'Ungültige Eingabe',
   },
   processing: {
     finishButton: 'Beenden',

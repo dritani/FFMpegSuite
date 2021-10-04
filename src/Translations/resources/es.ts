@@ -22,6 +22,7 @@ export default {
     fasterLabel: 'Más despedido',
     slowerLabel: 'Más lento sin pérdida',
     startButton: 'Comienzo',
+    errorLabel: 'Entrada inválida',
   },
   processing: {
     finishButton: 'Terminar',
